@@ -9,5 +9,8 @@ import AppIntents
 import ExtensionFoundation
 
 @main
-struct SiriExtension: AppIntentsExtension {
+struct AccesibleMapAssistantExtension: AppIntentsExtension {
+    var intents: [any AppIntent.Type] {
+        [AccesibleMapAssistant.self]
+    }
 }

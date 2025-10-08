@@ -21,6 +21,7 @@ final class DIContainer {
     
     let location = LocationService()
     let geo = GeofenceService()
+    let ai = AIService.shared
     
     private init() {}
 }

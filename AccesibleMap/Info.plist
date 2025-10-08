@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>AppIntentsSupported</key>
+	<array>
+		<string>FindBathroomIntent</string>
+	</array>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
@@ -13,9 +17,24 @@
 			</array>
 		</dict>
 	</array>
+	<key>IntentsRestrictedWhileLocked</key>
+	<false/>
+	<key>IntentsSupported</key>
+	<array>
+		<string>AccesibleMapIntents</string>
+	</array>
+	<key>IntentsSupportedRequiringUserConfirmation</key>
+	<array>
+		<string>AccesibleMapIntents.FindBathroomIntent</string>
+	</array>
 	<key>MKDirectionsApplicationSupportedModes</key>
 	<array>
 		<string>MKDirectionsModeOther</string>
+	</array>
+	<key>NSUserActivityTypes</key>
+	<array>
+		<string>INSearchForMessagesIntent</string>
+		<string>INSendMessageIntent</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
