@@ -6,11 +6,13 @@
 //
 
 import SwiftUI
+import MapKit
 
 //Router, aqui se encargará de mostrar la pantalla, ya sea un onboarding, login, home, etc
 struct ContentView: View {
     var body: some View {
-        VenueMapView()
+        Map()
+            .mapStyle(.standard(pointsOfInterest: .excludingAll))
     }
 }
 

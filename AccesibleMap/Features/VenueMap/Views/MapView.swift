@@ -8,6 +8,29 @@
 import SwiftUI
 import MapKit
 
+struct POIBadgeView: View {
+    let poi: VenuePOI
+    var body: some View {
+        HStack(spacing: 6) {
+            Image(systemName: poi.type.icon)
+                .font(.system(size: 14, weight: .semibold))
+            Text(poi.type.displayName)
+                .font(.caption)
+                .bold()
+        }
+        .padding(.horizontal, 10)
+        .padding(.vertical, 6)
+        .foregroundStyle(.primary)
+        .glassEffect(.regular)
+        .clipShape(Capsule())
+        .overlay(
+            Capsule()
+                .stroke(poi.type.color.opacity(0.9), lineWidth: 1)
+        )
+        .shadow(radius: 2)
+    }
+}
+
 struct MapView: View {
     @ObservedObject var locationVm: LocationViewModel
     @StateObject private var vm = MapViewModel()
@@ -36,33 +59,71 @@ struct MapView: View {
         return nil
     }
     
+    private var cameraDistance: CLLocationDistance {
+        cameraInfo?.distance ?? .greatestFiniteMagnitude
+    }
+    
+    private var shouldShowPOIs: Bool {
+        cameraDistance <= 4000
+    }
+    
+    private var isVeryClose: Bool {
+        cameraDistance <= 2000
+    }
+    
+    private var visiblePOIs: [VenuePOI] {
+        // Flatten venues to one array of filtered POIs to reduce nested generics in the body
+        vm.venues.flatMap { venue in
+            filteredPOIs(for: venue)
+        }
+    }
+    
     var body: some View {
         Map(position: $camera, selection: $selectedPOIId) {
             UserAnnotation()
             
-            if let cam = cameraInfo {
-                if cam.distance <= 2000 {
-                    ForEach(vm.venues, id: \.id) { venue in
-                        ForEach(filteredPOIs(for: venue)) { poi in
-                            Marker(poi.type.displayName, systemImage: poi.type.icon, coordinate: poi.center)
-                                .tint(poi.type.color)
-                                .tag(poi.id)
+            if shouldShowPOIs {
+                // Show POIs when close or mid distance; the visual used is the same but
+                // we avoid duplicate branches to help the type-checker.
+                ForEach(thinnedPOIs(from: visiblePOIs, distance: cameraDistance)) { poi in
+                    let isStairs: Bool = poi.type == .stails || poi.type == .manBathroom || poi.type == .womanBathroom
+                    var anchor: CGFloat {
+                        if isStairs {
+                            24
+                        } else {
+                            28
                         }
                     }
-                } else {
-                    if cam.distance <= 4000 {
-                        ForEach(vm.venues, id: \.id) { venue in
-                            ForEach(filteredPOIs(for: venue)) { poi in
-                                Marker(poi.type.displayName, systemImage: poi.type.icon, coordinate: poi.center)
-                                    .tint(poi.type.color)
-                                    .tag(poi.id)
+                    Annotation(isStairs ? "" : poi.type.displayName, coordinate: poi.center) {
+                        Image(systemName: poi.type.icon)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: anchor - 12, height: anchor - 12)
+                            .frame(width: anchor, height: anchor)
+                            .foregroundStyle(.white)
+                            .background(poi.type.color.gradient.opacity(isStairs ? 0.9 : 1))
+                            .clipShape(isStairs ? AnyShape(RoundedRectangle(cornerRadius: 4)) : AnyShape(Circle()))
+                            .overlay {
+                                if isStairs {
+                                    RoundedRectangle(cornerRadius: 4)
+                                        .stroke(Color.white.opacity(0.6), lineWidth: 2)
+                                } else {
+                                    Circle().stroke(Color.white.opacity(0.6), lineWidth: 2)
+                                }
                             }
-                        }
+                            .scaleEffect(scaleForZoom(cameraDistance))
+                            .opacity(opacityForZoom(cameraDistance))
                     }
-                    ForEach(vm.venues, id: \.id) { venue in
-                        Marker(venue.name, systemImage: "sportscourt", coordinate: venue.center)
-                            .tint(Color.accentColor)
-                    }
+                    .tag(poi.id)
+                    
+                }
+            }
+            
+            // Show venue marker pins when zoomed out
+            if !shouldShowPOIs {
+                ForEach(vm.venues, id: \.id) { venue in
+                    Marker(venue.name, systemImage: "sportscourt", coordinate: venue.center)
+                        .tint(Color.indigo)
                 }
             }
         }
@@ -79,7 +140,8 @@ struct MapView: View {
             emphasis: .muted,
             pointsOfInterest: .including([.airport, .hotel]))
         )
-        .onChange(of: selectedPOIId) { newValue in
+//        .annotationTitles(.hidden)
+        .onChange(of: selectedPOIId) { _, newValue in
             guard let id = newValue else { return }
             selectedPOI = findPOI(by: id)
             if selectedPOI != nil { UIImpactFeedbackGenerator(style: .light).impactOccurred() }
@@ -121,7 +183,6 @@ struct MapView: View {
                     .padding(8)
                     .glassEffect(.clear)
                     
-                    
                     // Filtro rápido
                     Toggle(isOn: $showOnlyEssentials) {
                         Text("Esenciales")
@@ -134,34 +195,24 @@ struct MapView: View {
                 HStack {
                     Spacer()
                     Button {
-                        if let venue = vm.venues.first { // Puedes cambiar la heurística si manejas múltiples
+                        if let venue = vm.venues.first {
                             camera = .region(MKCoordinateRegion(center: venue.center, span: .init(latitudeDelta: 0.004, longitudeDelta: 0.004)))
                         }
                     } label: {
                         Image(systemName: "sportscourt")
-                            .padding(12)
+                            .padding(14)
                             .glassEffect(.regular, in: .circle)
                     }
                 }
             }
-            .padding([.top, .horizontal],8)
+            .padding([.top, .horizontal],12)
         }
-        .overlay(alignment: .bottomTrailing) {
-            VStack(spacing: 10) {
-//                Button {
-//                    if let userLat = locationVm.latitude, let userLon = locationVm.longitude {
-//                        camera = .region(MKCoordinateRegion(center: .init(latitude: userLat, longitude: userLon), span: .init(latitudeDelta: 0.003, longitudeDelta: 0.003)))
-//                    }
-//                } label: {
-//                    Image(systemName: "location.fill")
-//                        .padding(10)
-//                        .background(.ultraThinMaterial)
-//                        .clipShape(Circle())
-//                }
-
-            }
-            .padding(12)
-        }
+//        .overlay(alignment: .bottomTrailing) {
+//            VStack(spacing: 10) {
+//                // Reserved for extra controls
+//            }
+//            .padding(12)
+//        }
         .onAppear {
             vm.loadVenues()
             locationVm.startUpdates()
@@ -180,22 +231,37 @@ struct MapView: View {
         .onDisappear {
             locationVm.stopUpdates()
         }
-        //        .overlay {
-        //            VStack(alignment: .leading, spacing: 6) {
-        //                if let cam = cameraInfo {
-        //                    Text("🎥 Camera:")
-        //                    Text("Pitch: \(cam.pitch, specifier: "%.1f")°")
-        //                    Text("Heading: \(cam.heading, specifier: "%.1f")°")
-        //                    Text("Altitude: \(cam.distance, specifier: "%.0f") m")
-        //                }
-        //            }
-        //            .font(.caption.monospaced())
-        //            .padding(12)
-        //            .background(.ultraThinMaterial)
-        //            .clipShape(RoundedRectangle(cornerRadius: 8))
-        //            .padding()
-        //            .frame(maxWidth: .infinity, alignment: .leading)
-        //        }
+    }
+    
+    private func scaleForZoom(_ d: CLLocationDistance) -> CGFloat {
+        // 1.0 cerca, 0.6 lejos
+        let minD: CLLocationDistance = 800    // muy cerca
+        let maxD: CLLocationDistance = 6000   // lejos
+        let t = min(1, max(0, (d - minD) / (maxD - minD)))
+        return 1.0 - 0.4 * t
+    }
+    
+    private func opacityForZoom(_ d: CLLocationDistance) -> Double {
+        // 1.0 cerca, 0.4 lejos
+        let minD: CLLocationDistance = 800
+        let maxD: CLLocationDistance = 6000
+        let t = min(1, max(0, (d - minD) / (maxD - minD)))
+        return 1.0 - 0.6 * t
+    }
+    
+    private func thinnedPOIs(from pois: [VenuePOI], distance: CLLocationDistance) -> [VenuePOI] {
+        guard distance > 4500 else { return pois }
+        // agrupa por “celdas” de ~50–80m
+        let gridSize = 0.0008 // ~80m aprox según lat
+        var seen: Set<String> = []
+        return pois.compactMap { p in
+            let gx = Int((p.center.latitude / gridSize).rounded(.down))
+            let gy = Int((p.center.longitude / gridSize).rounded(.down))
+            let key = "\(gx)-\(gy)-\(p.type.rawValue)"
+            if seen.contains(key) { return nil }
+            seen.insert(key)
+            return p
+        }
     }
 }
 
