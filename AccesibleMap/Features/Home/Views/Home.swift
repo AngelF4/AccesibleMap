@@ -46,73 +46,80 @@ struct Home: View {
             
             VStack(spacing: 24) {
                 if vm.showVenueList {
-                    if vm.selectedCity == nil {
-                        VStack(spacing: 0) {
-                            Pager(page: cityPage, data: vm.cities, id: \.id) { city in
-                                Text(city.name)
-                                    .font(.headline)
-                                    .frame(width: 150, height: 100)
-                                    .glassEffect(.regular, in: .rect(cornerRadius: 12))
-                            }
-                            .draggingAnimation(.custom(animation: .spring(duration: 0.1)))
-                            .preferredItemSize(CGSize(width: 150, height: 100))
-                            .itemSpacing(20)
-                            .interactive(scale: 0.9)
-                            .horizontal()
-                            .sensitivity(.high)
-                            .pagingPriority(.simultaneous)
-                            .swipeInteractionArea(.allAvailable)
-                            .padding(.horizontal, 20)
-                            .onPageChanged { idx in
-                                if vm.cities.indices.contains(idx) { vm.cityPosition = vm.cities[idx] }
-                            }
-                            .frame(height: 150)
-                            Button {
-                                withAnimation {
-                                    vm.selectCurrentCity()
-                                    page = Page.withIndex(0)
+                    if vm.selectedVenue == nil {
+                        VStack(spacing: 24) {
+                            if !vm.cities.isEmpty {
+                                VStack(spacing: 12) {
+                                    Text("Selecciona una ciudad")
+                                        .font(.headline)
+                                    Pager(page: cityPage, data: vm.cities, id: \.id) { city in
+                                        Text(city.name)
+                                            .font(.headline)
+                                            .frame(width: 150, height: 100)
+                                            .glassEffect(.regular, in: .rect(cornerRadius: 12))
+                                    }
+                                    .draggingAnimation(.custom(animation: .spring(duration: 0.1)))
+                                    .preferredItemSize(CGSize(width: 150, height: 100))
+                                    .itemSpacing(20)
+                                    .interactive(scale: 0.9)
+                                    .horizontal()
+                                    .sensitivity(.high)
+                                    .pagingPriority(.simultaneous)
+                                    .swipeInteractionArea(.allAvailable)
+                                    .padding(.horizontal, 20)
+                                    .onPageChanged { idx in
+                                        guard vm.cities.indices.contains(idx) else { return }
+                                        withAnimation {
+                                            let city = vm.cities[idx]
+                                            vm.setCity(city)
+                                            page = Page.withIndex(0)
+                                        }
+                                    }
+                                    .frame(height: 150)
                                 }
-                            } label: {
-                                Text("Ver estadios en esta ciudad")
-                                    .fontWeight(.semibold)
-                                    .frame(maxWidth: .infinity, minHeight: 50)
                             }
-                            .buttonStyle(.glass)
-                            .padding(.horizontal, 30)
-                            .padding(.bottom, 30)
-                        }
-                    } else if vm.selectedVenue == nil {
-                        VStack(spacing: 0) {
-                            Pager(page: page, data: vm.venues, id: \.id) { item in
-                                Text(item.name)
-                                    .frame(width: 150, height: 100)
-                                    .glassEffect(.regular, in: .rect(cornerRadius: 12))
-                            }
-                            .draggingAnimation(.custom(animation: .spring(duration: 0.1)))
-                            .preferredItemSize(CGSize(width: 150, height: 100))
-                            .itemSpacing(20)
-                            .interactive(scale: 0.9)
-                            .horizontal()
-                            .sensitivity(.high)
-                            .pagingPriority(.simultaneous)
-                            .swipeInteractionArea(.allAvailable)
-                            .padding(.horizontal, 20) // peek
-                            .onPageChanged { idx in
-                                if vm.venues.indices.contains(idx) { vm.position = vm.venues[idx] }
-                            }
-                            .frame(height: 150)
-                            Button {
-                                withAnimation {
-                                    vm.selectedVenue = vm.position
+
+                            if !vm.venues.isEmpty {
+                                VStack(spacing: 16) {
+                                    Text("Escoge tu estadio")
+                                        .font(.headline)
+                                    Pager(page: page, data: vm.venues, id: \.id) { item in
+                                        Text(item.name)
+                                            .frame(width: 150, height: 100)
+                                            .glassEffect(.regular, in: .rect(cornerRadius: 12))
+                                    }
+                                    .draggingAnimation(.custom(animation: .spring(duration: 0.1)))
+                                    .preferredItemSize(CGSize(width: 150, height: 100))
+                                    .itemSpacing(20)
+                                    .interactive(scale: 0.9)
+                                    .horizontal()
+                                    .sensitivity(.high)
+                                    .pagingPriority(.simultaneous)
+                                    .swipeInteractionArea(.allAvailable)
+                                    .padding(.horizontal, 20) // peek
+                                    .onPageChanged { idx in
+                                        if vm.venues.indices.contains(idx) { vm.position = vm.venues[idx] }
+                                    }
+                                    .frame(height: 150)
+                                    Button {
+                                        withAnimation {
+                                            vm.selectedVenue = vm.position
+                                        }
+                                    } label: {
+                                        Text("Entrar a ver ese estadio")
+                                            .fontWeight(.semibold)
+                                            .frame(maxWidth: .infinity, minHeight: 50)
+                                    }
+                                    .buttonStyle(.glass)
+                                    .padding(.horizontal, 30)
+                                    .padding(.bottom, 30)
                                 }
-                            } label: {
-                                Text("Entrar a ver ese estadio")
-                                    .fontWeight(.semibold)
-                                    .frame(maxWidth: .infinity, minHeight: 50)
+                            } else {
+                                Text("No hay estadios disponibles en esta ciudad aún.")
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                                    .padding(.bottom, 30)
                             }
-                            .buttonStyle(.glass)
-                            .padding(.horizontal, 30)
-                            .padding(.bottom, 30)
                         }
                     }
                 } else {
@@ -144,16 +151,15 @@ struct Home: View {
         .onAppear {
             vm.prepareInitialState()
             vm.mapPosition = .camera(vm.cameraToShow)
-            if let city = vm.selectedCity {
-                vm.position = city.venues.first
+            if let selectedCity = vm.selectedCity,
+               let cityIndex = vm.cities.firstIndex(of: selectedCity) {
+                cityPage = Page.withIndex(cityIndex)
+            }
+            if vm.position == nil {
+                vm.position = vm.venues.first
             }
         }
         .onChange(of: vm.showVenueList) {
-            withAnimation(.spring(duration: 1)) {
-                vm.mapPosition = .camera(vm.cameraToShow)
-            }
-        }
-        .onChange(of: vm.cityPosition) {
             withAnimation(.spring(duration: 1)) {
                 vm.mapPosition = .camera(vm.cameraToShow)
             }
@@ -166,6 +172,11 @@ struct Home: View {
         .onChange(of: vm.selectedCity) {
             withAnimation(.spring(duration: 1)) {
                 vm.mapPosition = .camera(vm.cameraToShow)
+            }
+            if let selectedCity = vm.selectedCity,
+               let index = vm.cities.firstIndex(of: selectedCity) {
+                cityPage = Page.withIndex(index)
+                page = Page.withIndex(0)
             }
         }
         .onChange(of: vm.selectedVenue) {

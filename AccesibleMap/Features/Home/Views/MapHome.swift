@@ -91,15 +91,14 @@ struct MapHome: View {
                             Marker(selectedVenue.name, systemImage: "sportscourt", coordinate: selectedVenue.center)
                                 .tint(Color.indigo)
                         }
-                    } else if vm.selectedCity != nil {
-                        ForEach(vm.venues) { venue in
-                            Marker(venue.name, systemImage: "star.fill", coordinate: venue.center)
-                                .tint(.orange)
-                        }
                     } else {
-                        ForEach(vm.cities) { city in
-                            Marker(city.name, systemImage: "building.2.fill", coordinate: city.coordinate)
-                                .tint(.blue)
+                        ForEach(vm.venues) { venue in
+                            Marker(
+                                venue.name,
+                                systemImage: vm.position == venue ? "sportscourt.fill" : "star.fill",
+                                coordinate: venue.center
+                            )
+                            .tint(vm.position == venue ? .indigo : .orange)
                         }
                     }
                 }

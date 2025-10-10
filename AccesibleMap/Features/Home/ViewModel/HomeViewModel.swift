@@ -14,7 +14,6 @@ class HomeViewModel: ObservableObject {
     @Published var showVenueList = false
     @Published var mapPosition: MapCameraPosition = .automatic
     @Published var cities: [City] = []
-    @Published var cityPosition: City?
     @Published var selectedCity: City?
     @Published var venues: [Venue] = []
     @Published var position: Venue?
@@ -35,39 +34,36 @@ class HomeViewModel: ObservableObject {
         )
         self.cities = [monterrey]
 #endif
-        self.cityPosition = cities.first
+        if let firstCity = cities.first {
+            setCity(firstCity)
+        }
     }
 
     func prepareInitialState() {
-        if cityPosition == nil {
-            cityPosition = cities.first
-        }
+        guard !cities.isEmpty else { return }
 
-        if let city = selectedCity, position == nil {
-            position = city.venues.first
+        if let currentCity = selectedCity {
+            if venues.isEmpty {
+                venues = currentCity.venues
+            }
+            if position == nil {
+                position = currentCity.venues.first
+            }
+        } else if let firstCity = cities.first {
+            setCity(firstCity)
         }
     }
 
-    func selectCurrentCity() {
-        guard let city = cityPosition else { return }
+    func setCity(_ city: City) {
         selectedCity = city
-        selectedVenue = nil
         venues = city.venues
         position = venues.first
-    }
-
-    func resetToCitySelection() {
-        selectedCity = nil
         selectedVenue = nil
-        venues = []
-        position = nil
     }
 
     func handleBackNavigation() {
         if selectedVenue != nil {
             selectedVenue = nil
-        } else if selectedCity != nil {
-            resetToCitySelection()
         } else {
             showVenueList = false
         }
@@ -105,16 +101,14 @@ class HomeViewModel: ObservableObject {
         }
 
         if showVenueList {
-            if let city = selectedCity {
-                if let venue = position ?? city.venues.first {
-                    return MapCamera(
-                        centerCoordinate: venue.center,
-                        distance: 9000,
-                        heading: 0,
-                        pitch: 35
-                    )
-                }
-            } else if let city = cityPosition ?? cities.first {
+            if let venue = position ?? venues.first {
+                return MapCamera(
+                    centerCoordinate: venue.center,
+                    distance: 9000,
+                    heading: 0,
+                    pitch: 35
+                )
+            } else if let city = selectedCity {
                 return MapCamera(
                     centerCoordinate: city.coordinate,
                     distance: 70000,
