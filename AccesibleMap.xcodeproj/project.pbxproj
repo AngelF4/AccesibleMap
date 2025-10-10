@@ -479,7 +479,7 @@
 		84C5147B2E94AA9300BE85D4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = StadiumIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = AccesibleMap/AccesibleMap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
@@ -517,7 +517,7 @@
 		84C5147C2E94AA9300BE85D4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = StadiumIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = AccesibleMap/AccesibleMap.entitlements;
 				CODE_SIGN_STYLE = Automatic;

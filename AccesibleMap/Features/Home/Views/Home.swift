@@ -19,10 +19,12 @@ struct Home: View {
         ZStack(alignment: .bottom) {
                 MapHome(vm: vm)
                 .allowsHitTesting(vm.showVenueList)
-            if vm.showVenueList || vm.selectedVenue == nil {
-                Color.black.opacity(0.1)
-                    .ignoresSafeArea()
-                    .allowsHitTesting(false)
+            if !vm.showVenueList || vm.selectedVenue == nil {
+                if !vm.showVenueList {
+                    Color.black.opacity(0.1)
+                        .ignoresSafeArea()
+                        .allowsHitTesting(false)
+                }
                 
                 Rectangle()
                     .fill(
@@ -44,32 +46,38 @@ struct Home: View {
             VStack(spacing: 24) {
                 if vm.showVenueList {
                     if vm.selectedVenue == nil {
-                        Pager(page: page, data: vm.venues, id: \.id) { item in
+                        VStack(spacing: 0) {
+                            Pager(page: page, data: vm.venues, id: \.id) { item in
+                                Text(item.name)
+                                    .frame(width: 150, height: 100)
+                                    .glassEffect(.regular, in: .rect(cornerRadius: 12))
+                            }
+                            .draggingAnimation(.custom(animation: .spring(duration: 0.1)))
+                            .preferredItemSize(CGSize(width: 150, height: 100))
+                            .itemSpacing(20)
+                            .interactive(scale: 0.9)
+                            .horizontal()
+                            .sensitivity(.high)
+                            .pagingPriority(.simultaneous)
+                            .swipeInteractionArea(.allAvailable)
+                            .padding(.horizontal, 20) // peek
+                            .onPageChanged { idx in
+                                if vm.venues.indices.contains(idx) { vm.position = vm.venues[idx] }
+                            }
+                            .frame(height: 150)
                             Button {
                                 withAnimation {
-                                    vm.selectedVenue = item
+                                    vm.selectedVenue = vm.position
                                 }
                             } label: {
-                                
-                                Text(item.name)
+                                Text("Entrar a ver ese estadio")
+                                    .fontWeight(.semibold)
+                                    .frame(maxWidth: .infinity, minHeight: 50)
                             }
-                            .buttonStyle(.plain)
-                            .frame(width: 150, height: 100)
-                            .glassEffect(.regular, in: .rect(cornerRadius: 12))
+                            .buttonStyle(.glass)
+                            .padding(.horizontal, 30)
+                            .padding(.bottom, 30)
                         }
-                        .draggingAnimation(.custom(animation: .spring(duration: 0.1)))
-                        .preferredItemSize(CGSize(width: 150, height: 100))
-                        .itemSpacing(20)
-                        .interactive(scale: 0.9)
-                        .horizontal()
-                        .sensitivity(.high)
-                        .pagingPriority(.simultaneous)
-                        .swipeInteractionArea(.allAvailable)
-                        .padding(.horizontal, 20) // peek
-                        .onPageChanged { idx in
-                            if vm.venues.indices.contains(idx) { vm.position = vm.venues[idx] }
-                        }
-                        .frame(height: 150)
                     }
                 } else {
                     VStack(alignment: .leading, spacing: 0) {
@@ -92,13 +100,15 @@ struct Home: View {
                     }
                     .buttonStyle(.glass)
                     .padding(.horizontal, 30)
-                    .padding(.bottom, 20)
+                    .padding(.bottom, 30)
                 }
             }
             
         }
         .onAppear {
             vm.mapPosition = .camera(vm.cameraToShow)
+            guard let firstVenue = vm.venues.first else { return }
+            vm.position = firstVenue
         }
         .onChange(of: vm.showVenueList) {
             withAnimation(.spring(duration: 1)) {
@@ -120,8 +130,11 @@ struct Home: View {
                 if vm.showVenueList {
                     Button {
                         withAnimation(.spring(duration: 0.8)) {
-                            vm.showVenueList = false
-                            vm.selectedVenue = nil
+                            if vm.selectedVenue != nil {
+                                vm.selectedVenue = nil
+                            } else {
+                                vm.showVenueList = false
+                            }
                         }
                     } label: {
                         Label("Regresar", systemImage: "chevron.left")

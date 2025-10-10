@@ -53,67 +53,114 @@ struct MapHome: View {
     }
 
     var body: some View {
-        Map(position: $vm.mapPosition, selection: $selectedPOIId) {
-            UserAnnotation()
-
-            if vm.showVenueList {
-                if let selectedVenue = vm.selectedVenue {
-                    if shouldShowPOIs {
-                        ForEach(visiblePOIs) { poi in
-                            let isStairs: Bool = poi.type == .stails || poi.type == .manBathroom || poi.type == .womanBathroom
-                            let anchor: CGFloat = isStairs ? 24 : 28
-
-                            Annotation(isStairs ? "" : poi.type.displayName, coordinate: poi.center) {
-                                Image(systemName: poi.type.icon)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: anchor - 12, height: anchor - 12)
-                                    .frame(width: anchor, height: anchor)
-                                    .foregroundStyle(.white)
-                                    .background(poi.type.color.gradient.opacity(isStairs ? 0.7 : 1))
-                                    .clipShape(isStairs ? AnyShape(RoundedRectangle(cornerRadius: 4)) : AnyShape(Circle()))
-                                    .overlay {
-                                        if isStairs {
-                                            RoundedRectangle(cornerRadius: 4)
-                                                .stroke(Color.white.opacity(0.6), lineWidth: 2)
-                                        } else {
-                                            Circle().stroke(Color.white.opacity(0.6), lineWidth: 2)
+        ZStack(alignment: .bottom) {
+            Map(position: $vm.mapPosition, selection: $selectedPOIId) {
+                UserAnnotation()
+                
+                if vm.showVenueList {
+                    if let selectedVenue = vm.selectedVenue {
+                        if shouldShowPOIs {
+                            ForEach(visiblePOIs) { poi in
+                                let isStairs: Bool = poi.type == .stails || poi.type == .manBathroom || poi.type == .womanBathroom
+                                let anchor: CGFloat = isStairs ? 24 : 28
+                                
+                                Annotation(isStairs ? "" : poi.type.displayName, coordinate: poi.center) {
+                                    Image(systemName: poi.type.icon)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: anchor - 12, height: anchor - 12)
+                                        .frame(width: anchor, height: anchor)
+                                        .foregroundStyle(.white)
+                                        .background(poi.type.color.gradient.opacity(isStairs ? 0.7 : 1))
+                                        .clipShape(isStairs ? AnyShape(RoundedRectangle(cornerRadius: 4)) : AnyShape(Circle()))
+                                        .overlay {
+                                            if isStairs {
+                                                RoundedRectangle(cornerRadius: 4)
+                                                    .stroke(Color.white.opacity(0.6), lineWidth: 2)
+                                            } else {
+                                                Circle().stroke(Color.white.opacity(0.6), lineWidth: 2)
+                                            }
                                         }
-                                    }
-                                    .scaleEffect(scaleForZoom(cameraDistance))
+                                        .scaleEffect(scaleForZoom(cameraDistance))
+                                }
+                                .tag(poi.id)
                             }
-                            .tag(poi.id)
+                        }
+                        
+                        if !shouldShowPOIs {
+                            Marker(selectedVenue.name, systemImage: "sportscourt", coordinate: selectedVenue.center)
+                                .tint(Color.indigo)
+                        }
+                    } else {
+                        ForEach(vm.venues) { venue in
+                            Marker(venue.name, systemImage: "star.fill", coordinate: venue.center)
+                                .tint(.orange)
                         }
                     }
-
-                    if !shouldShowPOIs {
-                        Marker(selectedVenue.name, systemImage: "sportscourt", coordinate: selectedVenue.center)
-                            .tint(Color.indigo)
-                    }
-                } else {
-                    ForEach(vm.venues) { venue in
-                        Marker(venue.name, systemImage: "star.fill", coordinate: venue.center)
-                            .tint(.orange)
-                    }
-                }
-            } else {
-                ForEach(vm.venues) { venue in
-                    Marker(venue.name, systemImage: "star.fill", coordinate: venue.center)
-                        .tint(.orange)
                 }
             }
-        }
-        .mapControls {
-            MapCompass()
-            MapUserLocationButton()
-        }
-        .mapStyle(.standard(
-            elevation: .flat,
-            pointsOfInterest: vm.selectedVenue == nil ? .excludingAll : .including([.airport, .hotel])
-        ))
-        .mapControlVisibility(vm.selectedVenue == nil ? .hidden : .visible)
-        .onMapCameraChange(frequency: .continuous) { context in
-            cameraInfo = context.camera
+            .mapControls {
+                MapCompass()
+                MapUserLocationButton()
+            }
+            .mapStyle(.standard(
+                elevation: .flat,
+                pointsOfInterest: vm.selectedVenue == nil ? .excludingAll : .including([.airport, .hotel])
+            ))
+            .mapControlVisibility(vm.selectedVenue == nil ? .hidden : .visible)
+            .onMapCameraChange(frequency: .continuous) { context in
+                cameraInfo = context.camera
+            }
+            
+            if vm.showVenueList, let selectedVenue = vm.selectedVenue, !selectedVenue.pois.isEmpty {
+                HStack {
+                    Spacer()
+                    Button {
+                        if let venue = vm.selectedVenue {
+                            withAnimation {
+                                vm.mapPosition = .camera(
+                                    MapCamera(
+                                        centerCoordinate: venue.center,
+                                        distance: 3000,
+                                        heading: 0,
+                                        pitch: 0
+                                    )
+                                )
+                            }
+                        }
+                    } label: {
+                        Image(systemName: "sportscourt")
+                            .padding(14)
+                            .glassEffect(.regular, in: .circle)
+                    }
+                }
+                VStack {
+                    HStack(spacing: 8) {
+                        HStack(spacing: 6) {
+                            Text("Piso")
+                            Picker("Piso", selection: $selectedFloor) {
+                                ForEach(availableFloors(for: selectedVenue), id: \.self) { piso in
+                                    Text("\(piso)").tag(piso)
+                                }
+                            }
+                            .labelsHidden()
+                            .pickerStyle(.segmented)
+                            .frame(maxWidth: 180)
+                        }
+                        .padding(8)
+                        .glassEffect(.clear)
+                        
+                        Toggle(isOn: $showOnlyEssentials) {
+                            Text("Esenciales")
+                                .font(.callout)
+                        }
+                        .toggleStyle(.switch)
+                        .padding(8)
+                        .glassEffect(.clear)
+                    }
+                }
+                .padding([.top, .horizontal], 12)
+            }
         }
         .onChange(of: selectedPOIId) { _, newValue in
             guard let id = newValue else { return }
@@ -138,57 +185,6 @@ struct MapHome: View {
             }
             .padding()
             .presentationDetents([.medium])
-        }
-        .safeAreaInset(edge: .top) {
-            if vm.showVenueList, let selectedVenue = vm.selectedVenue, !selectedVenue.pois.isEmpty {
-                VStack {
-                    HStack(spacing: 8) {
-                        HStack(spacing: 6) {
-                            Text("Piso")
-                            Picker("Piso", selection: $selectedFloor) {
-                                ForEach(availableFloors(for: selectedVenue), id: \.self) { piso in
-                                    Text("\(piso)").tag(piso)
-                                }
-                            }
-                            .labelsHidden()
-                            .pickerStyle(.segmented)
-                            .frame(maxWidth: 180)
-                        }
-                        .padding(8)
-                        .glassEffect(.clear)
-
-                        Toggle(isOn: $showOnlyEssentials) {
-                            Text("Esenciales")
-                                .font(.callout)
-                        }
-                        .toggleStyle(.switch)
-                        .padding(8)
-                        .glassEffect(.clear)
-                    }
-                    HStack {
-                        Spacer()
-                        Button {
-                            if let venue = vm.selectedVenue {
-                                withAnimation {
-                                    vm.mapPosition = .camera(
-                                        MapCamera(
-                                            centerCoordinate: venue.center,
-                                            distance: 3000,
-                                            heading: 0,
-                                            pitch: 0
-                                        )
-                                    )
-                                }
-                            }
-                        } label: {
-                            Image(systemName: "sportscourt")
-                                .padding(14)
-                                .glassEffect(.regular, in: .circle)
-                        }
-                    }
-                }
-                .padding([.top, .horizontal], 12)
-            }
         }
         .onAppear {
             locationVm.requestPermission()
