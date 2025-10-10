@@ -107,6 +107,11 @@ struct Home: View {
                 vm.mapPosition = .camera(vm.cameraToShow)
             }
         }
+        .onChange(of: vm.selectedVenue) {
+            withAnimation(.spring(duration: 0.9)) {
+                vm.mapPosition = .camera(vm.cameraToShow)
+            }
+        }
         .toolbar {
             ToolbarItem(placement: .navigation) {
                 if vm.showVenueList {

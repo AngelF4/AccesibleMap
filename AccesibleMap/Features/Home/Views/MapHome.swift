@@ -10,14 +10,20 @@ import MapKit
 
 struct MapHome: View {
     @ObservedObject var vm: HomeViewModel
-    
+    @StateObject private var locationVm = LocationViewModel()
+
     @State private var cameraInfo: MapCamera? = nil
-    
+
     @State private var selectedPOIId: UUID? = nil
     @State private var selectedPOI: VenuePOI? = nil
     @State private var showOnlyEssentials: Bool = true // acceso, acceso silla, estacionamiento
-    @State private var selectedFloor: Int = 1
-    
+    @State private var selectedFloor: Int = 0
+
+    private func availableFloors(for venue: Venue) -> [Int] {
+        let floors = Set(venue.pois.map(\.floor))
+        return floors.sorted()
+    }
+
     private func filteredPOIs(for venue: Venue) -> [VenuePOI] {
         let base = venue.pois.filter { $0.floor == selectedFloor }
         if showOnlyEssentials {
@@ -27,49 +33,36 @@ struct MapHome: View {
         }
         return base
     }
-    
+
     private func findPOI(by id: UUID) -> VenuePOI? {
-        for venue in vm.venues {
-            if let match = venue.pois.first(where: { $0.id == id }) { return match }
-        }
-        return nil
+        guard let venue = vm.selectedVenue else { return nil }
+        return venue.pois.first(where: { $0.id == id })
     }
-    
+
     private var cameraDistance: CLLocationDistance {
         cameraInfo?.distance ?? .greatestFiniteMagnitude
     }
-    
+
     private var shouldShowPOIs: Bool {
         cameraDistance <= 4000
     }
-    
-    private var isVeryClose: Bool {
-        cameraDistance <= 2000
-    }
-    
+
     private var visiblePOIs: [VenuePOI] {
-        // Flatten venues to one array of filtered POIs to reduce nested generics in the body
-        vm.venues.flatMap { venue in
-            filteredPOIs(for: venue)
-        }
+        guard let selectedVenue = vm.selectedVenue else { return [] }
+        return filteredPOIs(for: selectedVenue)
     }
-    
+
     var body: some View {
-        Map(position: $vm.mapPosition) {
+        Map(position: $vm.mapPosition, selection: $selectedPOIId) {
+            UserAnnotation()
+
             if vm.showVenueList {
                 if let selectedVenue = vm.selectedVenue {
-                    UserAnnotation()
-                    
                     if shouldShowPOIs {
                         ForEach(visiblePOIs) { poi in
                             let isStairs: Bool = poi.type == .stails || poi.type == .manBathroom || poi.type == .womanBathroom
-                            var anchor: CGFloat {
-                                if isStairs {
-                                    24
-                                } else {
-                                    28
-                                }
-                            }
+                            let anchor: CGFloat = isStairs ? 24 : 28
+
                             Annotation(isStairs ? "" : poi.type.displayName, coordinate: poi.center) {
                                 Image(systemName: poi.type.icon)
                                     .resizable()
@@ -87,34 +80,38 @@ struct MapHome: View {
                                             Circle().stroke(Color.white.opacity(0.6), lineWidth: 2)
                                         }
                                     }
-                                
+                                    .scaleEffect(scaleForZoom(cameraDistance))
                             }
                             .tag(poi.id)
-                            
                         }
                     }
-                    
-                    // Show venue marker pins when zoomed out
+
                     if !shouldShowPOIs {
-                        ForEach(vm.venues, id: \.id) { venue in
-                            Marker(venue.name, systemImage: "sportscourt", coordinate: venue.center)
-                                .tint(Color.indigo)
-                        }
+                        Marker(selectedVenue.name, systemImage: "sportscourt", coordinate: selectedVenue.center)
+                            .tint(Color.indigo)
                     }
                 } else {
                     ForEach(vm.venues) { venue in
-                        Marker(venue.name, systemImage: "star.fill",  coordinate: venue.center)
+                        Marker(venue.name, systemImage: "star.fill", coordinate: venue.center)
                             .tint(.orange)
-                        //                    Annotation(venue.name, coordinate: venue.center) {
-                        //                        Image(systemName: "mappin")
-                        //                    }
                     }
+                }
+            } else {
+                ForEach(vm.venues) { venue in
+                    Marker(venue.name, systemImage: "star.fill", coordinate: venue.center)
+                        .tint(.orange)
                 }
             }
         }
+        .mapControls {
+            MapCompass()
+            MapUserLocationButton()
+        }
         .mapStyle(.standard(
-            elevation: .realistic,
-            pointsOfInterest: vm.selectedVenue == nil ? .excludingAll : .including([.airport, .hotel])))
+            elevation: .flat,
+            emphasis: .muted,
+            pointsOfInterest: vm.selectedVenue == nil ? .excludingAll : .including([.airport, .hotel])
+        ))
         .mapControlVisibility(vm.selectedVenue == nil ? .hidden : .visible)
         .onMapCameraChange(frequency: .continuous) { context in
             cameraInfo = context.camera
@@ -124,6 +121,99 @@ struct MapHome: View {
             selectedPOI = findPOI(by: id)
             if selectedPOI != nil { UIImpactFeedbackGenerator(style: .light).impactOccurred() }
         }
+        .sheet(item: $selectedPOI) { poi in
+            VStack(spacing: 12) {
+                Text(poi.type.displayName)
+                    .font(.headline)
+                Text("Piso: \(poi.floor)")
+                    .font(.subheadline)
+                HStack {
+                    Button("Cómo llegar") {
+                        let placemark = MKPlacemark(coordinate: poi.center)
+                        let item = MKMapItem(placemark: placemark)
+                        item.name = poi.type.displayName
+                        item.openInMaps(launchOptions: [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeWalking])
+                    }
+                    Button("Cerrar") { selectedPOI = nil }
+                }
+            }
+            .padding()
+            .presentationDetents([.medium])
+        }
+        .safeAreaInset(edge: .top) {
+            if vm.showVenueList, let selectedVenue = vm.selectedVenue, !selectedVenue.pois.isEmpty {
+                VStack {
+                    HStack(spacing: 8) {
+                        HStack(spacing: 6) {
+                            Text("Piso")
+                            Picker("Piso", selection: $selectedFloor) {
+                                ForEach(availableFloors(for: selectedVenue), id: \.self) { piso in
+                                    Text("\(piso)").tag(piso)
+                                }
+                            }
+                            .labelsHidden()
+                            .pickerStyle(.segmented)
+                            .frame(maxWidth: 180)
+                        }
+                        .padding(8)
+                        .glassEffect(.clear)
+
+                        Toggle(isOn: $showOnlyEssentials) {
+                            Text("Esenciales")
+                                .font(.callout)
+                        }
+                        .toggleStyle(.switch)
+                        .padding(8)
+                        .glassEffect(.clear)
+                    }
+                    HStack {
+                        Spacer()
+                        Button {
+                            if let venue = vm.selectedVenue {
+                                vm.mapPosition = .camera(
+                                    MapCamera(
+                                        centerCoordinate: venue.center,
+                                        distance: 3000,
+                                        heading: 0,
+                                        pitch: 45
+                                    )
+                                )
+                            }
+                        } label: {
+                            Image(systemName: "sportscourt")
+                                .padding(14)
+                                .glassEffect(.regular, in: .circle)
+                        }
+                    }
+                }
+                .padding([.top, .horizontal], 12)
+            }
+        }
+        .onAppear {
+            locationVm.startUpdates()
+            showOnlyEssentials = true
+            if let venue = vm.selectedVenue ?? vm.venues.first {
+                selectedFloor = availableFloors(for: venue).first ?? 0
+            }
+        }
+        .onDisappear {
+            locationVm.stopUpdates()
+        }
+        .onChange(of: vm.selectedVenue) { _, newValue in
+            selectedPOIId = nil
+            selectedPOI = nil
+            showOnlyEssentials = true
+            if let venue = newValue {
+                selectedFloor = availableFloors(for: venue).first ?? 0
+            }
+        }
+    }
+
+    private func scaleForZoom(_ distance: CLLocationDistance) -> CGFloat {
+        let minD: CLLocationDistance = 800
+        let maxD: CLLocationDistance = 3000
+        let t = min(1, max(0, (distance - minD) / (maxD - minD)))
+        return 1.0 - 0.4 * t
     }
 }
 
