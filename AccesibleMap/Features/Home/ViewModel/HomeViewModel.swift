@@ -42,26 +42,37 @@ class HomeViewModel: ObservableObject {
     }
     
     var cameraToShow: MapCamera {
+        if let venue = selectedVenue {
+            return MapCamera(
+                centerCoordinate: venue.center,
+                distance: 3000,
+                heading: 0,
+                pitch: 45
+            )
+        }
+
         if showVenueList {
-            if let venue = position {
-                // Focus on the selected venue while the list is shown
+            if let venue = position ?? venues.first {
                 return MapCamera(
                     centerCoordinate: venue.center,
-                    distance: 10000
+                    distance: 9000,
+                    heading: 0,
+                    pitch: 35
                 )
             } else {
-                // Default wide view when no venue is selected
                 return MapCamera(
                     centerCoordinate: .init(
                         latitude: 25.669122,
                         longitude: -100.244362
                     ),
-                    distance: 10000
+                    distance: 9000,
+                    heading: 0,
+                    pitch: 35
                 )
             }
-        } else {
-            return getRandomCamera()
         }
+
+        return getRandomCamera()
     }
 }
 
