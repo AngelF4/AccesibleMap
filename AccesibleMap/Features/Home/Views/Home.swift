@@ -14,6 +14,7 @@ import SwiftUIPager
 struct Home: View {
     @StateObject private var vm = HomeViewModel()
     @State private var page = Page.withIndex(0)
+    @State private var cityPage = Page.withIndex(0)
     
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -45,7 +46,42 @@ struct Home: View {
             
             VStack(spacing: 24) {
                 if vm.showVenueList {
-                    if vm.selectedVenue == nil {
+                    if vm.selectedCity == nil {
+                        VStack(spacing: 0) {
+                            Pager(page: cityPage, data: vm.cities, id: \.id) { city in
+                                Text(city.name)
+                                    .font(.headline)
+                                    .frame(width: 150, height: 100)
+                                    .glassEffect(.regular, in: .rect(cornerRadius: 12))
+                            }
+                            .draggingAnimation(.custom(animation: .spring(duration: 0.1)))
+                            .preferredItemSize(CGSize(width: 150, height: 100))
+                            .itemSpacing(20)
+                            .interactive(scale: 0.9)
+                            .horizontal()
+                            .sensitivity(.high)
+                            .pagingPriority(.simultaneous)
+                            .swipeInteractionArea(.allAvailable)
+                            .padding(.horizontal, 20)
+                            .onPageChanged { idx in
+                                if vm.cities.indices.contains(idx) { vm.cityPosition = vm.cities[idx] }
+                            }
+                            .frame(height: 150)
+                            Button {
+                                withAnimation {
+                                    vm.selectCurrentCity()
+                                    page = Page.withIndex(0)
+                                }
+                            } label: {
+                                Text("Ver estadios en esta ciudad")
+                                    .fontWeight(.semibold)
+                                    .frame(maxWidth: .infinity, minHeight: 50)
+                            }
+                            .buttonStyle(.glass)
+                            .padding(.horizontal, 30)
+                            .padding(.bottom, 30)
+                        }
+                    } else if vm.selectedVenue == nil {
                         VStack(spacing: 0) {
                             Pager(page: page, data: vm.venues, id: \.id) { item in
                                 Text(item.name)
@@ -106,17 +142,29 @@ struct Home: View {
             
         }
         .onAppear {
+            vm.prepareInitialState()
             vm.mapPosition = .camera(vm.cameraToShow)
-            guard let firstVenue = vm.venues.first else { return }
-            vm.position = firstVenue
+            if let city = vm.selectedCity {
+                vm.position = city.venues.first
+            }
         }
         .onChange(of: vm.showVenueList) {
             withAnimation(.spring(duration: 1)) {
                 vm.mapPosition = .camera(vm.cameraToShow)
             }
         }
+        .onChange(of: vm.cityPosition) {
+            withAnimation(.spring(duration: 1)) {
+                vm.mapPosition = .camera(vm.cameraToShow)
+            }
+        }
         .onChange(of: vm.position) {
             withAnimation(.spring(duration: 2)) {
+                vm.mapPosition = .camera(vm.cameraToShow)
+            }
+        }
+        .onChange(of: vm.selectedCity) {
+            withAnimation(.spring(duration: 1)) {
                 vm.mapPosition = .camera(vm.cameraToShow)
             }
         }
@@ -130,11 +178,7 @@ struct Home: View {
                 if vm.showVenueList {
                     Button {
                         withAnimation(.spring(duration: 0.8)) {
-                            if vm.selectedVenue != nil {
-                                vm.selectedVenue = nil
-                            } else {
-                                vm.showVenueList = false
-                            }
+                            vm.handleBackNavigation()
                         }
                     } label: {
                         Label("Regresar", systemImage: "chevron.left")

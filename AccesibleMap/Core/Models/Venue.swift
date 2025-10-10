@@ -177,13 +177,78 @@ enum pointOfInterest: String, CaseIterable {
 extension Venue {
     // Conjunto de venues de prueba
     static let mocks: [Venue] = [
+        .estadioAzteca,
+        .foroSol,
+        .estadioAkron,
+        .arenaVFG,
         .estadioBBVA,
         .estadioUniversitario,
         .aeropuertoMTY,
         .arenaMonterrey
     ]
-    
+
     // MARK: - Individuos
+    static let estadioAzteca = Venue(
+        name: "Estadio Azteca",
+        center: .init(latitude: 19.302861, longitude: -99.150528),
+        pathImage: [],
+        accessibilityDescription: "Estadio con accesos adaptados y servicios esenciales.",
+        accessibilityLabel: "Estadio Azteca",
+        pois: [
+            VenuePOI(center: .init(latitude: 19.303100, longitude: -99.150900), floor: 0, type: .access),
+            VenuePOI(center: .init(latitude: 19.303250, longitude: -99.149900), floor: 0, type: .accessWheelchair),
+            VenuePOI(center: .init(latitude: 19.302650, longitude: -99.150700), floor: 0, type: .parking),
+            VenuePOI(center: .init(latitude: 19.302500, longitude: -99.150100), floor: 0, type: .food),
+            VenuePOI(center: .init(latitude: 19.302940, longitude: -99.151050), floor: 0, type: .manBathroom)
+        ]
+    )
+
+    static let foroSol = Venue(
+        name: "Foro Sol",
+        center: .init(latitude: 19.404167, longitude: -99.097778),
+        pathImage: [],
+        accessibilityDescription: "Recinto para eventos masivos con servicios accesibles.",
+        accessibilityLabel: "Foro Sol",
+        pois: [
+            VenuePOI(center: .init(latitude: 19.404300, longitude: -99.098100), floor: 0, type: .access),
+            VenuePOI(center: .init(latitude: 19.403900, longitude: -99.097400), floor: 0, type: .accessWheelchair),
+            VenuePOI(center: .init(latitude: 19.403800, longitude: -99.098300), floor: 0, type: .food),
+            VenuePOI(center: .init(latitude: 19.404450, longitude: -99.097800), floor: 0, type: .womanBathroom),
+            VenuePOI(center: .init(latitude: 19.404000, longitude: -99.098600), floor: 0, type: .customerService)
+        ]
+    )
+
+    static let estadioAkron = Venue(
+        name: "Estadio Akron",
+        center: .init(latitude: 20.687111, longitude: -103.462168),
+        pathImage: [],
+        accessibilityDescription: "Estadio con estacionamiento y accesos adaptados.",
+        accessibilityLabel: "Estadio Akron",
+        pois: [
+            VenuePOI(center: .init(latitude: 20.687350, longitude: -103.461900), floor: 0, type: .access),
+            VenuePOI(center: .init(latitude: 20.686900, longitude: -103.462400), floor: 0, type: .accessWheelchair),
+            VenuePOI(center: .init(latitude: 20.687600, longitude: -103.462800), floor: 0, type: .parking),
+            VenuePOI(center: .init(latitude: 20.686750, longitude: -103.462150), floor: 0, type: .food),
+            VenuePOI(center: .init(latitude: 20.687050, longitude: -103.462950), floor: 0, type: .elevator)
+        ]
+    )
+
+    static let arenaVFG = Venue(
+        name: "Arena VFG",
+        center: .init(latitude: 20.528900, longitude: -103.310800),
+        pathImage: [],
+        accessibilityDescription: "Arena techada con servicios esenciales accesibles.",
+        accessibilityLabel: "Arena VFG",
+        pois: [
+            VenuePOI(center: .init(latitude: 20.528700, longitude: -103.311200), floor: 0, type: .access),
+            VenuePOI(center: .init(latitude: 20.529100, longitude: -103.310500), floor: 0, type: .accessWheelchair),
+            VenuePOI(center: .init(latitude: 20.528500, longitude: -103.310900), floor: 0, type: .food),
+            VenuePOI(center: .init(latitude: 20.529200, longitude: -103.310700), floor: 0, type: .medicalKit),
+            VenuePOI(center: .init(latitude: 20.528950, longitude: -103.311100), floor: 0, type: .womanBathroom)
+        ]
+    )
+
+    // MARK: - Individuos existentes
     static let estadioBBVA = Venue(
         name: "Estadio BBVA",
         center: .init(latitude: 25.6689, longitude: -100.2451),
