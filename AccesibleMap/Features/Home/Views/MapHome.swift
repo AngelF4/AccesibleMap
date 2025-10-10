@@ -109,7 +109,6 @@ struct MapHome: View {
         }
         .mapStyle(.standard(
             elevation: .flat,
-            emphasis: .muted,
             pointsOfInterest: vm.selectedVenue == nil ? .excludingAll : .including([.airport, .hotel])
         ))
         .mapControlVisibility(vm.selectedVenue == nil ? .hidden : .visible)
@@ -170,14 +169,16 @@ struct MapHome: View {
                         Spacer()
                         Button {
                             if let venue = vm.selectedVenue {
-                                vm.mapPosition = .camera(
-                                    MapCamera(
-                                        centerCoordinate: venue.center,
-                                        distance: 3000,
-                                        heading: 0,
-                                        pitch: 45
+                                withAnimation {
+                                    vm.mapPosition = .camera(
+                                        MapCamera(
+                                            centerCoordinate: venue.center,
+                                            distance: 3000,
+                                            heading: 0,
+                                            pitch: 0
+                                        )
                                     )
-                                )
+                                }
                             }
                         } label: {
                             Image(systemName: "sportscourt")
@@ -190,6 +191,7 @@ struct MapHome: View {
             }
         }
         .onAppear {
+            locationVm.requestPermission()
             locationVm.startUpdates()
             showOnlyEssentials = true
             if let venue = vm.selectedVenue ?? vm.venues.first {

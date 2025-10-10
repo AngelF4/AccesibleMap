@@ -47,7 +47,7 @@ class HomeViewModel: ObservableObject {
                 centerCoordinate: venue.center,
                 distance: 3000,
                 heading: 0,
-                pitch: 45
+                pitch: 0
             )
         }
 

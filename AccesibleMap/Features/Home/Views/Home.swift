@@ -19,6 +19,7 @@ struct Home: View {
         ZStack(alignment: .bottom) {
                 MapHome(vm: vm)
                 .allowsHitTesting(vm.showVenueList)
+            if vm.showVenueList || vm.selectedVenue == nil {
                 Color.black.opacity(0.1)
                     .ignoresSafeArea()
                     .allowsHitTesting(false)
@@ -29,7 +30,7 @@ struct Home: View {
                     )
                     .ignoresSafeArea()
                     .allowsHitTesting(false)
-            
+            }
             
             VStack {
                 MovingWaves(period: 6, height: 160)
@@ -45,7 +46,9 @@ struct Home: View {
                     if vm.selectedVenue == nil {
                         Pager(page: page, data: vm.venues, id: \.id) { item in
                             Button {
-                                vm.selectedVenue = item
+                                withAnimation {
+                                    vm.selectedVenue = item
+                                }
                             } label: {
                                 
                                 Text(item.name)
