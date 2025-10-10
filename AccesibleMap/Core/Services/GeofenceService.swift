@@ -10,6 +10,12 @@ import CoreLocation
 import SwiftUI
 
 final class GeofenceService {
+    var venues: [Venue]  {
+        [
+            venueBBVA
+        ]
+    }
+    
     let venueBBVA = Venue(
         name: "Estadio BBVA",
         center: .init(latitude: 25.669122, longitude: -100.244362),

@@ -11,8 +11,18 @@ import MapKit
 //Router, aqui se encargará de mostrar la pantalla, ya sea un onboarding, login, home, etc
 struct ContentView: View {
     var body: some View {
-        Map()
-            .mapStyle(.standard(pointsOfInterest: .excludingAll))
+        TabView {
+            Tab("Inicio", systemImage: "soccerball") {
+                NavigationStack {
+                    Home()
+                }
+            }
+            Tab("Perfil", systemImage: "person.crop.circle") {
+                NavigationStack {
+                    Home()
+                }
+            }
+        }
     }
 }
 

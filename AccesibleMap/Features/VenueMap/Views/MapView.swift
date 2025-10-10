@@ -78,14 +78,13 @@ struct MapView: View {
         }
     }
     
+    
     var body: some View {
         Map(position: $camera, selection: $selectedPOIId) {
             UserAnnotation()
             
             if shouldShowPOIs {
-                // Show POIs when close or mid distance; the visual used is the same but
-                // we avoid duplicate branches to help the type-checker.
-                ForEach(thinnedPOIs(from: visiblePOIs, distance: cameraDistance)) { poi in
+                ForEach(visiblePOIs) { poi in
                     let isStairs: Bool = poi.type == .stails || poi.type == .manBathroom || poi.type == .womanBathroom
                     var anchor: CGFloat {
                         if isStairs {
@@ -101,7 +100,7 @@ struct MapView: View {
                             .frame(width: anchor - 12, height: anchor - 12)
                             .frame(width: anchor, height: anchor)
                             .foregroundStyle(.white)
-                            .background(poi.type.color.gradient.opacity(isStairs ? 0.9 : 1))
+                            .background(poi.type.color.gradient.opacity(isStairs ? 0.7 : 1))
                             .clipShape(isStairs ? AnyShape(RoundedRectangle(cornerRadius: 4)) : AnyShape(Circle()))
                             .overlay {
                                 if isStairs {
@@ -112,7 +111,7 @@ struct MapView: View {
                                 }
                             }
                             .scaleEffect(scaleForZoom(cameraDistance))
-                            .opacity(opacityForZoom(cameraDistance))
+                            
                     }
                     .tag(poi.id)
                     
@@ -129,14 +128,14 @@ struct MapView: View {
         }
         .mapControls {
             MapCompass()
-            MapPitchToggle()
+            
             MapUserLocationButton()
         }
         .onMapCameraChange(frequency: .continuous) { context in
             cameraInfo = context.camera
         }
         .mapStyle(.standard(
-            elevation: .realistic,
+            elevation: .flat,
             emphasis: .muted,
             pointsOfInterest: .including([.airport, .hotel]))
         )
@@ -207,12 +206,6 @@ struct MapView: View {
             }
             .padding([.top, .horizontal],12)
         }
-//        .overlay(alignment: .bottomTrailing) {
-//            VStack(spacing: 10) {
-//                // Reserved for extra controls
-//            }
-//            .padding(12)
-//        }
         .onAppear {
             vm.loadVenues()
             locationVm.startUpdates()
@@ -236,7 +229,7 @@ struct MapView: View {
     private func scaleForZoom(_ d: CLLocationDistance) -> CGFloat {
         // 1.0 cerca, 0.6 lejos
         let minD: CLLocationDistance = 800    // muy cerca
-        let maxD: CLLocationDistance = 6000   // lejos
+        let maxD: CLLocationDistance = 3000   // lejos
         let t = min(1, max(0, (d - minD) / (maxD - minD)))
         return 1.0 - 0.4 * t
     }
@@ -247,21 +240,6 @@ struct MapView: View {
         let maxD: CLLocationDistance = 6000
         let t = min(1, max(0, (d - minD) / (maxD - minD)))
         return 1.0 - 0.6 * t
-    }
-    
-    private func thinnedPOIs(from pois: [VenuePOI], distance: CLLocationDistance) -> [VenuePOI] {
-        guard distance > 4500 else { return pois }
-        // agrupa por “celdas” de ~50–80m
-        let gridSize = 0.0008 // ~80m aprox según lat
-        var seen: Set<String> = []
-        return pois.compactMap { p in
-            let gx = Int((p.center.latitude / gridSize).rounded(.down))
-            let gy = Int((p.center.longitude / gridSize).rounded(.down))
-            let key = "\(gx)-\(gy)-\(p.type.rawValue)"
-            if seen.contains(key) { return nil }
-            seen.insert(key)
-            return p
-        }
     }
 }
 
