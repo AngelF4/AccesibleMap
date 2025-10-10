@@ -14,18 +14,15 @@ import SwiftUIPager
 struct Home: View {
     @StateObject private var vm = HomeViewModel()
     @State private var page = Page.withIndex(0)
+    @State private var cityChangeWorkItem: DispatchWorkItem?
+    @State private var venueChangeWorkItem: DispatchWorkItem?
     
     var body: some View {
         ZStack(alignment: .bottom) {
-                MapHome(vm: vm)
-                .allowsHitTesting(vm.showVenueList)
+            MapHome(vm: vm)
+                .allowsHitTesting(vm.showVenueList && vm.selectedCity != nil)
+            
             if !vm.showVenueList || vm.selectedVenue == nil {
-                if !vm.showVenueList {
-                    Color.black.opacity(0.1)
-                        .ignoresSafeArea()
-                        .allowsHitTesting(false)
-                }
-                
                 Rectangle()
                     .fill(
                         LinearGradient(colors: [Color("LabelColor").opacity(0.5), .clear], startPoint: .bottom, endPoint: .center)
@@ -45,9 +42,53 @@ struct Home: View {
             
             VStack(spacing: 24) {
                 if vm.showVenueList {
-                    if vm.selectedVenue == nil {
+                    // Paso 1: Elegir ciudad
+                    if vm.selectedCity == nil {
                         VStack(spacing: 0) {
-                            Pager(page: page, data: vm.venues, id: \.id) { item in
+                            Pager(page: page, data: vm.cities, id: \.self) { city in
+                                CityCard(city: city)
+                                    .scaleEffect(0.7)
+                            }
+                            .draggingAnimation(.custom(animation: .spring(duration: 0.1)))
+                            .preferredItemSize(CGSize(width: 300 * 0.7, height: 130))
+                            .itemSpacing(20)
+                            .interactive(scale: 0.8)
+                            .horizontal()
+                            .sensitivity(.high)
+                            .pagingPriority(.simultaneous)
+                            .swipeInteractionArea(.allAvailable)
+                            .padding(.horizontal, 20)
+                            .onPageChanged { idx in
+                                // Debounce rapid page changes for cities
+                                cityChangeWorkItem?.cancel()
+                                let work = DispatchWorkItem { [weak vm] in
+                                    guard let vm, vm.cities.indices.contains(idx) else { return }
+                                    vm.positionCity = vm.cities[idx]
+                                }
+                                cityChangeWorkItem = work
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.35, execute: work)
+                            }
+                            
+                            .frame(height: 130)
+                            
+                            Button {
+                                withAnimation {
+                                    vm.selectedCity = vm.positionCity ?? vm.cities.first
+                                }
+                            } label: {
+                                Text("Ver sedes en \(vm.positionCity?.displayName ?? vm.cities.first?.displayName ?? "ciudad")")
+                                    .fontWeight(.semibold)
+                                    .frame(maxWidth: .infinity, minHeight: 50)
+                            }
+                            .buttonStyle(.glass)
+                            .padding(.horizontal, 30)
+                            .padding(.bottom, 30)
+                        }
+                    }
+                    // Paso 2: Elegir sede dentro de la ciudad
+                    else if vm.selectedVenue == nil {
+                        VStack(spacing: 0) {
+                            Pager(page: page, data: vm.venuesInSelectedCity, id: \.id) { item in
                                 Text(item.name)
                                     .frame(width: 150, height: 100)
                                     .glassEffect(.regular, in: .rect(cornerRadius: 12))
@@ -62,7 +103,14 @@ struct Home: View {
                             .swipeInteractionArea(.allAvailable)
                             .padding(.horizontal, 20) // peek
                             .onPageChanged { idx in
-                                if vm.venues.indices.contains(idx) { vm.position = vm.venues[idx] }
+                                // Debounce rapid page changes for venues
+                                venueChangeWorkItem?.cancel()
+                                let work = DispatchWorkItem { [weak vm] in
+                                    guard let vm, vm.venuesInSelectedCity.indices.contains(idx) else { return }
+                                    vm.position = vm.venuesInSelectedCity[idx]
+                                }
+                                venueChangeWorkItem = work
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.35, execute: work)
                             }
                             .frame(height: 150)
                             Button {
@@ -92,6 +140,7 @@ struct Home: View {
                     Button {
                         withAnimation(.spring(duration: 1)) {
                             vm.showVenueList = true
+                            vm.positionCity = vm.cities.first
                         }
                     } label: {
                         Text("¿Listo para el partido?")
@@ -107,8 +156,7 @@ struct Home: View {
         }
         .onAppear {
             vm.mapPosition = .camera(vm.cameraToShow)
-            guard let firstVenue = vm.venues.first else { return }
-            vm.position = firstVenue
+            vm.positionCity = vm.cities.first
         }
         .onChange(of: vm.showVenueList) {
             withAnimation(.spring(duration: 1)) {
@@ -125,6 +173,18 @@ struct Home: View {
                 vm.mapPosition = .camera(vm.cameraToShow)
             }
         }
+        .onChange(of: vm.selectedCity) {
+            // Al pasar al paso de sedes, selecciona la primera sede de esa ciudad como "position"
+            vm.position = vm.venuesInSelectedCity.first
+            withAnimation(.spring(duration: 0.9)) {
+                vm.mapPosition = .camera(vm.cameraToShow)
+            }
+        }
+        .onChange(of: vm.positionCity) {
+            withAnimation(.spring(duration: 0.9)) {
+                vm.mapPosition = .camera(vm.cameraToShow)
+            }
+        }
         .toolbar {
             ToolbarItem(placement: .navigation) {
                 if vm.showVenueList {
@@ -132,6 +192,8 @@ struct Home: View {
                         withAnimation(.spring(duration: 0.8)) {
                             if vm.selectedVenue != nil {
                                 vm.selectedVenue = nil
+                            } else if vm.selectedCity != nil {
+                                vm.selectedCity = nil
                             } else {
                                 vm.showVenueList = false
                             }

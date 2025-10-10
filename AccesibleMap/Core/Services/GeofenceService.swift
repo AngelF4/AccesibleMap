@@ -18,6 +18,7 @@ final class GeofenceService {
     
     let venueBBVA = Venue(
         name: "Estadio BBVA",
+        city: .mty,
         center: .init(latitude: 25.669122, longitude: -100.244362),
         pathImage: [.init(pathImage: "BBVAPath", floor: 1, imageRotation: 96.55)],
         accessibilityDescription: "Marcador del estadio BBVA",

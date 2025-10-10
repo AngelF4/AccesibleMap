@@ -11,19 +11,19 @@ import MapKit
 struct MapHome: View {
     @ObservedObject var vm: HomeViewModel
     @StateObject private var locationVm = LocationViewModel()
-
+    
     @State private var cameraInfo: MapCamera? = nil
-
+    
     @State private var selectedPOIId: UUID? = nil
     @State private var selectedPOI: VenuePOI? = nil
     @State private var showOnlyEssentials: Bool = true // acceso, acceso silla, estacionamiento
     @State private var selectedFloor: Int = 0
-
+    
     private func availableFloors(for venue: Venue) -> [Int] {
         let floors = Set(venue.pois.map(\.floor))
         return floors.sorted()
     }
-
+    
     private func filteredPOIs(for venue: Venue) -> [VenuePOI] {
         let base = venue.pois.filter { $0.floor == selectedFloor }
         if showOnlyEssentials {
@@ -33,25 +33,25 @@ struct MapHome: View {
         }
         return base
     }
-
+    
     private func findPOI(by id: UUID) -> VenuePOI? {
         guard let venue = vm.selectedVenue else { return nil }
         return venue.pois.first(where: { $0.id == id })
     }
-
+    
     private var cameraDistance: CLLocationDistance {
         cameraInfo?.distance ?? .greatestFiniteMagnitude
     }
-
+    
     private var shouldShowPOIs: Bool {
         cameraDistance <= 4000
     }
-
+    
     private var visiblePOIs: [VenuePOI] {
         guard let selectedVenue = vm.selectedVenue else { return [] }
         return filteredPOIs(for: selectedVenue)
     }
-
+    
     var body: some View {
         ZStack(alignment: .bottom) {
             Map(position: $vm.mapPosition, selection: $selectedPOIId) {
@@ -85,14 +85,13 @@ struct MapHome: View {
                                 }
                                 .tag(poi.id)
                             }
-                        }
-                        
-                        if !shouldShowPOIs {
+                        } else {
                             Marker(selectedVenue.name, systemImage: "sportscourt", coordinate: selectedVenue.center)
                                 .tint(Color.indigo)
                         }
-                    } else {
-                        ForEach(vm.venues) { venue in
+                    } else if vm.selectedCity != nil {
+                        // Mostrar sedes de la ciudad elegida
+                        ForEach(vm.venuesInSelectedCity) { venue in
                             Marker(venue.name, systemImage: "star.fill", coordinate: venue.center)
                                 .tint(.orange)
                         }
@@ -113,28 +112,28 @@ struct MapHome: View {
             }
             
             if vm.showVenueList, let selectedVenue = vm.selectedVenue, !selectedVenue.pois.isEmpty {
-                HStack {
-                    Spacer()
-                    Button {
-                        if let venue = vm.selectedVenue {
-                            withAnimation {
-                                vm.mapPosition = .camera(
-                                    MapCamera(
-                                        centerCoordinate: venue.center,
-                                        distance: 3000,
-                                        heading: 0,
-                                        pitch: 0
-                                    )
-                                )
-                            }
-                        }
-                    } label: {
-                        Image(systemName: "sportscourt")
-                            .padding(14)
-                            .glassEffect(.regular, in: .circle)
-                    }
-                }
                 VStack {
+                    HStack {
+                        Spacer()
+                        Button {
+                            if let venue = vm.selectedVenue {
+                                withAnimation {
+                                    vm.mapPosition = .camera(
+                                        MapCamera(
+                                            centerCoordinate: venue.center,
+                                            distance: 3000,
+                                            heading: 0,
+                                            pitch: 0
+                                        )
+                                    )
+                                }
+                            }
+                        } label: {
+                            Image(systemName: "sportscourt")
+                                .padding(14)
+                                .glassEffect(.regular, in: .circle)
+                        }
+                    }
                     HStack(spacing: 8) {
                         HStack(spacing: 6) {
                             Text("Piso")
@@ -159,7 +158,7 @@ struct MapHome: View {
                         .glassEffect(.clear)
                     }
                 }
-                .padding([.top, .horizontal], 12)
+                .padding(12)
             }
         }
         .onChange(of: selectedPOIId) { _, newValue in
@@ -206,7 +205,7 @@ struct MapHome: View {
             }
         }
     }
-
+    
     private func scaleForZoom(_ distance: CLLocationDistance) -> CGFloat {
         let minD: CLLocationDistance = 800
         let maxD: CLLocationDistance = 3000

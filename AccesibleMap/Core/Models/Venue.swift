@@ -13,6 +13,7 @@ struct Venue: Identifiable, Equatable {
     let id = UUID()
     
     let name: String
+    let city: City                     // ← NUEVO: ciudad a la que pertenece la sede
     let center: CLLocationCoordinate2D
     let pathImage: [VenuePath]
     let accessibilityDescription: String
@@ -179,13 +180,15 @@ extension Venue {
     static let mocks: [Venue] = [
         .estadioBBVA,
         .estadioUniversitario,
-        .aeropuertoMTY,
-        .arenaMonterrey
+        .arenaMonterrey,
+        .estadioAzteca,
+        .estadioAkron
     ]
     
-    // MARK: - Individuos
+    // MARK: - Monterrey
     static let estadioBBVA = Venue(
         name: "Estadio BBVA",
+        city: .mty,
         center: .init(latitude: 25.6689, longitude: -100.2451),
         pathImage: [
             VenuePath(pathImage: "BBVApath", floor: 0, imageRotation: 96.55)
@@ -204,6 +207,7 @@ extension Venue {
     
     static let estadioUniversitario = Venue(
         name: "Estadio Universitario",
+        city: .mty,
         center: .init(latitude: 25.7253, longitude: -100.3131),
         pathImage: [
             VenuePath(pathImage: "UNIpath", floor: 0, imageRotation: 0)
@@ -219,25 +223,9 @@ extension Venue {
         ]
     )
     
-    static let aeropuertoMTY = Venue(
-        name: "Aeropuerto MTY",
-        center: .init(latitude: 25.7785, longitude: -100.1060),
-        pathImage: [
-            VenuePath(pathImage: "MTYAirportPath", floor: 0, imageRotation: 0)
-        ],
-        accessibilityDescription: "Terminal con elevadores y atención a clientes.",
-        accessibilityLabel: "Aeropuerto de Monterrey",
-        pois: [
-            VenuePOI(center: .init(latitude: 25.778700, longitude: -100.106200), floor: 0, type: .customerService),
-            VenuePOI(center: .init(latitude: 25.778300, longitude: -100.105900), floor: 0, type: .elevatorWheelchair),
-            VenuePOI(center: .init(latitude: 25.778900, longitude: -100.106400), floor: 0, type: .atm),
-            VenuePOI(center: .init(latitude: 25.778600, longitude: -100.106100), floor: 0, type: .food),
-            VenuePOI(center: .init(latitude: 25.778450, longitude: -100.106050), floor: 0, type: .access)
-        ]
-    )
-    
     static let arenaMonterrey = Venue(
         name: "Arena Monterrey",
+        city: .mty,
         center: .init(latitude: 25.6866, longitude: -100.2831),
         pathImage: [
             VenuePath(pathImage: "ArenaPath", floor: 0, imageRotation: 0)
@@ -250,6 +238,44 @@ extension Venue {
             VenuePOI(center: .init(latitude: 25.686620, longitude: -100.283300), floor: 0, type: .medicalKit),
             VenuePOI(center: .init(latitude: 25.686720, longitude: -100.283150), floor: 0, type: .womanBathroom),
             VenuePOI(center: .init(latitude: 25.686780, longitude: -100.283060), floor: 0, type: .manBathroom)
+        ]
+    )
+    
+    // MARK: - CDMX
+    static let estadioAzteca = Venue(
+        name: "Estadio Azteca",
+        city: .cdmx,
+        center: .init(latitude: 19.3029, longitude: -99.1505),
+        pathImage: [
+            VenuePath(pathImage: "AztecaPath", floor: 0, imageRotation: 0)
+        ],
+        accessibilityDescription: "Estadio con amplias zonas y servicios.",
+        accessibilityLabel: "Estadio Azteca",
+        pois: [
+            VenuePOI(center: .init(latitude: 19.303200, longitude: -99.151000), floor: 0, type: .access),
+            VenuePOI(center: .init(latitude: 19.302600, longitude: -99.150100), floor: 0, type: .parking),
+            VenuePOI(center: .init(latitude: 19.303000, longitude: -99.150600), floor: 0, type: .food),
+            VenuePOI(center: .init(latitude: 19.303050, longitude: -99.150400), floor: 0, type: .manBathroom),
+            VenuePOI(center: .init(latitude: 19.302950, longitude: -99.150300), floor: 0, type: .womanBathroom)
+        ]
+    )
+    
+    // MARK: - Guadalajara
+    static let estadioAkron = Venue(
+        name: "Estadio Akron",
+        city: .gdl,
+        center: .init(latitude: 20.6735, longitude: -103.4632),
+        pathImage: [
+            VenuePath(pathImage: "AkronPath", floor: 0, imageRotation: 0)
+        ],
+        accessibilityDescription: "Estadio moderno con accesibilidad.",
+        accessibilityLabel: "Estadio Akron",
+        pois: [
+            VenuePOI(center: .init(latitude: 20.673700, longitude: -103.463000), floor: 0, type: .access),
+            VenuePOI(center: .init(latitude: 20.673900, longitude: -103.463300), floor: 0, type: .accessWheelchair),
+            VenuePOI(center: .init(latitude: 20.673800, longitude: -103.463100), floor: 0, type: .food),
+            VenuePOI(center: .init(latitude: 20.673650, longitude: -103.463250), floor: 0, type: .elevator),
+            VenuePOI(center: .init(latitude: 20.673600, longitude: -103.463150), floor: 0, type: .familyBathroom)
         ]
     )
 }
