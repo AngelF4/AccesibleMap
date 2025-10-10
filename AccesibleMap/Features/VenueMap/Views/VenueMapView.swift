@@ -21,7 +21,7 @@ struct VenueMapView: View {
                 }
         case .denied, .restricted, .authorizedAlways, .authorizedWhenInUse:
             //Mapa con ubicación predeterminada, la ubicación es opcional, solo es de referencia
-            MapView(viewModel: vm)
+            HomeMap(locationViewModel: vm, selectedVenue: nil)
         @unknown default:
             ContentUnavailableView("No pudo obtener la ubicación. Intente nuevamente.", systemImage: "mappin.slash")
         }
