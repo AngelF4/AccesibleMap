@@ -16,11 +16,15 @@ class HomeViewModel: ObservableObject {
     @Published var venues: [Venue] = []
     @Published var position: Venue?
     @Published var selectedVenue: Venue?
-    
-    
+
+    private let defaultCameraAnimation: Animation = .spring(duration: 1)
+    private let carouselCameraAnimation: Animation = .spring(duration: 1.1)
+    private let selectionCameraAnimation: Animation = .spring(duration: 1)
+
+
     let cameras = VenuesCamera().cameras
     let geo = DIContainer.shared.geo
-    
+
     init() {
 #if DEBUG
         self.venues = Venue.mocks
@@ -73,6 +77,40 @@ class HomeViewModel: ObservableObject {
         }
 
         return getRandomCamera()
+    }
+
+    func updateMapPosition(animated: Bool = true, animation: Animation? = nil, overrideCamera: MapCamera? = nil) {
+        let targetCamera = overrideCamera ?? cameraToShow
+        let newPosition = MapCameraPosition.camera(targetCamera)
+
+        guard animated else {
+            mapPosition = newPosition
+            return
+        }
+
+        withAnimation(animation ?? defaultCameraAnimation) {
+            mapPosition = newPosition
+        }
+    }
+
+    func focusOnSelectedVenue(animated: Bool = true) {
+        guard let venue = selectedVenue else {
+            updateMapPosition(animated: animated)
+            return
+        }
+
+        let camera = MapCamera(
+            centerCoordinate: venue.center,
+            distance: 3000,
+            heading: 0,
+            pitch: 0
+        )
+
+        updateMapPosition(animated: animated, animation: selectionCameraAnimation, overrideCamera: camera)
+    }
+
+    func focusOnVenueFromCarousel(animated: Bool = true) {
+        updateMapPosition(animated: animated, animation: carouselCameraAnimation)
     }
 }
 

@@ -98,22 +98,17 @@ struct Home: View {
             
         }
         .onAppear {
-            vm.mapPosition = .camera(vm.cameraToShow)
+            vm.updateMapPosition(animated: false)
         }
-        .onChange(of: vm.showVenueList) {
-            withAnimation(.spring(duration: 1)) {
-                vm.mapPosition = .camera(vm.cameraToShow)
-            }
+        .onChange(of: vm.showVenueList) { _ in
+            vm.updateMapPosition()
         }
-        .onChange(of: vm.position) {
-            withAnimation(.spring(duration: 2)) {
-                vm.mapPosition = .camera(vm.cameraToShow)
-            }
+        .onChange(of: vm.position) { position in
+            guard position != nil else { return }
+            vm.focusOnVenueFromCarousel()
         }
-        .onChange(of: vm.selectedVenue) {
-            withAnimation(.spring(duration: 0.9)) {
-                vm.mapPosition = .camera(vm.cameraToShow)
-            }
+        .onChange(of: vm.selectedVenue) { _ in
+            vm.focusOnSelectedVenue()
         }
         .toolbar {
             ToolbarItem(placement: .navigation) {

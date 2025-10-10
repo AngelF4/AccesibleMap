@@ -168,23 +168,13 @@ struct MapHome: View {
                     HStack {
                         Spacer()
                         Button {
-                            if let venue = vm.selectedVenue {
-                                withAnimation {
-                                    vm.mapPosition = .camera(
-                                        MapCamera(
-                                            centerCoordinate: venue.center,
-                                            distance: 3000,
-                                            heading: 0,
-                                            pitch: 0
-                                        )
-                                    )
-                                }
-                            }
+                            vm.focusOnSelectedVenue()
                         } label: {
                             Image(systemName: "sportscourt")
                                 .padding(14)
                                 .glassEffect(.regular, in: .circle)
                         }
+                        .disabled(vm.selectedVenue == nil)
                     }
                 }
                 .padding([.top, .horizontal], 12)
