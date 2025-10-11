@@ -17,9 +17,16 @@ struct ContentView: View {
                     Home()
                 }
             }
+            
             Tab("Perfil", systemImage: "person.crop.circle") {
                 NavigationStack {
-                    Home()
+                    ContentUnavailableView(
+                        "Perfil en proceso",
+                        systemImage: "person.crop.circle",
+                        description:
+                            Text("Cuando esté listo, aqui podrás ver tu perfil para configurarlo y ver tus partidos favoritos")
+                    )
+                    .foregroundStyle(.secondary, .accent)
                 }
             }
         }

@@ -49,5 +49,12 @@ class VenuesCamera {
             heading: 0,
             pitch: 64
         ),
+        //Estadio Azteca
+        MapCamera(
+            centerCoordinate: .init(latitude: 19.3029, longitude: -99.1505),
+            distance: 1100,
+            heading: -25,
+            pitch: 64
+        )
     ]
 }

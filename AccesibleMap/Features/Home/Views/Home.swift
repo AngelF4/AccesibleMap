@@ -8,19 +8,16 @@
 import SwiftUI
 import MapKit
 import SwiftUIPager
-//Text("IAngel")
-//    .font(.custom("FWC2026-NormalBlack", size: 34, relativeTo: .title))
 
 struct Home: View {
     @StateObject private var vm = HomeViewModel()
     @State private var page = Page.withIndex(0)
-    @State private var cityChangeWorkItem: DispatchWorkItem?
-    @State private var venueChangeWorkItem: DispatchWorkItem?
+    @State private var pageCity = Page.withIndex(0)
     
     var body: some View {
         ZStack(alignment: .bottom) {
             MapHome(vm: vm)
-                .allowsHitTesting(vm.showVenueList && vm.selectedCity != nil)
+                .allowsHitTesting(vm.step != .hero)
             
             if !vm.showVenueList || vm.selectedVenue == nil {
                 Rectangle()
@@ -41,11 +38,11 @@ struct Home: View {
             }
             
             VStack(spacing: 24) {
-                if vm.showVenueList {
+                if vm.step != .hero {
                     // Paso 1: Elegir ciudad
-                    if vm.selectedCity == nil {
+                    if vm.step == .cityList {
                         VStack(spacing: 0) {
-                            Pager(page: page, data: vm.cities, id: \.self) { city in
+                            Pager(page: pageCity, data: vm.cities, id: \.self) { city in
                                 CityCard(city: city)
                                     .scaleEffect(0.7)
                             }
@@ -59,22 +56,13 @@ struct Home: View {
                             .swipeInteractionArea(.allAvailable)
                             .padding(.horizontal, 20)
                             .onPageChanged { idx in
-                                // Debounce rapid page changes for cities
-                                cityChangeWorkItem?.cancel()
-                                let work = DispatchWorkItem { [weak vm] in
-                                    guard let vm, vm.cities.indices.contains(idx) else { return }
-                                    vm.positionCity = vm.cities[idx]
-                                }
-                                cityChangeWorkItem = work
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.35, execute: work)
+                                vm.pageCityChanged(to: idx)
                             }
                             
                             .frame(height: 130)
                             
                             Button {
-                                withAnimation {
-                                    vm.selectedCity = vm.positionCity ?? vm.cities.first
-                                }
+                                vm.confirmCitySelection()
                             } label: {
                                 Text("Ver sedes en \(vm.positionCity?.displayName ?? vm.cities.first?.displayName ?? "ciudad")")
                                     .fontWeight(.semibold)
@@ -86,15 +74,14 @@ struct Home: View {
                         }
                     }
                     // Paso 2: Elegir sede dentro de la ciudad
-                    else if vm.selectedVenue == nil {
+                    else if vm.step == .venueList {
                         VStack(spacing: 0) {
                             Pager(page: page, data: vm.venuesInSelectedCity, id: \.id) { item in
-                                Text(item.name)
-                                    .frame(width: 150, height: 100)
-                                    .glassEffect(.regular, in: .rect(cornerRadius: 12))
+                                VenueCard(venue: item)
+                                    .scaleEffect(0.7)
                             }
                             .draggingAnimation(.custom(animation: .spring(duration: 0.1)))
-                            .preferredItemSize(CGSize(width: 150, height: 100))
+                            .preferredItemSize(CGSize(width: 270 * 0.7, height: 120))
                             .itemSpacing(20)
                             .interactive(scale: 0.9)
                             .horizontal()
@@ -103,20 +90,12 @@ struct Home: View {
                             .swipeInteractionArea(.allAvailable)
                             .padding(.horizontal, 20) // peek
                             .onPageChanged { idx in
-                                // Debounce rapid page changes for venues
-                                venueChangeWorkItem?.cancel()
-                                let work = DispatchWorkItem { [weak vm] in
-                                    guard let vm, vm.venuesInSelectedCity.indices.contains(idx) else { return }
-                                    vm.position = vm.venuesInSelectedCity[idx]
-                                }
-                                venueChangeWorkItem = work
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.35, execute: work)
+                                vm.pageVenueChanged(to: idx)
                             }
-                            .frame(height: 150)
+                            .frame(height: 140)
+                            
                             Button {
-                                withAnimation {
-                                    vm.selectedVenue = vm.position
-                                }
+                                vm.confirmVenueSelection()
                             } label: {
                                 Text("Entrar a ver ese estadio")
                                     .fontWeight(.semibold)
@@ -138,9 +117,8 @@ struct Home: View {
                     .padding(.horizontal)
                     .padding(.top, -20)
                     Button {
-                        withAnimation(.spring(duration: 1)) {
-                            vm.showVenueList = true
-                            vm.positionCity = vm.cities.first
+                        withAnimation {
+                            vm.showList()
                         }
                     } label: {
                         Text("¿Listo para el partido?")
@@ -155,48 +133,35 @@ struct Home: View {
             
         }
         .onAppear {
-            vm.mapPosition = .camera(vm.cameraToShow)
-            vm.positionCity = vm.cities.first
+            vm.onAppear()
         }
         .onChange(of: vm.showVenueList) {
-            withAnimation(.spring(duration: 1)) {
-                vm.mapPosition = .camera(vm.cameraToShow)
-            }
+            vm.syncCameraForStateChange(animated: true, duration: 0.4)
         }
         .onChange(of: vm.position) {
-            withAnimation(.spring(duration: 2)) {
-                vm.mapPosition = .camera(vm.cameraToShow)
+            if vm.step != .venueDetail {
+                vm.syncCameraForStateChange(animated: true, duration: 0.4)
             }
         }
         .onChange(of: vm.selectedVenue) {
-            withAnimation(.spring(duration: 0.9)) {
-                vm.mapPosition = .camera(vm.cameraToShow)
-            }
+            vm.syncCameraForStateChange(animated: true, duration: 0.4)
         }
         .onChange(of: vm.selectedCity) {
-            // Al pasar al paso de sedes, selecciona la primera sede de esa ciudad como "position"
-            vm.position = vm.venuesInSelectedCity.first
-            withAnimation(.spring(duration: 0.9)) {
-                vm.mapPosition = .camera(vm.cameraToShow)
+            if vm.step != .venueDetail {
+                vm.syncCameraForStateChange(animated: true, duration: 0.4)
             }
         }
         .onChange(of: vm.positionCity) {
-            withAnimation(.spring(duration: 0.9)) {
-                vm.mapPosition = .camera(vm.cameraToShow)
+            if vm.step != .venueDetail {
+                vm.syncCameraForStateChange(animated: true, duration: 0.4)
             }
         }
         .toolbar {
             ToolbarItem(placement: .navigation) {
                 if vm.showVenueList {
                     Button {
-                        withAnimation(.spring(duration: 0.8)) {
-                            if vm.selectedVenue != nil {
-                                vm.selectedVenue = nil
-                            } else if vm.selectedCity != nil {
-                                vm.selectedCity = nil
-                            } else {
-                                vm.showVenueList = false
-                            }
+                        withAnimation {
+                            vm.goBack()
                         }
                     } label: {
                         Label("Regresar", systemImage: "chevron.left")
@@ -223,41 +188,5 @@ struct Home: View {
 #Preview {
     NavigationStack {
         Home()
-    }
-}
-
-struct MovingWaves: View {
-    /// Seconds it takes for one screen-width to traverse from right to left.
-    var period: TimeInterval = 8
-    /// Height of the waves area.
-    var height: CGFloat = 150
-    
-    var body: some View {
-        GeometryReader { proxy in
-            let width = max(proxy.size.width, 1)
-            
-            TimelineView(.animation) { context in
-                let t = context.date.timeIntervalSinceReferenceDate
-                let gap: CGFloat = -70 // negative separation (overlap)
-                let step = max(1, width + gap) // distance between tile origins
-                let phase = CGFloat((t.truncatingRemainder(dividingBy: period)) / period) * step
-                
-                // number of tiles needed to cover the screen given the step; add padding tiles
-                let needed = Int(ceil(width / step)) + 3
-                let count = max(3, min(8, needed))
-                
-                ZStack(alignment: .leading) {
-                    ForEach(0..<count, id: \.self) { i in
-                        Image("wavePath")
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: width, height: height)
-                            .offset(x: -phase + CGFloat(i) * step)
-                    }
-                }
-            }
-        }
-        .frame(height: height)
-        .allowsHitTesting(false)
     }
 }

@@ -12,44 +12,17 @@ struct MapHome: View {
     @ObservedObject var vm: HomeViewModel
     @StateObject private var locationVm = LocationViewModel()
     
-    @State private var cameraInfo: MapCamera? = nil
-    
     @State private var selectedPOIId: UUID? = nil
     @State private var selectedPOI: VenuePOI? = nil
-    @State private var showOnlyEssentials: Bool = true // acceso, acceso silla, estacionamiento
-    @State private var selectedFloor: Int = 0
-    
-    private func availableFloors(for venue: Venue) -> [Int] {
-        let floors = Set(venue.pois.map(\.floor))
-        return floors.sorted()
-    }
-    
-    private func filteredPOIs(for venue: Venue) -> [VenuePOI] {
-        let base = venue.pois.filter { $0.floor == selectedFloor }
-        if showOnlyEssentials {
-            return base.filter { poi in
-                poi.type == .parking || poi.type == .access || poi.type == .accessWheelchair
-            }
-        }
-        return base
-    }
     
     private func findPOI(by id: UUID) -> VenuePOI? {
         guard let venue = vm.selectedVenue else { return nil }
         return venue.pois.first(where: { $0.id == id })
     }
     
-    private var cameraDistance: CLLocationDistance {
-        cameraInfo?.distance ?? .greatestFiniteMagnitude
-    }
-    
-    private var shouldShowPOIs: Bool {
-        cameraDistance <= 4000
-    }
-    
     private var visiblePOIs: [VenuePOI] {
         guard let selectedVenue = vm.selectedVenue else { return [] }
-        return filteredPOIs(for: selectedVenue)
+        return vm.filteredPOIs(for: selectedVenue)
     }
     
     var body: some View {
@@ -59,7 +32,7 @@ struct MapHome: View {
                 
                 if vm.showVenueList {
                     if let selectedVenue = vm.selectedVenue {
-                        if shouldShowPOIs {
+                        if vm.shouldShowPOIs {
                             ForEach(visiblePOIs) { poi in
                                 let isStairs: Bool = poi.type == .stails || poi.type == .manBathroom || poi.type == .womanBathroom
                                 let anchor: CGFloat = isStairs ? 24 : 28
@@ -81,7 +54,7 @@ struct MapHome: View {
                                                 Circle().stroke(Color.white.opacity(0.6), lineWidth: 2)
                                             }
                                         }
-                                        .scaleEffect(scaleForZoom(cameraDistance))
+                                        .scaleEffect(scaleForZoom(vm.cameraDistance))
                                 }
                                 .tag(poi.id)
                             }
@@ -108,37 +81,28 @@ struct MapHome: View {
             ))
             .mapControlVisibility(vm.selectedVenue == nil ? .hidden : .visible)
             .onMapCameraChange(frequency: .continuous) { context in
-                cameraInfo = context.camera
+                vm.cameraInfo = context.camera
             }
             
             if vm.showVenueList, let selectedVenue = vm.selectedVenue, !selectedVenue.pois.isEmpty {
                 VStack {
                     HStack {
                         Spacer()
-                        Button {
-                            if let venue = vm.selectedVenue {
-                                withAnimation {
-                                    vm.mapPosition = .camera(
-                                        MapCamera(
-                                            centerCoordinate: venue.center,
-                                            distance: 3000,
-                                            heading: 0,
-                                            pitch: 0
-                                        )
-                                    )
-                                }
+                        if vm.isFarFromSelectedVenue {
+                            Button { vm.syncCameraForStateChange(animated: true, duration: 0.4) } label: {
+                                Image(systemName: "sportscourt")
+                                    .padding(14)
+                                    .glassEffect(.regular, in: .circle)
                             }
-                        } label: {
-                            Image(systemName: "sportscourt")
-                                .padding(14)
-                                .glassEffect(.regular, in: .circle)
+                            .transition(.move(edge: .trailing).combined(with: .opacity))
                         }
                     }
+                    .animation(.easeInOut(duration: 0.2), value: vm.isFarFromSelectedVenue)
                     HStack(spacing: 8) {
                         HStack(spacing: 6) {
                             Text("Piso")
-                            Picker("Piso", selection: $selectedFloor) {
-                                ForEach(availableFloors(for: selectedVenue), id: \.self) { piso in
+                            Picker("Piso", selection: $vm.selectedFloor) {
+                                ForEach(vm.availableFloors(for: selectedVenue), id: \.self) { piso in
                                     Text("\(piso)").tag(piso)
                                 }
                             }
@@ -149,7 +113,7 @@ struct MapHome: View {
                         .padding(8)
                         .glassEffect(.clear)
                         
-                        Toggle(isOn: $showOnlyEssentials) {
+                        Toggle(isOn: $vm.showOnlyEssentials) {
                             Text("Esenciales")
                                 .font(.callout)
                         }
@@ -159,6 +123,7 @@ struct MapHome: View {
                     }
                 }
                 .padding(12)
+                .padding(.bottom, 16)
             }
         }
         .onChange(of: selectedPOIId) { _, newValue in
@@ -188,9 +153,8 @@ struct MapHome: View {
         .onAppear {
             locationVm.requestPermission()
             locationVm.startUpdates()
-            showOnlyEssentials = true
             if let venue = vm.selectedVenue ?? vm.venues.first {
-                selectedFloor = availableFloors(for: venue).first ?? 0
+                vm.selectedFloor = vm.availableFloors(for: venue).first ?? 0
             }
         }
         .onDisappear {
@@ -199,9 +163,9 @@ struct MapHome: View {
         .onChange(of: vm.selectedVenue) { _, newValue in
             selectedPOIId = nil
             selectedPOI = nil
-            showOnlyEssentials = true
+            vm.showOnlyEssentials = true
             if let venue = newValue {
-                selectedFloor = availableFloors(for: venue).first ?? 0
+                vm.selectedFloor = vm.availableFloors(for: venue).first ?? 0
             }
         }
     }
