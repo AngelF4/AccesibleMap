@@ -22,7 +22,7 @@ struct Home: View {
             if !vm.showVenueList || vm.selectedVenue == nil {
                 Rectangle()
                     .fill(
-                        LinearGradient(colors: [Color("LabelColor").opacity(0.5), .clear], startPoint: .bottom, endPoint: .center)
+                        LinearGradient(colors: [Color("TextColor").opacity(0.5), .clear], startPoint: .bottom, endPoint: .center)
                     )
                     .ignoresSafeArea()
                     .allowsHitTesting(false)
@@ -111,7 +111,7 @@ struct Home: View {
                         Text("Stadium".uppercased())
                             .font(.custom("FWC2026-UltraCondensedBold", size: 62, relativeTo: .largeTitle))
                     }
-                    .foregroundStyle(Color("LabelColor"))
+                    .foregroundStyle(Color("TextColor"))
                     .shadow(color: .white.opacity(0.3), radius: 10)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal)

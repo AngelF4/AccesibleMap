@@ -33,30 +33,25 @@ struct MapHome: View {
                 if vm.showVenueList {
                     if let selectedVenue = vm.selectedVenue {
                         if vm.shouldShowPOIs {
-                            ForEach(visiblePOIs) { poi in
-                                let isStairs: Bool = poi.type == .stails || poi.type == .manBathroom || poi.type == .womanBathroom
-                                let anchor: CGFloat = isStairs ? 24 : 28
+                            ForEach(visiblePOIs, id: \.id) { poi in
+                                let accessLike = isAccessLike(poi.type)
+                                // Permitir que accesos/entradas vivan más lejos aunque vm.shouldShowPOIs sea false
+                                let extendedVisibility = vm.cameraDistance <= 6000 && accessLike
+                                // Respetar filtro de distancia general o la excepción para accesos
+                                let canRender = vm.shouldShowPOIs || extendedVisibility
                                 
-                                Annotation(isStairs ? "" : poi.type.displayName, coordinate: poi.center) {
-                                    Image(systemName: poi.type.icon)
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(width: anchor - 12, height: anchor - 12)
-                                        .frame(width: anchor, height: anchor)
-                                        .foregroundStyle(.white)
-                                        .background(poi.type.color.gradient.opacity(isStairs ? 0.7 : 1))
-                                        .clipShape(isStairs ? AnyShape(RoundedRectangle(cornerRadius: 4)) : AnyShape(Circle()))
-                                        .overlay {
-                                            if isStairs {
-                                                RoundedRectangle(cornerRadius: 4)
-                                                    .stroke(Color.white.opacity(0.6), lineWidth: 2)
-                                            } else {
-                                                Circle().stroke(Color.white.opacity(0.6), lineWidth: 2)
-                                            }
-                                        }
-                                        .scaleEffect(scaleForZoom(vm.cameraDistance))
+                                let level = revealLevel(distance: vm.cameraDistance, for: poi.type)
+                                let title = (level == .labeled) ? poi.type.displayName : ""
+                                
+                                // En MapContentBuilder solo se debe emitir contenido de mapa (Annotation/Marker/etc.).
+                                // Si no se debe mostrar, simplemente no emitimos nada.
+                                if canRender && level != .hidden {
+                                    Annotation(title, coordinate: poi.center) {
+                                        poiAnnotationBody(for: poi, level: level)
+                                    }
+                                    .tag(poi.id)
+                                    
                                 }
-                                .tag(poi.id)
                             }
                         } else {
                             Marker(selectedVenue.name, systemImage: "sportscourt", coordinate: selectedVenue.center)
@@ -99,7 +94,8 @@ struct MapHome: View {
                     }
                     .animation(.easeInOut(duration: 0.2), value: vm.isFarFromSelectedVenue)
                     HStack(spacing: 8) {
-                        HStack(spacing: 6) {
+                        Spacer()
+                        HStack(spacing: 4) {
                             Text("Piso")
                             Picker("Piso", selection: $vm.selectedFloor) {
                                 ForEach(vm.availableFloors(for: selectedVenue), id: \.self) { piso in
@@ -107,19 +103,10 @@ struct MapHome: View {
                                 }
                             }
                             .labelsHidden()
-                            .pickerStyle(.segmented)
-                            .frame(maxWidth: 180)
+                            .pickerStyle(.automatic)
                         }
                         .padding(8)
-                        .glassEffect(.clear)
-                        
-                        Toggle(isOn: $vm.showOnlyEssentials) {
-                            Text("Esenciales")
-                                .font(.callout)
-                        }
-                        .toggleStyle(.switch)
-                        .padding(8)
-                        .glassEffect(.clear)
+                        .glassEffect(.regular)
                     }
                 }
                 .padding(12)
@@ -163,10 +150,98 @@ struct MapHome: View {
         .onChange(of: vm.selectedVenue) { _, newValue in
             selectedPOIId = nil
             selectedPOI = nil
-            vm.showOnlyEssentials = true
+            //            vm.showOnlyEssentials = true
             if let venue = newValue {
                 vm.selectedFloor = vm.availableFloors(for: venue).first ?? 0
             }
+        }
+    }
+    
+    private enum RevealLevel { case hidden, dots, icons, labeled }
+    
+    private func isAccessLike(_ type: pointOfInterest) -> Bool {
+        switch type {
+        case .access, .accessWheelchair, .parking: return true
+        default: return false
+        }
+    }
+    
+    /// Umbrales diferenciados: accesos/entradas visibles desde más lejos
+    private func revealLevel(distance: CLLocationDistance, for type: pointOfInterest) -> RevealLevel {
+        // Otros POIs
+        let farHiddenOther: CLLocationDistance = 2500
+        let farDotsOther: CLLocationDistance = 1200
+        let nearIconsOther: CLLocationDistance = 400
+        
+        // Accesos/entradas (más generosos)
+        let farHiddenAccess: CLLocationDistance = 5000
+        let farDotsAccess: CLLocationDistance = 4000
+        let nearIconsAccess: CLLocationDistance = 2000
+        
+        let access = isAccessLike(type)
+        if access {
+            if distance > farHiddenAccess { return .hidden }
+            else if distance > farDotsAccess { return .dots }
+            else if distance > nearIconsAccess { return .icons }
+            else { return .labeled }
+        } else {
+            if distance > farHiddenOther { return .hidden }
+            else if distance > farDotsOther { return .dots }
+            else if distance > nearIconsOther { return .icons }
+            else { return .labeled }
+        }
+    }
+    
+    @ViewBuilder
+    private func poiAnnotationBody(for poi: VenuePOI, level: RevealLevel) -> some View {
+        let isStairs = poi.type == .accessWheelchair || poi.type == .access || poi.type == .parking
+        let anchor: CGFloat = isStairs ? 24 : 28
+        
+        switch level {
+        case .hidden:
+            EmptyView()
+        case .dots:
+            Circle()
+                .frame(width: 6, height: 6)
+                .opacity(0.95)
+                .foregroundStyle(poi.type.color)
+                .overlay(Circle().stroke(Color.white.opacity(0.85), lineWidth: 1))
+        case .icons:
+            Image(systemName: poi.type.icon)
+                .resizable()
+                .scaledToFit()
+                .frame(width: anchor - 12, height: anchor - 12)
+                .frame(width: anchor, height: anchor)
+                .foregroundStyle(.white)
+                .background(poi.type.color.gradient.opacity(isStairs ? 0.7 : 1))
+                .clipShape(isStairs ? AnyShape(RoundedRectangle(cornerRadius: 4)) : AnyShape(Circle()))
+                .overlay {
+                    if isStairs {
+                        RoundedRectangle(cornerRadius: 4)
+                            .stroke(Color.white.opacity(0.6), lineWidth: 2)
+                    } else {
+                        Circle().stroke(Color.white.opacity(0.6), lineWidth: 2)
+                    }
+                }
+        case .labeled:
+            Image(systemName: poi.type.icon)
+                .resizable()
+                .scaledToFit()
+                .frame(width: anchor - 12, height: anchor - 12)
+                .frame(width: anchor, height: anchor)
+                .foregroundStyle(.white)
+                .background(poi.type.color.gradient.opacity(isStairs ? 0.7 : 1))
+                .clipShape(isStairs ? AnyShape(RoundedRectangle(cornerRadius: 4)) : AnyShape(Circle()))
+                .overlay {
+                    if isStairs {
+                        RoundedRectangle(cornerRadius: 4)
+                            .stroke(Color.white.opacity(0.6), lineWidth: 2)
+                    } else {
+                        Circle().stroke(Color.white.opacity(0.6), lineWidth: 2)
+                    }
+                }
+                .shadow(radius: 2)
+                .scaleEffect(scaleForZoom(vm.cameraDistance))
         }
     }
     
@@ -188,4 +263,8 @@ struct MapHome: View {
         )
     )
     MapHome(vm: HomeViewModel())
+}
+
+#Preview {
+    ContentView()
 }

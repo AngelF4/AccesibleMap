@@ -37,7 +37,7 @@ class HomeViewModel: ObservableObject {
     
     // Filtros de UI (MVVM)
     @Published var selectedFloor: Int = 0
-    @Published var showOnlyEssentials: Bool = true
+//    @Published var showOnlyEssentials: Bool = true
     
     // NUEVO: flujo por ciudad
     @Published var selectedCity: City? = nil
@@ -110,11 +110,11 @@ class HomeViewModel: ObservableObject {
     
     func filteredPOIs(for venue: Venue) -> [VenuePOI] {
         let base = venue.pois.filter { $0.floor == selectedFloor }
-        if showOnlyEssentials {
-            return base.filter { poi in
-                poi.type == .parking || poi.type == .access || poi.type == .accessWheelchair
-            }
-        }
+//        if showOnlyEssentials {
+//            return base.filter { poi in
+//                poi.type == .parking || poi.type == .access || poi.type == .accessWheelchair
+//            }
+//        }
         return base
     }
     
