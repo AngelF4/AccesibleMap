@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		845A0F982E983820009B13B9 /* SwiftUIPager in Frameworks */ = {isa = PBXBuildFile; productRef = 845A0F972E983820009B13B9 /* SwiftUIPager */; };
 		84C514DF2E94AC9700BE85D4 /* Siri.appex in Embed ExtensionKit Extensions */ = {isa = PBXBuildFile; fileRef = 84C514D62E94AC9700BE85D4 /* Siri.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		84C514EC2E94ACCA00BE85D4 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84C514EB2E94ACCA00BE85D4 /* WidgetKit.framework */; };
 		84C514EE2E94ACCA00BE85D4 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84C514ED2E94ACCA00BE85D4 /* SwiftUI.framework */; };
@@ -119,6 +120,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				845A0F982E983820009B13B9 /* SwiftUIPager in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -195,6 +197,7 @@
 			);
 			name = AccesibleMap;
 			packageProductDependencies = (
+				845A0F972E983820009B13B9 /* SwiftUIPager */,
 			);
 			productName = AccesibleMap;
 			productReference = 84C5146F2E94AA9200BE85D4 /* AccesibleMap.app */;
@@ -275,6 +278,9 @@
 			);
 			mainGroup = 84C514662E94AA9200BE85D4;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				845A0F962E983820009B13B9 /* XCRemoteSwiftPackageReference "SwiftUIPager" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 84C514702E94AA9200BE85D4 /* Products */;
 			projectDirPath = "";
@@ -473,7 +479,7 @@
 		84C5147B2E94AA9300BE85D4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = StadiumIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = AccesibleMap/AccesibleMap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
@@ -482,6 +488,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AccesibleMap/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Stadium;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.navigation";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Necesitamos tu ubicación para mostrarte notificaciones personalizadas en base de donde te encuentres";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Para mostrar tu ubicación en el mapa";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -509,7 +517,7 @@
 		84C5147C2E94AA9300BE85D4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = StadiumIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = AccesibleMap/AccesibleMap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
@@ -518,6 +526,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AccesibleMap/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Stadium;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.navigation";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Necesitamos tu ubicación para mostrarte notificaciones personalizadas en base de donde te encuentres";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Para mostrar tu ubicación en el mapa";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -698,6 +708,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		845A0F962E983820009B13B9 /* XCRemoteSwiftPackageReference "SwiftUIPager" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/fermoya/SwiftUIPager.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		845A0F972E983820009B13B9 /* SwiftUIPager */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 845A0F962E983820009B13B9 /* XCRemoteSwiftPackageReference "SwiftUIPager" */;
+			productName = SwiftUIPager;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 84C514672E94AA9200BE85D4 /* Project object */;
 }
