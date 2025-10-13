@@ -16,6 +16,7 @@ class HomeViewModel: ObservableObject {
     @Published var venues: [Venue] = []
     @Published var position: Venue?
     @Published var selectedVenue: Venue?
+    @Published var lastVisitedVenue: Venue?
     
     enum Step {
         case hero
@@ -71,8 +72,11 @@ class HomeViewModel: ObservableObject {
     
     func confirmVenueSelection() {
         selectedVenue = position
+        if let selectedVenue {
+            setLastVisitedVenue(selectedVenue)
+        }
         syncCameraForStateChange(animated: true, duration: 0.4)
-        
+
     }
     
     func goBack() {
@@ -150,14 +154,63 @@ class HomeViewModel: ObservableObject {
     // MARK: - Datos auxiliares
     let cameras = VenuesCamera().cameras
     let geo = DIContainer.shared.geo
-    
+    private let defaults = UserDefaults.standard
+    private let lastVisitedVenueKey = "lastVisitedVenueName"
+
     init() {
 //#if DEBUG
 //        self.venues = Venue.mocks
 //#else
         venues = geo.venues
 //#endif
+        loadLastVisitedVenue()
         onAppear()
+    }
+
+    private func loadLastVisitedVenue() {
+        guard
+            let name = defaults.string(forKey: lastVisitedVenueKey),
+            let venue = venues.first(where: { $0.name == name })
+        else {
+            lastVisitedVenue = nil
+            return
+        }
+        lastVisitedVenue = venue
+    }
+
+    private func setLastVisitedVenue(_ venue: Venue) {
+        guard
+            let storedVenue = venues.first(where: { $0.id == venue.id })
+                ?? venues.first(where: { $0.name == venue.name })
+        else { return }
+
+        lastVisitedVenue = storedVenue
+        defaults.set(storedVenue.name, forKey: lastVisitedVenueKey)
+    }
+
+    func indexForCity(_ city: City) -> Int? {
+        cities.firstIndex(of: city)
+    }
+
+    func indexForVenue(_ venue: Venue) -> Int? {
+        venues(in: venue.city).firstIndex(where: { $0.id == venue.id })
+            ?? venues(in: venue.city).firstIndex(where: { $0.name == venue.name })
+    }
+
+    private func venues(in city: City) -> [Venue] {
+        venues.filter { $0.city == city }
+    }
+
+    func openLastVisitedVenue() {
+        guard let venue = lastVisitedVenue else { return }
+
+        showVenueList = true
+        selectedCity = venue.city
+        positionCity = venue.city
+        position = venue
+        selectedVenue = venue
+        setLastVisitedVenue(venue)
+        syncCameraForStateChange(animated: true, duration: 0.4)
     }
     
     private func getRandomCamera() -> MapCamera {

@@ -125,6 +125,26 @@ struct Home: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal)
                     .padding(.top, -20)
+                    if let lastVenue = vm.lastVisitedVenue {
+                        Button {
+                            if let cityIndex = vm.indexForCity(lastVenue.city) {
+                                pageCity = Page.withIndex(cityIndex)
+                            }
+                            if let venueIndex = vm.indexForVenue(lastVenue) {
+                                page = Page.withIndex(venueIndex)
+                            }
+                            withAnimation {
+                                vm.openLastVisitedVenue()
+                            }
+                        } label: {
+                            Label("Continuar en \(lastVenue.name)", systemImage: "clock.arrow.circlepath")
+                                .fontWeight(.semibold)
+                                .frame(maxWidth: .infinity, minHeight: 50)
+                        }
+                        .buttonStyle(.glass)
+                        .padding(.horizontal, 30)
+                        .padding(.bottom, 8)
+                    }
                     Button {
                         withAnimation {
                             vm.showList()
