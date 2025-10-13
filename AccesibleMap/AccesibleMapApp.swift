@@ -9,12 +9,21 @@ import SwiftUI
 
 @main
 struct AccesibleMapApp: App {
+    @StateObject private var accessibilityService = AccesibilityService.shared
+
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(accessibilityService)
+                .environment(\.accessibilityDifferentiateWithoutColor, accessibilityService.differentiateWithoutColorEffective)
+                .environment(\.accessibilityReduceMotion, accessibilityService.reduceMotionEffective)
+                .environment(\.accessibilityReduceTransparency, accessibilityService.reduceTransparencyEffective)
+                .environment(\.accessibilityBoldText, accessibilityService.boldTextEffective)
+                .environment(\.accessibilityShowButtonShapes, accessibilityService.buttonShapesEffective)
+                .environment(\.colorSchemeContrast, accessibilityService.highContrast ? .increased : .standard)
         }
     }
-    
+
 //    init() {
 //        setupApparience()
 //    }

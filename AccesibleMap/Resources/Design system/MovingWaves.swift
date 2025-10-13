@@ -12,28 +12,36 @@ struct MovingWaves: View {
     var period: TimeInterval = 8
     /// Height of the waves area.
     var height: CGFloat = 150
-    
+    @EnvironmentObject private var accessibility: AccesibilityService
+
     var body: some View {
         GeometryReader { proxy in
             let width = max(proxy.size.width, 1)
-            
-            TimelineView(.animation) { context in
-                let t = context.date.timeIntervalSinceReferenceDate
-                let gap: CGFloat = -70 // negative separation (overlap)
-                let step = max(1, width + gap) // distance between tile origins
-                let phase = CGFloat((t.truncatingRemainder(dividingBy: period)) / period) * step
-                
-                // number of tiles needed to cover the screen given the step; add padding tiles
-                let needed = Int(ceil(width / step)) + 3
-                let count = max(3, min(8, needed))
-                
-                ZStack(alignment: .leading) {
-                    ForEach(0..<count, id: \.self) { i in
-                        Image("wavePath")
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: width, height: height)
-                            .offset(x: -phase + CGFloat(i) * step)
+
+            if accessibility.reduceMotionEffective {
+                Image("wavePath")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: width, height: height)
+            } else {
+                TimelineView(.animation) { context in
+                    let t = context.date.timeIntervalSinceReferenceDate
+                    let gap: CGFloat = -70 // negative separation (overlap)
+                    let step = max(1, width + gap) // distance between tile origins
+                    let phase = CGFloat((t.truncatingRemainder(dividingBy: period)) / period) * step
+
+                    // number of tiles needed to cover the screen given the step; add padding tiles
+                    let needed = Int(ceil(width / step)) + 3
+                    let count = max(3, min(8, needed))
+
+                    ZStack(alignment: .leading) {
+                        ForEach(0..<count, id: \.self) { i in
+                            Image("wavePath")
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: width, height: height)
+                                .offset(x: -phase + CGFloat(i) * step)
+                        }
                     }
                 }
             }

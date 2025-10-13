@@ -11,10 +11,12 @@ import MapKit
 struct MapHome: View {
     @ObservedObject var vm: HomeViewModel
     @StateObject private var locationVm = LocationViewModel()
-    
+
     @State private var selectedPOIId: UUID? = nil
     @State private var selectedPOI: VenuePOI? = nil
-    
+
+    @EnvironmentObject private var accessibility: AccesibilityService
+
     private func findPOI(by id: UUID) -> VenuePOI? {
         guard let venue = vm.selectedVenue else { return nil }
         return venue.pois.first(where: { $0.id == id })
@@ -23,6 +25,10 @@ struct MapHome: View {
     private var visiblePOIs: [VenuePOI] {
         guard let selectedVenue = vm.selectedVenue else { return [] }
         return vm.filteredPOIs(for: selectedVenue)
+    }
+
+    private var animationEnabled: Bool {
+        !(accessibility.reduceMotionEffective || accessibility.reduceMapAnimations)
     }
     
     var body: some View {
@@ -39,18 +45,23 @@ struct MapHome: View {
                                 let extendedVisibility = vm.cameraDistance <= 6000 && accessLike
                                 // Respetar filtro de distancia general o la excepción para accesos
                                 let canRender = vm.shouldShowPOIs || extendedVisibility
-                                
+
                                 let level = revealLevel(distance: vm.cameraDistance, for: poi.type)
-                                let title = (level == .labeled) ? poi.type.displayName : ""
-                                
+                                let finalLevel: RevealLevel = accessibility.showPOILabelsAlways ? .labeled : level
+                                let title = (finalLevel == .labeled) ? poi.type.displayName : ""
+
                                 // En MapContentBuilder solo se debe emitir contenido de mapa (Annotation/Marker/etc.).
                                 // Si no se debe mostrar, simplemente no emitimos nada.
-                                if canRender && level != .hidden {
+                                if canRender && finalLevel != .hidden {
                                     Annotation(title, coordinate: poi.center) {
-                                        poiAnnotationBody(for: poi, level: level)
+                                        poiAnnotationBody(for: poi, level: finalLevel)
+                                            .accessibilityElement(children: .combine)
+                                            .accessibilityLabel("\(poi.type.displayName), piso \(poi.floor)")
+                                            .accessibilityHint("Toca dos veces para ver más detalles y cómo llegar")
+                                            .accessibilityAddTraits(.isButton)
                                     }
                                     .tag(poi.id)
-                                    
+
                                 }
                             }
                         } else {
@@ -72,42 +83,76 @@ struct MapHome: View {
             }
             .mapStyle(.standard(
                 elevation: .flat,
+                emphasis: accessibility.mapHighContrastStyle ? .default : .muted,
                 pointsOfInterest: vm.selectedVenue == nil ? .excludingAll : .including([.airport, .hotel])
             ))
             .mapControlVisibility(vm.selectedVenue == nil ? .hidden : .visible)
             .onMapCameraChange(frequency: .continuous) { context in
                 vm.cameraInfo = context.camera
             }
-            
+
             if vm.showVenueList, let selectedVenue = vm.selectedVenue, !selectedVenue.pois.isEmpty {
                 VStack {
                     HStack {
                         Spacer()
                         if vm.isFarFromSelectedVenue {
-                            Button { vm.syncCameraForStateChange(animated: true, duration: 0.4) } label: {
-                                Image(systemName: "sportscourt")
-                                    .padding(14)
-                                    .glassEffect(.regular, in: .circle)
+                            Button { vm.syncCameraForStateChange(animated: animationEnabled, duration: 0.4) } label: {
+                                if accessibility.clearGlass {
+                                    Image(systemName: "sportscourt")
+                                        .padding(14)
+                                        .glassEffect(.regular, in: .circle)
+                                } else {
+                                    Image(systemName: "sportscourt")
+                                        .padding(14)
+                                        .background(Color(.systemBackground).opacity(0.92))
+                                        .clipShape(Circle())
+                                        .shadow(radius: 2)
+                                }
                             }
-                            .transition(.move(edge: .trailing).combined(with: .opacity))
+                            .transition(animationEnabled ? .move(edge: .trailing).combined(with: .opacity) : .identity)
+                            .accessibilityLabel("Centrar mapa en la sede")
+                            .accessibilityHint("Vuelve a enfocar el estadio seleccionado")
                         }
                     }
-                    .animation(.easeInOut(duration: 0.2), value: vm.isFarFromSelectedVenue)
+                    .animation(animationEnabled ? .easeInOut(duration: 0.2) : nil, value: vm.isFarFromSelectedVenue)
                     HStack(spacing: 8) {
                         Spacer()
                         if vm.availableFloors(for: selectedVenue).count > 1 {
-                            HStack(spacing: 4) {
-                                Text("Piso")
-                                Picker("Piso", selection: $vm.selectedFloor) {
-                                    ForEach(vm.availableFloors(for: selectedVenue), id: \.self) { piso in
-                                        Text("\(piso)").tag(piso)
+                            if accessibility.clearGlass {
+                                HStack(spacing: 4) {
+                                    Text("Piso")
+                                    Picker("Piso", selection: $vm.selectedFloor) {
+                                        ForEach(vm.availableFloors(for: selectedVenue), id: \.self) { piso in
+                                            Text("\(piso)").tag(piso)
+                                        }
                                     }
+                                    .labelsHidden()
+                                    .pickerStyle(.automatic)
                                 }
-                                .labelsHidden()
-                                .pickerStyle(.automatic)
+                                .padding(8)
+                                .glassEffect(.regular)
+                                .clipShape(RoundedRectangle(cornerRadius: 14))
+                                .shadow(color: .black.opacity(0.1), radius: 4, y: 1)
+                            } else {
+                                HStack(spacing: 4) {
+                                    Text("Piso")
+                                    Picker("Piso", selection: $vm.selectedFloor) {
+                                        ForEach(vm.availableFloors(for: selectedVenue), id: \.self) { piso in
+                                            Text("\(piso)").tag(piso)
+                                        }
+                                    }
+                                    .labelsHidden()
+                                    .pickerStyle(.automatic)
+                                }
+                                .padding(8)
+                                .background(Color(.systemBackground).opacity(0.92))
+                                .clipShape(RoundedRectangle(cornerRadius: 14))
+                                .shadow(color: .black.opacity(0.1), radius: 4, y: 1)
                             }
-                            .padding(8)
-                            .glassEffect(.regular)
+                            .accessibilityElement(children: .combine)
+                            .accessibilityLabel("Seleccionar piso")
+                            .accessibilityValue("Piso \(vm.selectedFloor)")
+                            .accessibilityHint("Cambia el nivel del estadio para ver diferentes servicios")
                         }
                     }
                 }
@@ -118,14 +163,18 @@ struct MapHome: View {
         .onChange(of: selectedPOIId) { _, newValue in
             guard let id = newValue else { return }
             selectedPOI = findPOI(by: id)
-            if selectedPOI != nil { UIImpactFeedbackGenerator(style: .light).impactOccurred() }
+            if selectedPOI != nil, accessibility.hapticsEnabled { UIImpactFeedbackGenerator(style: .light).impactOccurred() }
+        }
+        .onChange(of: selectedPOI) { _, newValue in
+            guard let poi = newValue else { return }
+            accessibility.speak("\(poi.type.displayName) en piso \(poi.floor)")
         }
         .sheet(item: $selectedPOI) { poi in
             VStack(spacing: 12) {
                 Text(poi.type.displayName)
-                    .font(.headline)
+                    .font(.system(size: 20 * accessibility.effectiveFontScale, weight: .semibold, design: .rounded))
                 Text("Piso: \(poi.floor)")
-                    .font(.subheadline)
+                    .font(.system(size: 16 * accessibility.effectiveFontScale, weight: .medium, design: .rounded))
                 HStack {
                     Button("Cómo llegar") {
                         let placemark = MKPlacemark(coordinate: poi.center)
@@ -133,11 +182,14 @@ struct MapHome: View {
                         item.name = poi.type.displayName
                         item.openInMaps(launchOptions: [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeWalking])
                     }
+                    .accessibilityHint("Abre Apple Maps con la ruta hasta este punto")
                     Button("Cerrar") { selectedPOI = nil }
+                    .accessibilityHint("Cierra la información del punto de interés")
                 }
             }
             .padding()
             .presentationDetents([.medium])
+            .accessibilityElement(children: .contain)
         }
         .onAppear {
             locationVm.requestPermission()
@@ -197,8 +249,27 @@ struct MapHome: View {
     @ViewBuilder
     private func poiAnnotationBody(for poi: VenuePOI, level: RevealLevel) -> some View {
         let isStairs = poi.type == .accessWheelchair || poi.type == .access || poi.type == .parking
-        let anchor: CGFloat = isStairs ? 22 : 28
-        
+        let baseAnchor: CGFloat = isStairs ? 22 : 28
+        let anchor = baseAnchor * CGFloat(accessibility.effectiveMarkerScale)
+        let zoomScale = scaleForZoom(vm.cameraDistance) * CGFloat(accessibility.effectiveMarkerScale)
+
+        let icon = Image(systemName: poi.type.icon)
+            .resizable()
+            .scaledToFit()
+            .frame(width: anchor - 12, height: anchor - 12)
+            .frame(width: anchor, height: anchor)
+            .foregroundStyle(.white)
+            .background(poi.type.color.gradient)
+            .clipShape(isStairs ? AnyShape(RoundedRectangle(cornerRadius: 4)) : AnyShape(Circle()))
+            .overlay {
+                if isStairs {
+                    RoundedRectangle(cornerRadius: 4)
+                        .stroke(Color.white.opacity(0.6), lineWidth: 2)
+                } else {
+                    Circle().stroke(Color.white.opacity(0.6), lineWidth: 2)
+                }
+            }
+
         switch level {
         case .hidden:
             EmptyView()
@@ -209,44 +280,27 @@ struct MapHome: View {
                 .foregroundStyle(poi.type.color)
                 .overlay(Circle().stroke(Color.white.opacity(0.85), lineWidth: 1))
         case .icons:
-            Image(systemName: poi.type.icon)
-                .resizable()
-                .scaledToFit()
-                .frame(width: anchor - 12, height: anchor - 12)
-                .frame(width: anchor, height: anchor)
-                .foregroundStyle(.white)
-                .background(poi.type.color.gradient)
-                .clipShape(isStairs ? AnyShape(RoundedRectangle(cornerRadius: 4)) : AnyShape(Circle()))
-                .overlay {
-                    if isStairs {
-                        RoundedRectangle(cornerRadius: 4)
-                            .stroke(Color.white.opacity(0.6), lineWidth: 2)
-                    } else {
-                        Circle().stroke(Color.white.opacity(0.6), lineWidth: 2)
-                    }
-                }
+            icon
+                .scaleEffect(zoomScale)
         case .labeled:
-            Image(systemName: poi.type.icon)
-                .resizable()
-                .scaledToFit()
-                .frame(width: anchor - 12, height: anchor - 12)
-                .frame(width: anchor, height: anchor)
-                .foregroundStyle(.white)
-                .background(poi.type.color.gradient)
-                .clipShape(isStairs ? AnyShape(RoundedRectangle(cornerRadius: 4)) : AnyShape(Circle()))
-                .overlay {
-                    if isStairs {
-                        RoundedRectangle(cornerRadius: 4)
-                            .stroke(Color.white.opacity(0.6), lineWidth: 2)
-                    } else {
-                        Circle().stroke(Color.white.opacity(0.6), lineWidth: 2)
-                    }
-                }
-                .shadow(radius: 2)
-                .scaleEffect(scaleForZoom(vm.cameraDistance))
+            VStack(spacing: 6) {
+                icon
+                    .shadow(radius: 2)
+                    .scaleEffect(zoomScale)
+
+                Text(poi.type.displayName)
+                    .font(.system(size: 12 * accessibility.effectiveFontScale, weight: .semibold))
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(accessibility.mapHighContrastStyle ? Color.black.opacity(0.8) : Color.white.opacity(0.85))
+                    .foregroundColor(accessibility.mapHighContrastStyle ? .white : .black)
+                    .clipShape(Capsule())
+                    .shadow(radius: 2)
+                    .accessibilityHidden(true)
+            }
         }
     }
-    
+
     private func scaleForZoom(_ distance: CLLocationDistance) -> CGFloat {
         let minD: CLLocationDistance = 800
         let maxD: CLLocationDistance = 3000
@@ -265,8 +319,10 @@ struct MapHome: View {
         )
     )
     MapHome(vm: HomeViewModel())
+        .environmentObject(AccesibilityService.shared)
 }
 
 #Preview {
     ContentView()
+        .environmentObject(AccesibilityService.shared)
 }
