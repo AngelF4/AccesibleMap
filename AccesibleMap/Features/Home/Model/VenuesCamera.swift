@@ -29,16 +29,24 @@ class VenuesCamera {
             heading: 15,
             pitch: 64
         ),
-        // Estadio Mobil Super (Sultanes de Monterrey)
         MapCamera(
             centerCoordinate: .init(
-                latitude: 25.7181772058031,
-                longitude: -100.31563755707107
+                latitude: 20.681728,
+                longitude: -103.462681
             ),
-            distance: 1100,
-            heading: -20,
-            pitch: 64
-        ),
+            distance: 1200,
+            heading: 70,
+            pitch: 64),
+        // Estadio Mobil Super (Sultanes de Monterrey)
+//        MapCamera(
+//            centerCoordinate: .init(
+//                latitude: 25.7181772058031,
+//                longitude: -100.31563755707107
+//            ),
+//            distance: 1100,
+//            heading: -20,
+//            pitch: 64
+//        ),
         // Estadio Borregos (ITESM)
         MapCamera(
             centerCoordinate: .init(

@@ -155,7 +155,7 @@ class HomeViewModel: ObservableObject {
 //#if DEBUG
 //        self.venues = Venue.mocks
 //#else
-        venues.append(geo.venueBBVA)
+        venues = geo.venues
 //#endif
         onAppear()
     }

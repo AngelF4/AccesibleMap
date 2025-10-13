@@ -95,18 +95,20 @@ struct MapHome: View {
                     .animation(.easeInOut(duration: 0.2), value: vm.isFarFromSelectedVenue)
                     HStack(spacing: 8) {
                         Spacer()
-                        HStack(spacing: 4) {
-                            Text("Piso")
-                            Picker("Piso", selection: $vm.selectedFloor) {
-                                ForEach(vm.availableFloors(for: selectedVenue), id: \.self) { piso in
-                                    Text("\(piso)").tag(piso)
+                        if vm.availableFloors(for: selectedVenue).count > 1 {
+                            HStack(spacing: 4) {
+                                Text("Piso")
+                                Picker("Piso", selection: $vm.selectedFloor) {
+                                    ForEach(vm.availableFloors(for: selectedVenue), id: \.self) { piso in
+                                        Text("\(piso)").tag(piso)
+                                    }
                                 }
+                                .labelsHidden()
+                                .pickerStyle(.automatic)
                             }
-                            .labelsHidden()
-                            .pickerStyle(.automatic)
+                            .padding(8)
+                            .glassEffect(.regular)
                         }
-                        .padding(8)
-                        .glassEffect(.regular)
                     }
                 }
                 .padding(12)
@@ -169,14 +171,14 @@ struct MapHome: View {
     /// Umbrales diferenciados: accesos/entradas visibles desde más lejos
     private func revealLevel(distance: CLLocationDistance, for type: pointOfInterest) -> RevealLevel {
         // Otros POIs
-        let farHiddenOther: CLLocationDistance = 2500
+        let farHiddenOther: CLLocationDistance = 3000
         let farDotsOther: CLLocationDistance = 1200
-        let nearIconsOther: CLLocationDistance = 400
+        let nearIconsOther: CLLocationDistance = 500
         
         // Accesos/entradas (más generosos)
         let farHiddenAccess: CLLocationDistance = 5000
         let farDotsAccess: CLLocationDistance = 4000
-        let nearIconsAccess: CLLocationDistance = 2000
+        let nearIconsAccess: CLLocationDistance = 200
         
         let access = isAccessLike(type)
         if access {
@@ -195,7 +197,7 @@ struct MapHome: View {
     @ViewBuilder
     private func poiAnnotationBody(for poi: VenuePOI, level: RevealLevel) -> some View {
         let isStairs = poi.type == .accessWheelchair || poi.type == .access || poi.type == .parking
-        let anchor: CGFloat = isStairs ? 24 : 28
+        let anchor: CGFloat = isStairs ? 22 : 28
         
         switch level {
         case .hidden:
@@ -213,7 +215,7 @@ struct MapHome: View {
                 .frame(width: anchor - 12, height: anchor - 12)
                 .frame(width: anchor, height: anchor)
                 .foregroundStyle(.white)
-                .background(poi.type.color.gradient.opacity(isStairs ? 0.7 : 1))
+                .background(poi.type.color.gradient)
                 .clipShape(isStairs ? AnyShape(RoundedRectangle(cornerRadius: 4)) : AnyShape(Circle()))
                 .overlay {
                     if isStairs {
@@ -230,7 +232,7 @@ struct MapHome: View {
                 .frame(width: anchor - 12, height: anchor - 12)
                 .frame(width: anchor, height: anchor)
                 .foregroundStyle(.white)
-                .background(poi.type.color.gradient.opacity(isStairs ? 0.7 : 1))
+                .background(poi.type.color.gradient)
                 .clipShape(isStairs ? AnyShape(RoundedRectangle(cornerRadius: 4)) : AnyShape(Circle()))
                 .overlay {
                     if isStairs {
