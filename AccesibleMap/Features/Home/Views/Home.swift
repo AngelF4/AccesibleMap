@@ -34,6 +34,7 @@ struct Home: View {
                     .scaleEffect(1.1)
                     .rotationEffect(.degrees(-10))
                     .offset(y: vm.showVenueList ? -1000 : -140)
+                    .accessibilityHidden(true)
                 Spacer()
             }
             
@@ -45,6 +46,7 @@ struct Home: View {
                             Pager(page: pageCity, data: vm.cities, id: \.self) { city in
                                 CityCard(city: city)
                                     .scaleEffect(0.7)
+                                    .accessibilityValue(city.displayName)
                             }
                             .draggingAnimation(.custom(animation: .spring(duration: 0.1)))
                             .preferredItemSize(CGSize(width: 300 * 0.7, height: 130))
@@ -58,7 +60,9 @@ struct Home: View {
                             .onPageChanged { idx in
                                 vm.pageCityChanged(to: idx)
                             }
+                            .accessibilityLabel("Ciudades sede disponibles")
                             
+                            .accessibilityHint("Desliza para cambiar de ciudad o pulsa dos veces para escuchar la descripción")
                             .frame(height: 130)
                             
                             Button {
@@ -71,6 +75,7 @@ struct Home: View {
                             .buttonStyle(.glass)
                             .padding(.horizontal, 30)
                             .padding(.bottom, 30)
+                            .accessibilityHint("Confirma la selección de ciudad para ver los estadios disponibles")
                         }
                     }
                     // Paso 2: Elegir sede dentro de la ciudad
@@ -92,6 +97,9 @@ struct Home: View {
                             .onPageChanged { idx in
                                 vm.pageVenueChanged(to: idx)
                             }
+                            .accessibilityLabel("Sedes disponibles en la ciudad")
+                            .accessibilityValue(vm.position?.name ?? "Sin selección")
+                            .accessibilityHint("Desliza para cambiar de estadio y escucha un resumen accesible")
                             .frame(height: 140)
                             
                             Button {
@@ -104,6 +112,7 @@ struct Home: View {
                             .buttonStyle(.glass)
                             .padding(.horizontal, 30)
                             .padding(.bottom, 30)
+                            .accessibilityHint("Abre el mapa detallado de la sede elegida")
                         }
                     }
                 } else {
@@ -128,6 +137,7 @@ struct Home: View {
                     .buttonStyle(.glass)
                     .padding(.horizontal, 30)
                     .padding(.bottom, 30)
+                    .accessibilityHint("Muestra la lista de ciudades y estadios disponibles")
                 }
             }
             
@@ -166,6 +176,7 @@ struct Home: View {
                     } label: {
                         Label("Regresar", systemImage: "chevron.left")
                     }
+                    .accessibilityHint("Regresa al paso anterior del flujo")
                 }
             }
             ToolbarItem(placement: .navigation) {
@@ -175,6 +186,7 @@ struct Home: View {
                     } label: {
                         Label("Accesibilidad", systemImage: "figure")
                     }
+                    .accessibilityHint("Abre los ajustes de accesibilidad personalizados")
                 }
             }
         }

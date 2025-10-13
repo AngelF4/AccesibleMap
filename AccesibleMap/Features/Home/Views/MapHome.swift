@@ -46,11 +46,19 @@ struct MapHome: View {
                                 // En MapContentBuilder solo se debe emitir contenido de mapa (Annotation/Marker/etc.).
                                 // Si no se debe mostrar, simplemente no emitimos nada.
                                 if canRender && level != .hidden {
-                                    Annotation(title, coordinate: poi.center) {
-                                        poiAnnotationBody(for: poi, level: level)
+                                    if selectedPOIId == poi.id {
+                                        Marker(title, systemImage: poi.type.icon, coordinate: poi.center)
+                                            .tint(poi.type.color)
+                                            .tag(poi.id)
+                                    } else {
+                                        Annotation(title, coordinate: poi.center) {
+                                            poiAnnotationBody(for: poi, level: level)
+                                                .accessibilityLabel("\(poi.type.displayName), piso \(poi.floor)")
+                                                .accessibilityHint("Toca dos veces para ver más detalles y cómo llegar")
+                                                .accessibilityAddTraits(.isButton)
+                                        }
+                                        .tag(poi.id)
                                     }
-                                    .tag(poi.id)
-                                    
                                 }
                             }
                         } else {
@@ -90,6 +98,8 @@ struct MapHome: View {
                                     .glassEffect(.regular, in: .circle)
                             }
                             .transition(.move(edge: .trailing).combined(with: .opacity))
+                            .accessibilityLabel("Centrar mapa en la sede")
+                            .accessibilityHint("Vuelve a enfocar el estadio seleccionado")
                         }
                     }
                     .animation(.easeInOut(duration: 0.2), value: vm.isFarFromSelectedVenue)
@@ -105,6 +115,9 @@ struct MapHome: View {
                                 }
                                 .labelsHidden()
                                 .pickerStyle(.automatic)
+                                .accessibilityLabel("Seleccionar piso")
+                                .accessibilityValue("Piso \(vm.selectedFloor)")
+                                .accessibilityHint("Cambia el nivel del estadio para ver diferentes servicios")
                             }
                             .padding(8)
                             .glassEffect(.regular)
@@ -120,24 +133,13 @@ struct MapHome: View {
             selectedPOI = findPOI(by: id)
             if selectedPOI != nil { UIImpactFeedbackGenerator(style: .light).impactOccurred() }
         }
-        .sheet(item: $selectedPOI) { poi in
-            VStack(spacing: 12) {
-                Text(poi.type.displayName)
-                    .font(.headline)
-                Text("Piso: \(poi.floor)")
-                    .font(.subheadline)
-                HStack {
-                    Button("Cómo llegar") {
-                        let placemark = MKPlacemark(coordinate: poi.center)
-                        let item = MKMapItem(placemark: placemark)
-                        item.name = poi.type.displayName
-                        item.openInMaps(launchOptions: [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeWalking])
-                    }
-                    Button("Cerrar") { selectedPOI = nil }
-                }
-            }
-            .padding()
-            .presentationDetents([.medium])
+        .sheet(item: $selectedPOI, onDismiss: {
+            selectedPOIId = nil
+            selectedPOI = nil
+        }) { poi in
+            SheetPOI(poi: poi, venue: vm.selectedVenue)
+                .presentationBackground(.background)
+                .presentationDetents([.medium])
         }
         .onAppear {
             locationVm.requestPermission()
@@ -208,6 +210,7 @@ struct MapHome: View {
                 .opacity(0.95)
                 .foregroundStyle(poi.type.color)
                 .overlay(Circle().stroke(Color.white.opacity(0.85), lineWidth: 1))
+            
         case .icons:
             Image(systemName: poi.type.icon)
                 .resizable()
