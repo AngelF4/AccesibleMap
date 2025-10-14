@@ -7,9 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		84C514DF2E94AC9700BE85D4 /* AccesibleMapAssistant.appex in Embed ExtensionKit Extensions */ = {isa = PBXBuildFile; fileRef = 84C514D62E94AC9700BE85D4 /* AccesibleMapAssistant.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		845A0F982E983820009B13B9 /* SwiftUIPager in Frameworks */ = {isa = PBXBuildFile; productRef = 845A0F972E983820009B13B9 /* SwiftUIPager */; };
-		84C514DF2E94AC9700BE85D4 /* Siri.appex in Embed ExtensionKit Extensions */ = {isa = PBXBuildFile; fileRef = 84C514D62E94AC9700BE85D4 /* Siri.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		84C514DF2E94AC9700BE85D4 /* AccesibleMapAssistant.appex in Embed ExtensionKit Extensions */ = {isa = PBXBuildFile; fileRef = 84C514D62E94AC9700BE85D4 /* AccesibleMapAssistant.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		84C514EC2E94ACCA00BE85D4 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84C514EB2E94ACCA00BE85D4 /* WidgetKit.framework */; };
 		84C514EE2E94ACCA00BE85D4 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84C514ED2E94ACCA00BE85D4 /* SwiftUI.framework */; };
 		84C514FF2E94ACCB00BE85D4 /* WidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 84C514E92E94ACCA00BE85D4 /* WidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -73,13 +72,6 @@
 			);
 			target = 84C5146E2E94AA9200BE85D4 /* AccesibleMap */;
 		};
-		84C514E32E94AC9700BE85D4 /* Exceptions for "AccesibleMapAssistant" folder in "AccesibleMapAssistant" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = 84C514D52E94AC9700BE85D4 /* AccesibleMapAssistant */;
-		};
 		84C515032E94ACCB00BE85D4 /* Exceptions for "Widgets" folder in "WidgetsExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -100,9 +92,6 @@
 		};
 		84C514D72E94AC9700BE85D4 /* AccesibleMapAssistant */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				84C514E32E94AC9700BE85D4 /* Exceptions for "AccesibleMapAssistant" folder in "AccesibleMapAssistant" target */,
-			);
 			path = AccesibleMapAssistant;
 			sourceTree = "<group>";
 		};
@@ -561,8 +550,8 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 28QP46YWF4;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = AccesibleMapAssistant/Info.plist;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "$(SRCROOT)/AccesibleMapAssistant/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Siri;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -589,8 +578,8 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 28QP46YWF4;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = AccesibleMapAssistant/Info.plist;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "$(SRCROOT)/AccesibleMapAssistant/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Siri;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
