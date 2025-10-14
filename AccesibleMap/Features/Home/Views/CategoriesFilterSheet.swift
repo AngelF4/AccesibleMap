@@ -20,7 +20,7 @@ struct CategoriesFilterSheet: View {
                     .padding(10)
                     .frame(minWidth: 60, minHeight: 60)
                     .background(.accent.gradient, in: .rect(cornerRadius: 12))
-                Text("Categorias")
+                Text("Categorías")
                     .font(.title2.bold())
                 Text("Filtra los resultados con seleccionar las categorias que quieres que se muestren")
                     .frame(maxWidth: .infinity)
@@ -44,6 +44,23 @@ struct CategoriesFilterSheet: View {
                         }
                     }
                     .toggleStyle(SelectionSwitchStyle())
+                }
+            } header: {
+                HStack {
+                    Spacer()
+                    if vm.selectedCategories.isEmpty {
+                        Button("Restablecer") {
+                            vm.resetCategories()
+                        }
+                        .font(.headline)
+                        .foregroundStyle(.secondary)
+                    } else {
+                        Button("Quitar todo") {
+                            vm.resetCategories(selectAll: false)
+                        }
+                        .font(.headline)
+                        .foregroundStyle(.secondary)
+                    }
                 }
             }
         }
