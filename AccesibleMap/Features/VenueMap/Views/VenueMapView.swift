@@ -11,7 +11,6 @@ import CoreLocation
 struct VenueMapView: View {
     @StateObject var vm = LocationViewModel()
     
-    
     var body: some View {
         switch vm.authorizationStatus {
         case .notDetermined:
@@ -21,7 +20,7 @@ struct VenueMapView: View {
                 }
         case .denied, .restricted, .authorizedAlways, .authorizedWhenInUse:
             //Mapa con ubicación predeterminada, la ubicación es opcional, solo es de referencia
-            MapView(viewModel: vm)
+            MapView(locationVm: vm)
         @unknown default:
             ContentUnavailableView("No pudo obtener la ubicación. Intente nuevamente.", systemImage: "mappin.slash")
         }

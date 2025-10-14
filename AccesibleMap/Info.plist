@@ -35,10 +35,13 @@
 	<array>
 		<string>INSearchForMessagesIntent</string>
 		<string>INSendMessageIntent</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>FWC2026-UltraCondensedBold.ttf</string>
+		<string>FWC2026-NormalBlack.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
-		<string>processing</string>
 		<string>location</string>
 	</array>
 </dict>
