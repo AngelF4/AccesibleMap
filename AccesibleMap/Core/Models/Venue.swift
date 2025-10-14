@@ -84,7 +84,7 @@ enum pointOfInterest: String, CaseIterable {
         case .womanBathroom:
             "Baño mujeres"
         case .familyBathroom:
-            "Baño familiare"
+            "Baño familiar"
         case .elevatorWheelchair:
             "Elevador para personas con discapacidad"
         case .customerService:
