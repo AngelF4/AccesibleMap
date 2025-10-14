@@ -85,7 +85,7 @@ struct MapView: View {
             
             if shouldShowPOIs {
                 ForEach(visiblePOIs) { poi in
-                    let isStairs: Bool = poi.type == .stails || poi.type == .manBathroom || poi.type == .womanBathroom
+                    let isStairs: Bool = poi.type == .stails || poi.type == .bathroom
                     var anchor: CGFloat {
                         if isStairs {
                             24

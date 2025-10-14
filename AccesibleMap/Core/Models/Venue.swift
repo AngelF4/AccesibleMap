@@ -51,10 +51,8 @@ enum pointOfInterest: String, CaseIterable {
     case elevator
     case food
     case enfermy
-    case oficialStore
     case atm
-    case manBathroom
-    case womanBathroom
+    case bathroom
     case familyBathroom
     case elevatorWheelchair
     case customerService
@@ -75,20 +73,16 @@ enum pointOfInterest: String, CaseIterable {
             "Restaurantes"
         case .enfermy:
             "Enfermeria"
-        case .oficialStore:
-            "Tienda oficial"
         case .atm:
             "Cajero"
-        case .manBathroom:
-            "Baño hombres"
-        case .womanBathroom:
-            "Baño mujeres"
+        case .bathroom:
+            "Baños"
         case .familyBathroom:
             "Baño familiar"
         case .elevatorWheelchair:
             "Elevador para personas con discapacidad"
         case .customerService:
-            "Atención al cliente"
+            "Información"
         case .other:
             "otros"
         case .medicalKit:
@@ -113,14 +107,10 @@ enum pointOfInterest: String, CaseIterable {
             "fork.knife"
         case .enfermy:
             "heart.fill"
-        case .oficialStore:
-            "bag.fill"
         case .atm:
             "dollarsign"
-        case .manBathroom:
-            "figure.stand"
-        case .womanBathroom:
-            "figure.stand.dress"
+        case .bathroom:
+            "figure.stand.dress.line.vertical.figure"
         case .familyBathroom:
             "figure.2.and.child.holdinghands"
         case .elevatorWheelchair:
@@ -151,14 +141,10 @@ enum pointOfInterest: String, CaseIterable {
                 .orange
         case .enfermy:
                 .pink
-        case .oficialStore:
-                .cyan
         case .atm:
                 .green
-        case .manBathroom:
+        case .bathroom:
                 .brown
-        case .womanBathroom:
-                .purple
         case .familyBathroom:
                 .indigo
         case .elevatorWheelchair:
@@ -200,8 +186,8 @@ extension Venue {
             VenuePOI(center: .init(latitude: 25.668736, longitude: -100.245184), floor: 0, type: .access),
             VenuePOI(center: .init(latitude: 25.669111, longitude: -100.245771), floor: 0, type: .parking),
             VenuePOI(center: .init(latitude: 25.669300, longitude: -100.244900), floor: 0, type: .food),
-            VenuePOI(center: .init(latitude: 25.669020, longitude: -100.244500), floor: 0, type: .manBathroom),
-            VenuePOI(center: .init(latitude: 25.668980, longitude: -100.244620), floor: 0, type: .womanBathroom)
+            VenuePOI(center: .init(latitude: 25.669020, longitude: -100.244500), floor: 0, type: .bathroom),
+            VenuePOI(center: .init(latitude: 25.668980, longitude: -100.244620), floor: 0, type: .bathroom)
         ]
     )
     
@@ -234,10 +220,10 @@ extension Venue {
         accessibilityLabel: "Arena Monterrey",
         pois: [
             VenuePOI(center: .init(latitude: 25.686700, longitude: -100.283000), floor: 0, type: .access),
-            VenuePOI(center: .init(latitude: 25.686550, longitude: -100.283200), floor: 0, type: .oficialStore),
+            VenuePOI(center: .init(latitude: 25.686550, longitude: -100.283200), floor: 0, type: .customerService),
             VenuePOI(center: .init(latitude: 25.686620, longitude: -100.283300), floor: 0, type: .medicalKit),
-            VenuePOI(center: .init(latitude: 25.686720, longitude: -100.283150), floor: 0, type: .womanBathroom),
-            VenuePOI(center: .init(latitude: 25.686780, longitude: -100.283060), floor: 0, type: .manBathroom)
+            VenuePOI(center: .init(latitude: 25.686720, longitude: -100.283150), floor: 0, type: .bathroom),
+            VenuePOI(center: .init(latitude: 25.686780, longitude: -100.283060), floor: 0, type: .bathroom)
         ]
     )
     
@@ -255,8 +241,8 @@ extension Venue {
             VenuePOI(center: .init(latitude: 19.303200, longitude: -99.151000), floor: 0, type: .access),
             VenuePOI(center: .init(latitude: 19.302600, longitude: -99.150100), floor: 0, type: .parking),
             VenuePOI(center: .init(latitude: 19.303000, longitude: -99.150600), floor: 0, type: .food),
-            VenuePOI(center: .init(latitude: 19.303050, longitude: -99.150400), floor: 0, type: .manBathroom),
-            VenuePOI(center: .init(latitude: 19.302950, longitude: -99.150300), floor: 0, type: .womanBathroom)
+            VenuePOI(center: .init(latitude: 19.303050, longitude: -99.150400), floor: 0, type: .bathroom),
+            VenuePOI(center: .init(latitude: 19.302950, longitude: -99.150300), floor: 0, type: .bathroom)
         ]
     )
     

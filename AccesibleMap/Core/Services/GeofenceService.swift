@@ -32,7 +32,7 @@ final class GeofenceService {
                     longitude: -100.244330
                 ),
                 floor: 0,
-                type: .manBathroom
+                type: .bathroom
             ),
             .init(
                 center: .init(
@@ -40,7 +40,7 @@ final class GeofenceService {
                     longitude: -100.244078
                 ),
                 floor: 0,
-                type: .manBathroom
+                type: .bathroom
             ),
             .init(
                 center: .init(
@@ -58,14 +58,14 @@ final class GeofenceService {
                 floor: 0,
                 type: .stails
             ),
-            .init(
-                center: .init(
-                    latitude:  25.670161,
-                    longitude: -100.244641
-                ),
-                floor: 0,
-                type: .womanBathroom
-            ),
+//            .init(
+//                center: .init(
+//                    latitude:  25.670161,
+//                    longitude: -100.244641
+//                ),
+//                floor: 0,
+//                type: .wobathroom
+//            ),
             .init(
                 center: .init(
                     latitude:  25.670064,
@@ -88,7 +88,7 @@ final class GeofenceService {
                     longitude: -100.245129
                 ),
                 floor: 0,
-                type: .manBathroom
+                type: .bathroom
             ),
             .init(
                 center: .init(
@@ -98,14 +98,14 @@ final class GeofenceService {
                 floor: 0,
                 type: .stails
             ),
-            .init(
-                center: .init(
-                    latitude:  25.669668,
-                    longitude: -100.245210
-                ),
-                floor: 0,
-                type: .womanBathroom
-            ),
+//            .init(
+//                center: .init(
+//                    latitude:  25.669668,
+//                    longitude: -100.245210
+//                ),
+//                floor: 0,
+//                type: .wobathroom
+//            ),
             .init(
                 center: .init(
                     latitude:  25.669527,
@@ -120,7 +120,7 @@ final class GeofenceService {
                     longitude: -100.245333
                 ),
                 floor: 0,
-                type: .manBathroom
+                type: .bathroom
             ),
             .init(
                 center: .init(
@@ -130,14 +130,14 @@ final class GeofenceService {
                 floor: 0,
                 type: .stails
             ),
-            .init(
-                center: .init(
-                    latitude:  25.668652,
-                    longitude: -100.245349
-                ),
-                floor: 0,
-                type: .womanBathroom
-            ),
+//            .init(
+//                center: .init(
+//                    latitude:  25.668652,
+//                    longitude: -100.245349
+//                ),
+//                floor: 0,
+//                type: .wobathroom
+//            ),
             .init(
                 center: .init(
                     latitude:  25.668478,
@@ -152,7 +152,7 @@ final class GeofenceService {
                     longitude: -100.245172
                 ),
                 floor: 0,
-                type: .manBathroom
+                type: .bathroom
             ),
             .init(
                 center: .init(
@@ -168,7 +168,7 @@ final class GeofenceService {
                     longitude: -100.244679
                 ),
                 floor: 0,
-                type: .manBathroom
+                type: .bathroom
             ),
             .init(
                 center: .init(
@@ -176,7 +176,7 @@ final class GeofenceService {
                     longitude: -100.244325
                 ),
                 floor: 0,
-                type: .manBathroom
+                type: .bathroom
             ),
             .init(
                 center: .init(
@@ -192,7 +192,7 @@ final class GeofenceService {
                     longitude: -100.243622
                 ),
                 floor: 0,
-                type: .manBathroom
+                type: .bathroom
             ),
             .init(
                 center: .init(
@@ -202,14 +202,14 @@ final class GeofenceService {
                 floor: 0,
                 type: .stails
             ),
-            .init(
-                center: .init(
-                    latitude:  25.668537,
-                    longitude: -100.243531
-                ),
-                floor: 0,
-                type: .womanBathroom
-            ),
+//            .init(
+//                center: .init(
+//                    latitude:  25.668537,
+//                    longitude: -100.243531
+//                ),
+//                floor: 0,
+//                type: .wobathroom
+//            ),
             .init(
                 center: .init(
                     latitude:  25.668672,
@@ -224,7 +224,7 @@ final class GeofenceService {
                     longitude: -100.243418
                 ),
                 floor: 0,
-                type: .manBathroom
+                type: .bathroom
             ),
             .init(
                 center: .init(
@@ -234,14 +234,14 @@ final class GeofenceService {
                 floor: 0,
                 type: .stails
             ),
-            .init(
-                center: .init(
-                    latitude:  25.669373,
-                    longitude: -100.243332
-                ),
-                floor: 0,
-                type: .womanBathroom
-            ),
+//            .init(
+//                center: .init(
+//                    latitude:  25.669373,
+//                    longitude: -100.243332
+//                ),
+//                floor: 0,
+//                type: .wobathroom
+//            ),
             .init(
                 center: .init(
                     latitude:  25.669509,
@@ -256,7 +256,7 @@ final class GeofenceService {
                     longitude: -100.243429
                 ),
                 floor: 0,
-                type: .manBathroom
+                type: .bathroom
             ),
             .init(
                 center: .init(
@@ -346,14 +346,14 @@ final class GeofenceService {
                 floor: 0,
                 type: .atm
             ),
-            .init(
-                center: .init(
-                    latitude:  25.669252,
-                    longitude: -100.245081
-                ),
-                floor: 0,
-                type: .oficialStore
-            ),
+//            .init(
+//                center: .init(
+//                    latitude:  25.669252,
+//                    longitude: -100.245081
+//                ),
+//                floor: 0,
+//                type: .oficialStore
+//            ),
             .init(
                 center: .init(
                     latitude:  25.669117,
@@ -521,16 +521,16 @@ final class GeofenceService {
             .init(center: .init(latitude: 25.669900, longitude: -100.243600), floor: 1, type: .stails),
             
             // Floor 1 — bathrooms (mirroring key floor 0 points)
-            .init(center: .init(latitude: 25.670199, longitude: -100.244330), floor: 1, type: .manBathroom),
-            .init(center: .init(latitude: 25.670161, longitude: -100.244641), floor: 1, type: .womanBathroom),
-            .init(center: .init(latitude: 25.669875, longitude: -100.245129), floor: 1, type: .manBathroom),
-            .init(center: .init(latitude: 25.669668, longitude: -100.245210), floor: 1, type: .womanBathroom),
+            .init(center: .init(latitude: 25.670199, longitude: -100.244330), floor: 1, type: .bathroom),
+//            .init(center: .init(latitude: 25.670161, longitude: -100.244641), floor: 1, type: .wobathroom),
+            .init(center: .init(latitude: 25.669875, longitude: -100.245129), floor: 1, type: .bathroom),
+//            .init(center: .init(latitude: 25.669668, longitude: -100.245210), floor: 1, type: .wobathroom),
             .init(center: .init(latitude: 25.668280, longitude: -100.244861), floor: 1, type: .familyBathroom),
-            .init(center: .init(latitude: 25.668236, longitude: -100.244679), floor: 1, type: .manBathroom),
-            .init(center: .init(latitude: 25.668358, longitude: -100.243622), floor: 1, type: .manBathroom),
-            .init(center: .init(latitude: 25.668537, longitude: -100.243531), floor: 1, type: .womanBathroom),
-            .init(center: .init(latitude: 25.668798, longitude: -100.243418), floor: 1, type: .manBathroom),
-            .init(center: .init(latitude: 25.669373, longitude: -100.243332), floor: 1, type: .womanBathroom),
+            .init(center: .init(latitude: 25.668236, longitude: -100.244679), floor: 1, type: .bathroom),
+            .init(center: .init(latitude: 25.668358, longitude: -100.243622), floor: 1, type: .bathroom),
+//            .init(center: .init(latitude: 25.668537, longitude: -100.243531), floor: 1, type: .wobathroom),
+            .init(center: .init(latitude: 25.668798, longitude: -100.243418), floor: 1, type: .bathroom),
+//            .init(center: .init(latitude: 25.669373, longitude: -100.243332), floor: 1, type: .wobathroom),
             .init(center: .init(latitude: 25.669982, longitude: -100.243734), floor: 1, type: .familyBathroom),
             
             // Floor 1 — enfermería (mirror)
@@ -582,7 +582,7 @@ final class GeofenceService {
             .init(center: .init(latitude: 25.72294, longitude: -100.314879), floor: 0, type: .parking),
             .init(center: .init(latitude: 25.722095, longitude: -100.313536), floor: 0, type: .accessWheelchair),
             .init(center: .init(latitude: 25.721434, longitude: -100.311018), floor: 0, type: .accessWheelchair),
-            .init(center: .init(latitude: 25.72181, longitude: -100.312953), floor: 0, type: .oficialStore),
+//            .init(center: .init(latitude: 25.72181, longitude: -100.312953), floor: 0, type: .oficialStore),
             .init(center: .init(latitude: 25.721751, longitude: -100.312878), floor: 0, type: .atm),
             .init(center: .init(latitude: 25.722479, longitude: -100.31328), floor: 0, type: .atm),
             .init(center: .init(latitude: 25.722687, longitude: -100.313271), floor: 0, type: .access),
@@ -599,11 +599,11 @@ final class GeofenceService {
             .init(center: .init(latitude: 25.722261, longitude: -100.313238), floor: 0, type: .access),
             .init(center: .init(latitude: 25.7229, longitude: -100.313103), floor: 0, type: .enfermy),
             .init(center: .init(latitude: 25.722621, longitude: -100.310732), floor: 0, type: .enfermy),
-            .init(center: .init(latitude: 25.722736, longitude: -100.313017), floor: 0, type: .oficialStore),
-            .init(center: .init(latitude: 25.723126, longitude: -100.312827), floor: 0, type: .oficialStore),
-            .init(center: .init(latitude: 25.723501, longitude: -100.312664), floor: 0, type: .oficialStore),
-            .init(center: .init(latitude: 25.722484, longitude: -100.310959), floor: 0, type: .oficialStore),
-            .init(center: .init(latitude: 25.721966, longitude: -100.311136), floor: 0, type: .oficialStore),
+//            .init(center: .init(latitude: 25.722736, longitude: -100.313017), floor: 0, type: .oficialStore),
+//            .init(center: .init(latitude: 25.723126, longitude: -100.312827), floor: 0, type: .oficialStore),
+//            .init(center: .init(latitude: 25.723501, longitude: -100.312664), floor: 0, type: .oficialStore),
+//            .init(center: .init(latitude: 25.722484, longitude: -100.310959), floor: 0, type: .oficialStore),
+//            .init(center: .init(latitude: 25.721966, longitude: -100.311136), floor: 0, type: .oficialStore),
             
         ])
     

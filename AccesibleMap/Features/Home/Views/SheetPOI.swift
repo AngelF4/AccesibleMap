@@ -72,5 +72,5 @@ struct SheetPOI: View {
 }
 
 #Preview {
-    SheetPOI(poi: VenuePOI(center: .init(), floor: 0, type: .oficialStore), venue: .estadioBBVA)
+    SheetPOI(poi: VenuePOI(center: .init(), floor: 0, type: .atm), venue: .estadioBBVA)
 }
