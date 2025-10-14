@@ -8,26 +8,26 @@
 
 /* Begin PBXBuildFile section */
 		845A0F982E983820009B13B9 /* SwiftUIPager in Frameworks */ = {isa = PBXBuildFile; productRef = 845A0F972E983820009B13B9 /* SwiftUIPager */; };
-		84C514DF2E94AC9700BE85D4 /* AccesibleMapAssistant.appex in Embed ExtensionKit Extensions */ = {isa = PBXBuildFile; fileRef = 84C514D62E94AC9700BE85D4 /* AccesibleMapAssistant.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		84C514EC2E94ACCA00BE85D4 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84C514EB2E94ACCA00BE85D4 /* WidgetKit.framework */; };
 		84C514EE2E94ACCA00BE85D4 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84C514ED2E94ACCA00BE85D4 /* SwiftUI.framework */; };
 		84C514FF2E94ACCB00BE85D4 /* WidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 84C514E92E94ACCA00BE85D4 /* WidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		A9979E262E9ED41D00E2284D /* MapAssistant.appex in Embed ExtensionKit Extensions */ = {isa = PBXBuildFile; fileRef = A9979E1D2E9ED41D00E2284D /* MapAssistant.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		84C514DD2E94AC9700BE85D4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 84C514672E94AA9200BE85D4 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 84C514D52E94AC9700BE85D4;
-			remoteInfo = Siri;
-		};
 		84C514FD2E94ACCB00BE85D4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 84C514672E94AA9200BE85D4 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 84C514E82E94ACCA00BE85D4;
 			remoteInfo = WidgetsExtension;
+		};
+		A9979E242E9ED41D00E2284D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 84C514672E94AA9200BE85D4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A9979E1C2E9ED41D00E2284D;
+			remoteInfo = MapAssistant;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -38,7 +38,7 @@
 			dstPath = "$(EXTENSIONS_FOLDER_PATH)";
 			dstSubfolderSpec = 16;
 			files = (
-				84C514DF2E94AC9700BE85D4 /* AccesibleMapAssistant.appex in Embed ExtensionKit Extensions */,
+				A9979E262E9ED41D00E2284D /* MapAssistant.appex in Embed ExtensionKit Extensions */,
 			);
 			name = "Embed ExtensionKit Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -58,10 +58,10 @@
 
 /* Begin PBXFileReference section */
 		84C5146F2E94AA9200BE85D4 /* AccesibleMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AccesibleMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		84C514D62E94AC9700BE85D4 /* AccesibleMapAssistant.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.extensionkit-extension"; includeInIndex = 0; path = AccesibleMapAssistant.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		84C514E92E94ACCA00BE85D4 /* WidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WidgetsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		84C514EB2E94ACCA00BE85D4 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		84C514ED2E94ACCA00BE85D4 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		A9979E1D2E9ED41D00E2284D /* MapAssistant.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.extensionkit-extension"; includeInIndex = 0; path = MapAssistant.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -79,12 +79,12 @@
 			);
 			target = 84C514E82E94ACCA00BE85D4 /* WidgetsExtension */;
 		};
-		A9979E182E9ED14600E2284D /* Exceptions for "AccesibleMapAssistant" folder in "AccesibleMapAssistant" target */ = {
+		A9979E2A2E9ED41D00E2284D /* Exceptions for "MapAssistant" folder in "MapAssistant" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = 84C514D52E94AC9700BE85D4 /* AccesibleMapAssistant */;
+			target = A9979E1C2E9ED41D00E2284D /* MapAssistant */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -99,9 +99,6 @@
 		};
 		84C514D72E94AC9700BE85D4 /* AccesibleMapAssistant */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				A9979E182E9ED14600E2284D /* Exceptions for "AccesibleMapAssistant" folder in "AccesibleMapAssistant" target */,
-			);
 			path = AccesibleMapAssistant;
 			sourceTree = "<group>";
 		};
@@ -111,6 +108,14 @@
 				84C515032E94ACCB00BE85D4 /* Exceptions for "Widgets" folder in "WidgetsExtension" target */,
 			);
 			path = Widgets;
+			sourceTree = "<group>";
+		};
+		A9979E1E2E9ED41D00E2284D /* MapAssistant */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				A9979E2A2E9ED41D00E2284D /* Exceptions for "MapAssistant" folder in "MapAssistant" target */,
+			);
+			path = MapAssistant;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -124,19 +129,19 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		84C514D32E94AC9700BE85D4 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		84C514E62E94ACCA00BE85D4 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				84C514EE2E94ACCA00BE85D4 /* SwiftUI.framework in Frameworks */,
 				84C514EC2E94ACCA00BE85D4 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A9979E1A2E9ED41D00E2284D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -149,6 +154,7 @@
 				84C514712E94AA9200BE85D4 /* AccesibleMap */,
 				84C514D72E94AC9700BE85D4 /* AccesibleMapAssistant */,
 				84C514EF2E94ACCA00BE85D4 /* Widgets */,
+				A9979E1E2E9ED41D00E2284D /* MapAssistant */,
 				84C514EA2E94ACCA00BE85D4 /* Frameworks */,
 				84C514702E94AA9200BE85D4 /* Products */,
 			);
@@ -158,8 +164,8 @@
 			isa = PBXGroup;
 			children = (
 				84C5146F2E94AA9200BE85D4 /* AccesibleMap.app */,
-				84C514D62E94AC9700BE85D4 /* AccesibleMapAssistant.appex */,
 				84C514E92E94ACCA00BE85D4 /* WidgetsExtension.appex */,
+				A9979E1D2E9ED41D00E2284D /* MapAssistant.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -189,8 +195,8 @@
 			buildRules = (
 			);
 			dependencies = (
-				84C514DE2E94AC9700BE85D4 /* PBXTargetDependency */,
 				84C514FE2E94ACCB00BE85D4 /* PBXTargetDependency */,
+				A9979E252E9ED41D00E2284D /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				84C514712E94AA9200BE85D4 /* AccesibleMap */,
@@ -202,28 +208,6 @@
 			productName = AccesibleMap;
 			productReference = 84C5146F2E94AA9200BE85D4 /* AccesibleMap.app */;
 			productType = "com.apple.product-type.application";
-		};
-		84C514D52E94AC9700BE85D4 /* AccesibleMapAssistant */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 84C514E02E94AC9700BE85D4 /* Build configuration list for PBXNativeTarget "AccesibleMapAssistant" */;
-			buildPhases = (
-				84C514D22E94AC9700BE85D4 /* Sources */,
-				84C514D32E94AC9700BE85D4 /* Frameworks */,
-				84C514D42E94AC9700BE85D4 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				84C514D72E94AC9700BE85D4 /* AccesibleMapAssistant */,
-			);
-			name = AccesibleMapAssistant;
-			packageProductDependencies = (
-			);
-			productName = Siri;
-			productReference = 84C514D62E94AC9700BE85D4 /* AccesibleMapAssistant.appex */;
-			productType = "com.apple.product-type.extensionkit-extension";
 		};
 		84C514E82E94ACCA00BE85D4 /* WidgetsExtension */ = {
 			isa = PBXNativeTarget;
@@ -247,6 +231,28 @@
 			productReference = 84C514E92E94ACCA00BE85D4 /* WidgetsExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		A9979E1C2E9ED41D00E2284D /* MapAssistant */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A9979E272E9ED41D00E2284D /* Build configuration list for PBXNativeTarget "MapAssistant" */;
+			buildPhases = (
+				A9979E192E9ED41D00E2284D /* Sources */,
+				A9979E1A2E9ED41D00E2284D /* Frameworks */,
+				A9979E1B2E9ED41D00E2284D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				A9979E1E2E9ED41D00E2284D /* MapAssistant */,
+			);
+			name = MapAssistant;
+			packageProductDependencies = (
+			);
+			productName = MapAssistant;
+			productReference = A9979E1D2E9ED41D00E2284D /* MapAssistant.appex */;
+			productType = "com.apple.product-type.extensionkit-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -260,11 +266,11 @@
 					84C5146E2E94AA9200BE85D4 = {
 						CreatedOnToolsVersion = 26.0.1;
 					};
-					84C514D52E94AC9700BE85D4 = {
-						CreatedOnToolsVersion = 26.0.1;
-					};
 					84C514E82E94ACCA00BE85D4 = {
 						CreatedOnToolsVersion = 26.0.1;
+					};
+					A9979E1C2E9ED41D00E2284D = {
+						CreatedOnToolsVersion = 26.0;
 					};
 				};
 			};
@@ -287,8 +293,8 @@
 			projectRoot = "";
 			targets = (
 				84C5146E2E94AA9200BE85D4 /* AccesibleMap */,
-				84C514D52E94AC9700BE85D4 /* AccesibleMapAssistant */,
 				84C514E82E94ACCA00BE85D4 /* WidgetsExtension */,
+				A9979E1C2E9ED41D00E2284D /* MapAssistant */,
 			);
 		};
 /* End PBXProject section */
@@ -301,14 +307,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		84C514D42E94AC9700BE85D4 /* Resources */ = {
+		84C514E72E94ACCA00BE85D4 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		84C514E72E94ACCA00BE85D4 /* Resources */ = {
+		A9979E1B2E9ED41D00E2284D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -325,14 +331,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		84C514D22E94AC9700BE85D4 /* Sources */ = {
+		84C514E52E94ACCA00BE85D4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		84C514E52E94ACCA00BE85D4 /* Sources */ = {
+		A9979E192E9ED41D00E2284D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -342,15 +348,15 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		84C514DE2E94AC9700BE85D4 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 84C514D52E94AC9700BE85D4 /* AccesibleMapAssistant */;
-			targetProxy = 84C514DD2E94AC9700BE85D4 /* PBXContainerItemProxy */;
-		};
 		84C514FE2E94ACCB00BE85D4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 84C514E82E94ACCA00BE85D4 /* WidgetsExtension */;
 			targetProxy = 84C514FD2E94ACCB00BE85D4 /* PBXContainerItemProxy */;
+		};
+		A9979E252E9ED41D00E2284D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A9979E1C2E9ED41D00E2284D /* MapAssistant */;
+			targetProxy = A9979E242E9ED41D00E2284D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -554,62 +560,6 @@
 			};
 			name = Release;
 		};
-		84C514E12E94AC9700BE85D4 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 28QP46YWF4;
-				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = "$(SRCROOT)/AccesibleMapAssistant/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = Siri;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.hega.AccesibleMap.AccesibleMapAssistant;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		84C514E22E94AC9700BE85D4 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 28QP46YWF4;
-				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = "$(SRCROOT)/AccesibleMapAssistant/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = Siri;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.hega.AccesibleMap.AccesibleMapAssistant;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
 		84C515012E94ACCB00BE85D4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -670,6 +620,62 @@
 			};
 			name = Release;
 		};
+		A9979E282E9ED41D00E2284D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 28QP46YWF4;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MapAssistant/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = MapAssistant;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hega.AccesibleMap.MapAssistant;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A9979E292E9ED41D00E2284D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 28QP46YWF4;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MapAssistant/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = MapAssistant;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hega.AccesibleMap.MapAssistant;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -691,20 +697,20 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		84C514E02E94AC9700BE85D4 /* Build configuration list for PBXNativeTarget "AccesibleMapAssistant" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				84C514E12E94AC9700BE85D4 /* Debug */,
-				84C514E22E94AC9700BE85D4 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		84C515002E94ACCB00BE85D4 /* Build configuration list for PBXNativeTarget "WidgetsExtension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				84C515012E94ACCB00BE85D4 /* Debug */,
 				84C515022E94ACCB00BE85D4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A9979E272E9ED41D00E2284D /* Build configuration list for PBXNativeTarget "MapAssistant" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A9979E282E9ED41D00E2284D /* Debug */,
+				A9979E292E9ED41D00E2284D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

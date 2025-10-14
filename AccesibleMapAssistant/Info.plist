@@ -10,18 +10,33 @@
     <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
     <key>CFBundleName</key>
     <string>AccesibleMapAssistant</string>
+
+    <!-- 👇 nuevo tipo de paquete para ExtensionKit -->
     <key>CFBundlePackageType</key>
-    <string>XPC!</string>
+    <string>XAPP</string>
+
     <key>CFBundleShortVersionString</key>
     <string>1.0</string>
     <key>CFBundleVersion</key>
     <string>1</string>
+
     <key>NSExtension</key>
     <dict>
         <key>NSExtensionPointIdentifier</key>
-        <string>com.apple.intents-service</string>
+        <string>com.apple.extensionkit.appintents-extension</string>
         <key>NSExtensionPrincipalClass</key>
         <string>$(PRODUCT_MODULE_NAME).IntentHandler</string>
+
+        <key>EXAppExtensionAttributes</key>
+        <dict>
+            <!-- Tipo de ExtensionKit -->
+            <key>EXExtensionType</key>
+            <string>AppIntents</string>
+
+            <!-- 👇 requerido por iOS 18 para App Intents -->
+            <key>EXExtensionSupportsMultipleIntents</key>
+            <true/>
+        </dict>
     </dict>
 </dict>
 </plist>
