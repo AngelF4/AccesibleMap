@@ -9,6 +9,7 @@ import Foundation
 import Combine
 import MapKit
 import SwiftUI
+import SwiftUIPager
 
 class HomeViewModel: ObservableObject {
     @Published var showVenueList = false
@@ -17,6 +18,21 @@ class HomeViewModel: ObservableObject {
     @Published var position: Venue?
     @Published var selectedVenue: Venue?
     @Published var lastVisitedVenue: Venue?
+    @Published var pageVenue = Page.withIndex(0)
+    @Published var pageCity = Page.withIndex(0)
+    
+    private func alignPagers(for city: City) {
+        if let cidx = indexForCity(city) {
+            pageCity = Page.withIndex(cidx)
+        }
+        pageVenue = Page.withIndex(0)
+    }
+    
+    private func alignVenuePager(to venue: Venue) {
+        if let vidx = indexForVenue(venue) {
+            pageVenue = Page.withIndex(vidx)
+        }
+    }
     
     enum Step {
         case hero
@@ -89,7 +105,18 @@ class HomeViewModel: ObservableObject {
     }
     
     func confirmCitySelection() {
-        selectedCity = positionCity ?? cities.first
+        let city = positionCity ?? cities.first
+        selectedCity = city
+        positionCity = city
+        if let city { alignPagers(for: city) }
+        position = venuesInSelectedCity.first
+        syncCameraForStateChange(animated: true, duration: 0.9)
+    }
+    
+    func confirmCitySelection(_ city: City) {
+        selectedCity = city
+        positionCity = city
+        alignPagers(for: city)
         position = venuesInSelectedCity.first
         syncCameraForStateChange(animated: true, duration: 0.9)
     }
@@ -101,24 +128,76 @@ class HomeViewModel: ObservableObject {
     func confirmVenueSelection() {
         selectedVenue = position
         if let selectedVenue {
+            // Asegura que la ciudad quede bloqueada a la del venue
+            if selectedCity != selectedVenue.city {
+                selectedCity = selectedVenue.city
+                positionCity = selectedVenue.city
+                // Alinea solo el pager de ciudades; NO reinicies el pager de sedes aquí
+                if let cidx = indexForCity(selectedVenue.city) {
+                    pageCity = Page.withIndex(cidx)
+                }
+            }
+            // Mantén 'position' y alinea el pager de sedes al venue actual
+            position = selectedVenue
+            alignVenuePager(to: selectedVenue)
             setLastVisitedVenue(selectedVenue)
         }
         syncCameraForStateChange(animated: true, duration: 0.4)
-        
+    }
+    
+    func confirmVenueSelection(_ venue: Venue) {
+        // Asegura que la ciudad quede bloqueada a la del venue
+        if selectedCity != venue.city {
+            selectedCity = venue.city
+            positionCity = venue.city
+            // Alinea solo el pager de ciudades; NO reinicies el pager de sedes aquí
+            if let cidx = indexForCity(venue.city) {
+                pageCity = Page.withIndex(cidx)
+            }
+        }
+        // Mantén 'position' y alinea el pager de sedes al venue confirmado
+        position = venue
+        selectedVenue = venue
+        alignVenuePager(to: venue)
+        setLastVisitedVenue(venue)
+        syncCameraForStateChange(animated: true, duration: 0.4)
     }
     
     func goBack() {
         if selectedVenue != nil {
-            // Salir del detalle: volvemos a la lista de sedes, mantenemos 'position'
+            // Salir del detalle: volvemos a la lista de sedes y conservamos la posición del carrusel
+            let currentSelected = selectedVenue
             selectedVenue = nil
+            
+            // Si no hay una position válida, usa la última visitada (si es de la misma ciudad) o la primera sede
+            if position == nil {
+                if let last = lastVisitedVenue, last.city == selectedCity {
+                    position = last
+                } else {
+                    position = venuesInSelectedCity.first
+                }
+            } else if let currentSelected, position?.id != currentSelected.id {
+                // Si hubo un venue seleccionado diferente a la position, alineamos la position al seleccionado
+                position = currentSelected
+            }
+            // Asegura que los pagers queden alineados con la ciudad y el venue actual
+            if let city = selectedCity, let cidx = indexForCity(city) {
+                pageCity = Page.withIndex(cidx)
+            }
+            if let pos = position {
+                alignVenuePager(to: pos)
+            }
         } else if selectedCity != nil {
-            // Salir de la lista de sedes a la lista de ciudades: limpiar 'position'
+            // Salir de la lista de sedes a la lista de ciudades: limpiar position y resetear pager
             selectedCity = nil
+            position = nil
+            pageVenue = Page.withIndex(0)
         } else {
-            // Salir del flujo de listas: limpiar selecciones
+            // Salir del flujo: limpiar todo y regresar al héroe
             showVenueList = false
+            selectedCity = nil
+            position = nil
         }
-        position = nil
         syncCameraForStateChange(animated: true, duration: 0.8)
     }
     

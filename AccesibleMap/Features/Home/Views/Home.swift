@@ -11,8 +11,6 @@ import SwiftUIPager
 
 struct Home: View {
     @StateObject private var vm = HomeViewModel()
-    @State private var page = Page.withIndex(0)
-    @State private var pageCity = Page.withIndex(0)
     
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -43,9 +41,9 @@ struct Home: View {
                     // Paso 1: Elegir ciudad
                     if vm.step == .cityList {
                         VStack(spacing: 0) {
-                            Pager(page: pageCity, data: vm.cities, id: \.self) { city in
+                            Pager(page: vm.pageCity, data: vm.cities, id: \.self) { city in
                                 Button {
-                                    vm.confirmCitySelection()
+                                    vm.confirmCitySelection(city)
                                 } label: {
                                     CityCard(city: city)
                                         .scaleEffect(0.7)
@@ -70,7 +68,11 @@ struct Home: View {
                             .frame(height: 130)
                             
                             Button {
-                                vm.confirmCitySelection()
+                                if let city = vm.positionCity ?? vm.cities.first {
+                                    vm.confirmCitySelection(city)
+                                } else {
+                                    vm.confirmCitySelection()
+                                }
                             } label: {
                                 Text("Ver sedes en \(vm.positionCity?.displayName ?? vm.cities.first?.displayName ?? "ciudad")")
                                     .fontWeight(.semibold)
@@ -85,9 +87,10 @@ struct Home: View {
                     // Paso 2: Elegir sede dentro de la ciudad
                     else if vm.step == .venueList {
                         VStack(spacing: 0) {
-                            Pager(page: page, data: vm.venuesInSelectedCity, id: \.id) { item in
+                            Pager(page: vm.pageVenue, data: vm.venuesInSelectedCity, id: \.id) { item in
                                 Button {
-                                    vm.confirmVenueSelection()
+                                    
+                                    vm.confirmVenueSelection(item)
                                 } label: {
                                     VenueCard(venue: item)
                                         .scaleEffect(0.7)
@@ -195,10 +198,10 @@ struct Home: View {
                 if let lastVenue = vm.lastVisitedVenue, vm.step == .hero {
                     Button {
                         if let cityIndex = vm.indexForCity(lastVenue.city) {
-                            pageCity = Page.withIndex(cityIndex)
+                            vm.pageCity = Page.withIndex(cityIndex)
                         }
                         if let venueIndex = vm.indexForVenue(lastVenue) {
-                            page = Page.withIndex(venueIndex)
+                            vm.pageVenue = Page.withIndex(venueIndex)
                         }
                         withAnimation {
                             vm.openLastVisitedVenue()
@@ -218,12 +221,12 @@ struct Home: View {
             }
             ToolbarItem(placement: .navigation) {
                 if !vm.showVenueList {
-//                    NavigationLink {
-//                        A11ySettingsView()
-//                    } label: {
-//                        Label("Accesibilidad", systemImage: "figure")
-//                    }
-//                    .accessibilityHint("Abre los ajustes de accesibilidad personalizados")
+                    //                    NavigationLink {
+                    //                        A11ySettingsView()
+                    //                    } label: {
+                    //                        Label("Accesibilidad", systemImage: "figure")
+                    //                    }
+                    //                    .accessibilityHint("Abre los ajustes de accesibilidad personalizados")
                 }
             }
             ToolbarItem(placement: .automatic) {
