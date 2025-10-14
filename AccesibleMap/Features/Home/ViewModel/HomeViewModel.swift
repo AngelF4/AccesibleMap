@@ -38,11 +38,39 @@ class HomeViewModel: ObservableObject {
     
     // Filtros de UI (MVVM)
     @Published var selectedFloor: Int = 0
-//    @Published var showOnlyEssentials: Bool = true
+    private var allCategories: Set<pointOfInterest> { Set(pointOfInterest.allCases) }
+    @Published var selectedCategories: Set<pointOfInterest> = Set(pointOfInterest.allCases)
+    @Published var showCategoryFilters: Bool = false
+    //    @Published var showOnlyEssentials: Bool = true
     
-    // NUEVO: flujo por ciudad
+    // flujo por ciudad
     @Published var selectedCity: City? = nil
     @Published var positionCity: City? = nil
+    
+    // --- Helpers de categorías ---
+    func isCategoryOn(_ poi: pointOfInterest) -> Bool {
+        selectedCategories.contains(poi)
+    }
+    
+    func setCategory(_ poi: pointOfInterest, to isOn: Bool) {
+        if isOn {
+            selectedCategories.insert(poi)
+        } else {
+            selectedCategories.remove(poi)
+        }
+    }
+    
+    func resetCategories(selectAll: Bool = true) {
+        if selectAll {
+            selectedCategories = Set(pointOfInterest.allCases)
+        } else {
+            selectedCategories.removeAll()
+        }
+    }
+    
+    var isUsingCategoryFilters: Bool {
+        selectedCategories != allCategories
+    }
     
     // MARK: - Intents (acciones desde la Vista)
     func onAppear() {
@@ -76,7 +104,7 @@ class HomeViewModel: ObservableObject {
             setLastVisitedVenue(selectedVenue)
         }
         syncCameraForStateChange(animated: true, duration: 0.4)
-
+        
     }
     
     func goBack() {
@@ -86,12 +114,11 @@ class HomeViewModel: ObservableObject {
         } else if selectedCity != nil {
             // Salir de la lista de sedes a la lista de ciudades: limpiar 'position'
             selectedCity = nil
-            position = nil
         } else {
             // Salir del flujo de listas: limpiar selecciones
             showVenueList = false
-            position = nil
         }
+        position = nil
         syncCameraForStateChange(animated: true, duration: 0.8)
     }
     
@@ -114,12 +141,7 @@ class HomeViewModel: ObservableObject {
     
     func filteredPOIs(for venue: Venue) -> [VenuePOI] {
         let base = venue.pois.filter { $0.floor == selectedFloor }
-//        if showOnlyEssentials {
-//            return base.filter { poi in
-//                poi.type == .parking || poi.type == .access || poi.type == .accessWheelchair
-//            }
-//        }
-        return base
+        return base.filter { selectedCategories.contains($0.type) }
     }
     
     var cameraDistance: CLLocationDistance {
@@ -156,17 +178,17 @@ class HomeViewModel: ObservableObject {
     let geo = DIContainer.shared.geo
     private let defaults = UserDefaults.standard
     private let lastVisitedVenueKey = "lastVisitedVenueName"
-
+    
     init() {
-//#if DEBUG
-//        self.venues = Venue.mocks
-//#else
+        //#if DEBUG
+        //        self.venues = Venue.mocks
+        //#else
         venues = geo.venues
-//#endif
+        //#endif
         loadLastVisitedVenue()
         onAppear()
     }
-
+    
     private func loadLastVisitedVenue() {
         guard
             let name = defaults.string(forKey: lastVisitedVenueKey),
@@ -177,33 +199,33 @@ class HomeViewModel: ObservableObject {
         }
         lastVisitedVenue = venue
     }
-
+    
     private func setLastVisitedVenue(_ venue: Venue) {
         guard
             let storedVenue = venues.first(where: { $0.id == venue.id })
                 ?? venues.first(where: { $0.name == venue.name })
         else { return }
-
+        
         lastVisitedVenue = storedVenue
         defaults.set(storedVenue.name, forKey: lastVisitedVenueKey)
     }
-
+    
     func indexForCity(_ city: City) -> Int? {
         cities.firstIndex(of: city)
     }
-
+    
     func indexForVenue(_ venue: Venue) -> Int? {
         venues(in: venue.city).firstIndex(where: { $0.id == venue.id })
-            ?? venues(in: venue.city).firstIndex(where: { $0.name == venue.name })
+        ?? venues(in: venue.city).firstIndex(where: { $0.name == venue.name })
     }
-
+    
     private func venues(in city: City) -> [Venue] {
         venues.filter { $0.city == city }
     }
-
+    
     func openLastVisitedVenue() {
         guard let venue = lastVisitedVenue else { return }
-
+        
         showVenueList = true
         selectedCity = venue.city
         positionCity = venue.city

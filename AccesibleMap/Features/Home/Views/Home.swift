@@ -44,9 +44,13 @@ struct Home: View {
                     if vm.step == .cityList {
                         VStack(spacing: 0) {
                             Pager(page: pageCity, data: vm.cities, id: \.self) { city in
-                                CityCard(city: city)
-                                    .scaleEffect(0.7)
-                                    .accessibilityValue(city.displayName)
+                                Button {
+                                    vm.confirmCitySelection()
+                                } label: {
+                                    CityCard(city: city)
+                                        .scaleEffect(0.7)
+                                        .accessibilityValue(city.displayName)
+                                }
                             }
                             .draggingAnimation(.custom(animation: .spring(duration: 0.1)))
                             .preferredItemSize(CGSize(width: 300 * 0.7, height: 130))
@@ -54,7 +58,7 @@ struct Home: View {
                             .interactive(scale: 0.8)
                             .horizontal()
                             .sensitivity(.high)
-                            .pagingPriority(.simultaneous)
+                            .pagingPriority(.high)
                             .swipeInteractionArea(.allAvailable)
                             .padding(.horizontal, 20)
                             .onPageChanged { idx in
@@ -82,8 +86,12 @@ struct Home: View {
                     else if vm.step == .venueList {
                         VStack(spacing: 0) {
                             Pager(page: page, data: vm.venuesInSelectedCity, id: \.id) { item in
-                                VenueCard(venue: item)
-                                    .scaleEffect(0.7)
+                                Button {
+                                    vm.confirmVenueSelection()
+                                } label: {
+                                    VenueCard(venue: item)
+                                        .scaleEffect(0.7)
+                                }
                             }
                             .draggingAnimation(.custom(animation: .spring(duration: 0.1)))
                             .preferredItemSize(CGSize(width: 270 * 0.7, height: 120))
@@ -91,7 +99,7 @@ struct Home: View {
                             .interactive(scale: 0.9)
                             .horizontal()
                             .sensitivity(.high)
-                            .pagingPriority(.simultaneous)
+                            .pagingPriority(.high)
                             .swipeInteractionArea(.allAvailable)
                             .padding(.horizontal, 20) // peek
                             .onPageChanged { idx in
@@ -119,32 +127,14 @@ struct Home: View {
                     VStack(alignment: .leading, spacing: 0) {
                         Text("Stadium".uppercased())
                             .font(.custom("FWC2026-UltraCondensedBold", size: 62, relativeTo: .largeTitle))
+                            .blendMode(.overlay)
                     }
                     .foregroundStyle(Color("TextColor"))
                     .shadow(color: .white.opacity(0.3), radius: 10)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal)
                     .padding(.top, -20)
-                    if let lastVenue = vm.lastVisitedVenue {
-                        Button {
-                            if let cityIndex = vm.indexForCity(lastVenue.city) {
-                                pageCity = Page.withIndex(cityIndex)
-                            }
-                            if let venueIndex = vm.indexForVenue(lastVenue) {
-                                page = Page.withIndex(venueIndex)
-                            }
-                            withAnimation {
-                                vm.openLastVisitedVenue()
-                            }
-                        } label: {
-                            Label("Continuar en \(lastVenue.name)", systemImage: "clock.arrow.circlepath")
-                                .fontWeight(.semibold)
-                                .frame(maxWidth: .infinity, minHeight: 50)
-                        }
-                        .buttonStyle(.glass)
-                        .padding(.horizontal, 30)
-                        .padding(.bottom, 8)
-                    }
+                    
                     Button {
                         withAnimation {
                             vm.showList()
@@ -152,9 +142,11 @@ struct Home: View {
                     } label: {
                         Text("¿Listo para el partido?")
                             .fontWeight(.semibold)
+                            .foregroundStyle(.text)
                             .frame(maxWidth: .infinity, minHeight: 50)
                     }
-                    .buttonStyle(.glass)
+                    .buttonStyle(.glassProminent)
+                    .tint(.back)
                     .padding(.horizontal, 30)
                     .padding(.bottom, 30)
                     .accessibilityHint("Muestra la lista de ciudades y estadios disponibles")
@@ -199,15 +191,62 @@ struct Home: View {
                     .accessibilityHint("Regresa al paso anterior del flujo")
                 }
             }
+            ToolbarItem {
+                if let lastVenue = vm.lastVisitedVenue, vm.step == .hero {
+                    Button {
+                        if let cityIndex = vm.indexForCity(lastVenue.city) {
+                            pageCity = Page.withIndex(cityIndex)
+                        }
+                        if let venueIndex = vm.indexForVenue(lastVenue) {
+                            page = Page.withIndex(venueIndex)
+                        }
+                        withAnimation {
+                            vm.openLastVisitedVenue()
+                        }
+                    } label: {
+                        Label(lastVenue.name, systemImage: "clock.arrow.circlepath")
+                            .labelStyle(.titleAndIcon)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(.text)
+                            .frame(maxWidth: .infinity, minHeight: 50)
+                    }
+                    .accessibilityLabel("Continuar en el \(lastVenue.name)")
+                    .accessibilityHint("Te llevará al ultimo mapa visitado mostrando los puntos de accesos y servicios")
+                    .padding(.horizontal, 30)
+                    .padding(.bottom, 8)
+                }
+            }
             ToolbarItem(placement: .navigation) {
                 if !vm.showVenueList {
-                    NavigationLink {
-                        A11ySettingsView()
-                    } label: {
-                        Label("Accesibilidad", systemImage: "figure")
-                    }
-                    .accessibilityHint("Abre los ajustes de accesibilidad personalizados")
+//                    NavigationLink {
+//                        A11ySettingsView()
+//                    } label: {
+//                        Label("Accesibilidad", systemImage: "figure")
+//                    }
+//                    .accessibilityHint("Abre los ajustes de accesibilidad personalizados")
                 }
+            }
+            ToolbarItem(placement: .automatic) {
+                if vm.step == .venueDetail {
+                    Button {
+                        vm.showCategoryFilters = true
+                    } label: {
+                        if vm.isUsingCategoryFilters {
+                            Image(systemName: "line.3.horizontal.decrease")
+                                .foregroundStyle(.back)
+                                .padding(9)
+                                .background(.tint, in: .circle)
+                                .padding(.horizontal, -6)
+                        } else {
+                            Image(systemName: "line.3.horizontal.decrease")
+                        }
+                    }
+                }
+            }
+        }
+        .sheet(isPresented: $vm.showCategoryFilters) {
+            NavigationStack {
+                CategoriesFilterSheet(vm: vm)
             }
         }
     }
