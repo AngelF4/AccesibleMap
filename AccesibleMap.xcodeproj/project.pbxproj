@@ -79,6 +79,13 @@
 			);
 			target = 84C514E82E94ACCA00BE85D4 /* WidgetsExtension */;
 		};
+		A9979E182E9ED14600E2284D /* Exceptions for "AccesibleMapAssistant" folder in "AccesibleMapAssistant" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 84C514D52E94AC9700BE85D4 /* AccesibleMapAssistant */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -92,6 +99,9 @@
 		};
 		84C514D72E94AC9700BE85D4 /* AccesibleMapAssistant */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				A9979E182E9ED14600E2284D /* Exceptions for "AccesibleMapAssistant" folder in "AccesibleMapAssistant" target */,
+			);
 			path = AccesibleMapAssistant;
 			sourceTree = "<group>";
 		};
