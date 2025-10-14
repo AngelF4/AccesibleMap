@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		84C514DF2E94AC9700BE85D4 /* AccesibleMapAssistant.appex in Embed ExtensionKit Extensions */ = {isa = PBXBuildFile; fileRef = 84C514D62E94AC9700BE85D4 /* AccesibleMapAssistant.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		845A0F982E983820009B13B9 /* SwiftUIPager in Frameworks */ = {isa = PBXBuildFile; productRef = 845A0F972E983820009B13B9 /* SwiftUIPager */; };
 		84C514DF2E94AC9700BE85D4 /* Siri.appex in Embed ExtensionKit Extensions */ = {isa = PBXBuildFile; fileRef = 84C514D62E94AC9700BE85D4 /* Siri.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		84C514EC2E94ACCA00BE85D4 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84C514EB2E94ACCA00BE85D4 /* WidgetKit.framework */; };
@@ -38,7 +39,7 @@
 			dstPath = "$(EXTENSIONS_FOLDER_PATH)";
 			dstSubfolderSpec = 16;
 			files = (
-				84C514DF2E94AC9700BE85D4 /* Siri.appex in Embed ExtensionKit Extensions */,
+				84C514DF2E94AC9700BE85D4 /* AccesibleMapAssistant.appex in Embed ExtensionKit Extensions */,
 			);
 			name = "Embed ExtensionKit Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -58,7 +59,7 @@
 
 /* Begin PBXFileReference section */
 		84C5146F2E94AA9200BE85D4 /* AccesibleMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AccesibleMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		84C514D62E94AC9700BE85D4 /* Siri.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.extensionkit-extension"; includeInIndex = 0; path = Siri.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		84C514D62E94AC9700BE85D4 /* AccesibleMapAssistant.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.extensionkit-extension"; includeInIndex = 0; path = AccesibleMapAssistant.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		84C514E92E94ACCA00BE85D4 /* WidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WidgetsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		84C514EB2E94ACCA00BE85D4 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		84C514ED2E94ACCA00BE85D4 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -72,12 +73,12 @@
 			);
 			target = 84C5146E2E94AA9200BE85D4 /* AccesibleMap */;
 		};
-		84C514E32E94AC9700BE85D4 /* Exceptions for "Siri" folder in "Siri" target */ = {
+		84C514E32E94AC9700BE85D4 /* Exceptions for "AccesibleMapAssistant" folder in "AccesibleMapAssistant" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = 84C514D52E94AC9700BE85D4 /* Siri */;
+			target = 84C514D52E94AC9700BE85D4 /* AccesibleMapAssistant */;
 		};
 		84C515032E94ACCB00BE85D4 /* Exceptions for "Widgets" folder in "WidgetsExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
@@ -97,12 +98,12 @@
 			path = AccesibleMap;
 			sourceTree = "<group>";
 		};
-		84C514D72E94AC9700BE85D4 /* Siri */ = {
+		84C514D72E94AC9700BE85D4 /* AccesibleMapAssistant */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				84C514E32E94AC9700BE85D4 /* Exceptions for "Siri" folder in "Siri" target */,
+				84C514E32E94AC9700BE85D4 /* Exceptions for "AccesibleMapAssistant" folder in "AccesibleMapAssistant" target */,
 			);
-			path = Siri;
+			path = AccesibleMapAssistant;
 			sourceTree = "<group>";
 		};
 		84C514EF2E94ACCA00BE85D4 /* Widgets */ = {
@@ -147,7 +148,7 @@
 			isa = PBXGroup;
 			children = (
 				84C514712E94AA9200BE85D4 /* AccesibleMap */,
-				84C514D72E94AC9700BE85D4 /* Siri */,
+				84C514D72E94AC9700BE85D4 /* AccesibleMapAssistant */,
 				84C514EF2E94ACCA00BE85D4 /* Widgets */,
 				84C514EA2E94ACCA00BE85D4 /* Frameworks */,
 				84C514702E94AA9200BE85D4 /* Products */,
@@ -158,7 +159,7 @@
 			isa = PBXGroup;
 			children = (
 				84C5146F2E94AA9200BE85D4 /* AccesibleMap.app */,
-				84C514D62E94AC9700BE85D4 /* Siri.appex */,
+				84C514D62E94AC9700BE85D4 /* AccesibleMapAssistant.appex */,
 				84C514E92E94ACCA00BE85D4 /* WidgetsExtension.appex */,
 			);
 			name = Products;
@@ -203,9 +204,9 @@
 			productReference = 84C5146F2E94AA9200BE85D4 /* AccesibleMap.app */;
 			productType = "com.apple.product-type.application";
 		};
-		84C514D52E94AC9700BE85D4 /* Siri */ = {
+		84C514D52E94AC9700BE85D4 /* AccesibleMapAssistant */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 84C514E02E94AC9700BE85D4 /* Build configuration list for PBXNativeTarget "Siri" */;
+			buildConfigurationList = 84C514E02E94AC9700BE85D4 /* Build configuration list for PBXNativeTarget "AccesibleMapAssistant" */;
 			buildPhases = (
 				84C514D22E94AC9700BE85D4 /* Sources */,
 				84C514D32E94AC9700BE85D4 /* Frameworks */,
@@ -216,13 +217,13 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				84C514D72E94AC9700BE85D4 /* Siri */,
+				84C514D72E94AC9700BE85D4 /* AccesibleMapAssistant */,
 			);
-			name = Siri;
+			name = AccesibleMapAssistant;
 			packageProductDependencies = (
 			);
 			productName = Siri;
-			productReference = 84C514D62E94AC9700BE85D4 /* Siri.appex */;
+			productReference = 84C514D62E94AC9700BE85D4 /* AccesibleMapAssistant.appex */;
 			productType = "com.apple.product-type.extensionkit-extension";
 		};
 		84C514E82E94ACCA00BE85D4 /* WidgetsExtension */ = {
@@ -287,7 +288,7 @@
 			projectRoot = "";
 			targets = (
 				84C5146E2E94AA9200BE85D4 /* AccesibleMap */,
-				84C514D52E94AC9700BE85D4 /* Siri */,
+				84C514D52E94AC9700BE85D4 /* AccesibleMapAssistant */,
 				84C514E82E94ACCA00BE85D4 /* WidgetsExtension */,
 			);
 		};
@@ -344,7 +345,7 @@
 /* Begin PBXTargetDependency section */
 		84C514DE2E94AC9700BE85D4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 84C514D52E94AC9700BE85D4 /* Siri */;
+			target = 84C514D52E94AC9700BE85D4 /* AccesibleMapAssistant */;
 			targetProxy = 84C514DD2E94AC9700BE85D4 /* PBXContainerItemProxy */;
 		};
 		84C514FE2E94ACCB00BE85D4 /* PBXTargetDependency */ = {
@@ -561,7 +562,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 28QP46YWF4;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Siri/Info.plist;
+				INFOPLIST_FILE = AccesibleMapAssistant/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Siri;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -570,7 +571,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.hega.AccesibleMap.Siri;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hega.AccesibleMap.AccesibleMapAssistant;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -589,7 +590,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 28QP46YWF4;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Siri/Info.plist;
+				INFOPLIST_FILE = AccesibleMapAssistant/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Siri;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -598,7 +599,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.hega.AccesibleMap.Siri;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hega.AccesibleMap.AccesibleMapAssistant;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -691,7 +692,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		84C514E02E94AC9700BE85D4 /* Build configuration list for PBXNativeTarget "Siri" */ = {
+		84C514E02E94AC9700BE85D4 /* Build configuration list for PBXNativeTarget "AccesibleMapAssistant" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				84C514E12E94AC9700BE85D4 /* Debug */,
