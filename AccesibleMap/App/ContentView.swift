@@ -18,17 +18,17 @@ struct ContentView: View {
                 }
             }
             
-            Tab("Perfil", systemImage: "person.crop.circle") {
-                NavigationStack {
-                    ContentUnavailableView(
-                        "Perfil en proceso",
-                        systemImage: "person.crop.circle",
-                        description:
-                            Text("Cuando esté listo, aqui podrás ver tu perfil para configurarlo y ver tus partidos favoritos")
-                    )
-                    .foregroundStyle(.secondary, .accent)
-                }
-            }
+//            Tab("Chat", systemImage: "apple.intelligence") {
+//                NavigationStack {
+//                    ContentUnavailableView(
+//                        "Apple Intelligence en proceso",
+//                        systemImage: "apple.intelligence.badge.xmark",
+//                        description:
+//                            Text("Cuando esté listo, aqui podrás ver lo ultimo en IA y preguntarle lo que tu quieras")
+//                    )
+//                    .foregroundStyle(.secondary, .accent)
+//                }
+//            }
         }
     }
 }

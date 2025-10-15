@@ -34,14 +34,15 @@ struct MapHome: View {
                     if let selectedVenue = vm.selectedVenue {
                         if vm.shouldShowPOIs {
                             ForEach(visiblePOIs, id: \.id) { poi in
-                                let accessLike = isAccessLike(poi.type)
+                                let accessLike = vm.isAccessLike(poi.type)
                                 // Permitir que accesos/entradas vivan más lejos aunque vm.shouldShowPOIs sea false
                                 let extendedVisibility = vm.cameraDistance <= 6000 && accessLike
                                 // Respetar filtro de distancia general o la excepción para accesos
                                 let canRender = vm.shouldShowPOIs || extendedVisibility
                                 
-                                let level = revealLevel(distance: vm.cameraDistance, for: poi.type)
-                                let title = (level == .labeled) ? poi.type.displayName : ""
+                                let level = vm.revealLevel(distance: vm.cameraDistance, for: poi.type)
+                                let title = poi.type.displayName
+//                                let title = (level == .labeled) ? poi.type.displayName : ""
                                 
                                 // En MapContentBuilder solo se debe emitir contenido de mapa (Annotation/Marker/etc.).
                                 // Si no se debe mostrar, simplemente no emitimos nada.
@@ -53,11 +54,22 @@ struct MapHome: View {
                                     } else {
                                         Annotation(title, coordinate: poi.center) {
                                             poiAnnotationBody(for: poi, level: level)
+                                                .accessibilityElement(children: .ignore)
                                                 .accessibilityLabel("\(poi.type.displayName), piso \(poi.floor)")
-                                                .accessibilityHint("Toca dos veces para ver más detalles y cómo llegar")
+                                                .accessibilityHint("Da clic para ver más detalles y ver cómo llegar")
                                                 .accessibilityAddTraits(.isButton)
+                                                .accessibilityRepresentation {
+                                                    Button {
+                                                        // Mantén el mismo comportamiento de tap del annotation
+                                                        selectedPOIId = poi.id
+                                                    } label: {
+                                                        Text("\(poi.type.displayName), piso \(poi.floor)")
+                                                    }
+                                                    .accessibilityHint("Da clic para ver más detalles y ver cómo llegar")
+                                                }
                                         }
                                         .tag(poi.id)
+                                        .annotationTitles(level == .labeled ? .visible : .hidden)
                                     }
                                 }
                             }
@@ -74,6 +86,8 @@ struct MapHome: View {
                     }
                 }
             }
+            .accessibilityHidden(true, isEnabled: vm.step != .hero && vm.step != .venueDetail)
+            .accessibilityIgnoresInvertColors(false)
             .mapControls {
                 MapCompass()
                 MapUserLocationButton()
@@ -161,44 +175,9 @@ struct MapHome: View {
         }
     }
     
-    private enum RevealLevel { case hidden, dots, icons, labeled }
-    
-    private func isAccessLike(_ type: pointOfInterest) -> Bool {
-        switch type {
-        case .access, .accessWheelchair, .parking: return true
-        default: return false
-        }
-    }
-    
-    /// Umbrales diferenciados: accesos/entradas visibles desde más lejos
-    private func revealLevel(distance: CLLocationDistance, for type: pointOfInterest) -> RevealLevel {
-        // Otros POIs
-        let farHiddenOther: CLLocationDistance = 3000
-        let farDotsOther: CLLocationDistance = 1200
-        let nearIconsOther: CLLocationDistance = 500
-        
-        // Accesos/entradas (más generosos)
-        let farHiddenAccess: CLLocationDistance = 5000
-        let farDotsAccess: CLLocationDistance = 4000
-        let nearIconsAccess: CLLocationDistance = 200
-        
-        let access = isAccessLike(type)
-        if access {
-            if distance > farHiddenAccess { return .hidden }
-            else if distance > farDotsAccess { return .dots }
-            else if distance > nearIconsAccess { return .icons }
-            else { return .labeled }
-        } else {
-            if distance > farHiddenOther { return .hidden }
-            else if distance > farDotsOther { return .dots }
-            else if distance > nearIconsOther { return .icons }
-            else { return .labeled }
-        }
-    }
-    
     @ViewBuilder
     private func poiAnnotationBody(for poi: VenuePOI, level: RevealLevel) -> some View {
-        let isStairs = poi.type == .accessWheelchair || poi.type == .access || poi.type == .parking
+        let isStairs = vm.isAccessLike(poi.type)
         let anchor: CGFloat = isStairs ? 22 : 28
         
         switch level {
@@ -246,15 +225,8 @@ struct MapHome: View {
                     }
                 }
                 .shadow(radius: 2)
-                .scaleEffect(scaleForZoom(vm.cameraDistance))
+                .scaleEffect(vm.scaleForZoom(vm.cameraDistance))
         }
-    }
-    
-    private func scaleForZoom(_ distance: CLLocationDistance) -> CGFloat {
-        let minD: CLLocationDistance = 800
-        let maxD: CLLocationDistance = 3000
-        let t = min(1, max(0, (distance - minD) / (maxD - minD)))
-        return 1.0 - 0.4 * t
     }
 }
 

@@ -15,15 +15,16 @@ struct VenueCard: View {
         VStack(alignment: .leading, spacing: 4) {
             Image(systemName: "sportscourt")
                 .fontWeight(.bold)
-                .font(.system(size: 30))
+                .font(.system(size: 26))
             Text(venue.name)
-                .font(.custom("FWC2026-NormalBlack", size: 23, relativeTo: .title))
+                .font(.custom("FWC2026-NormalBlack", size: 16, relativeTo: .headline))
                 .lineLimit(2)
                 .minimumScaleFactor(0.6)
         }
         .foregroundStyle(venue.city.secondaryColor)
         .padding(.horizontal, 16)
-        .frame(width: 270, height: 130)
+        .frame(minHeight: 100)
+        .frame(width: 200)
         .background(venue.city.primaryColor)
         .cornerRadius(30)
     }

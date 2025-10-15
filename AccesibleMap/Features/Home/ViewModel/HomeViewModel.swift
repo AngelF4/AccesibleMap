@@ -196,6 +196,8 @@ class HomeViewModel: ObservableObject {
             // Salir del flujo: limpiar todo y regresar al héroe
             showVenueList = false
             selectedCity = nil
+            pageCity.index = 0
+            pageVenue.index = 0
             position = nil
         }
         syncCameraForStateChange(animated: true, duration: 0.8)
@@ -298,6 +300,48 @@ class HomeViewModel: ObservableObject {
         ?? venues(in: venue.city).firstIndex(where: { $0.name == venue.name })
     }
     
+    func isAccessLike(_ type: pointOfInterest) -> Bool {
+        switch type {
+        case .access, .accessWheelchair, .parking: return true
+        default: return false
+        }
+    }
+    
+    
+    
+    /// Umbrales diferenciados: accesos/entradas visibles desde más lejos
+    func revealLevel(distance: CLLocationDistance, for type: pointOfInterest) -> RevealLevel {
+        // Otros POIs
+        let farHiddenOther: CLLocationDistance = 3000
+        let farDotsOther: CLLocationDistance = 1500
+        let nearIconsOther: CLLocationDistance = 500
+        
+        // Accesos/entradas (más generosos)
+        let farHiddenAccess: CLLocationDistance = 5000
+        let farDotsAccess: CLLocationDistance = 4000
+        let nearIconsAccess: CLLocationDistance = 200
+        
+        let access = isAccessLike(type)
+        if access {
+            if distance > farHiddenAccess { return .hidden }
+            else if distance > farDotsAccess { return .dots }
+            else if distance > nearIconsAccess { return .icons }
+            else { return .labeled }
+        } else {
+            if distance > farHiddenOther { return .hidden }
+            else if distance > farDotsOther { return .dots }
+            else if distance > nearIconsOther { return .icons }
+            else { return .labeled }
+        }
+    }
+    
+    func scaleForZoom(_ distance: CLLocationDistance) -> CGFloat {
+        let minD: CLLocationDistance = 800
+        let maxD: CLLocationDistance = 3000
+        let t = min(1, max(0, (distance - minD) / (maxD - minD)))
+        return 1.0 - 0.4 * t
+    }
+    
     private func venues(in city: City) -> [Venue] {
         venues.filter { $0.city == city }
     }
@@ -374,3 +418,5 @@ class HomeViewModel: ObservableObject {
         return getRandomCamera()
     }
 }
+
+enum RevealLevel { case hidden, dots, icons, labeled }

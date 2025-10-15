@@ -46,12 +46,11 @@ struct Home: View {
                                     vm.confirmCitySelection(city)
                                 } label: {
                                     CityCard(city: city)
-                                        .scaleEffect(0.7)
                                         .accessibilityValue(city.displayName)
                                 }
                             }
                             .draggingAnimation(.custom(animation: .spring(duration: 0.1)))
-                            .preferredItemSize(CGSize(width: 300 * 0.7, height: 130))
+                            .preferredItemSize(CGSize(width: 220, height: 100))
                             .itemSpacing(20)
                             .interactive(scale: 0.8)
                             .horizontal()
@@ -63,7 +62,6 @@ struct Home: View {
                                 vm.pageCityChanged(to: idx)
                             }
                             .accessibilityLabel("Ciudades sede disponibles")
-                            
                             .accessibilityHint("Desliza para cambiar de ciudad o pulsa dos veces para escuchar la descripción")
                             .frame(height: 130)
                             
@@ -93,11 +91,11 @@ struct Home: View {
                                     vm.confirmVenueSelection(item)
                                 } label: {
                                     VenueCard(venue: item)
-                                        .scaleEffect(0.7)
                                 }
+                                .accessibilityValue(item.name)
                             }
                             .draggingAnimation(.custom(animation: .spring(duration: 0.1)))
-                            .preferredItemSize(CGSize(width: 270 * 0.7, height: 120))
+                            .preferredItemSize(CGSize(width: 220, height: 100))
                             .itemSpacing(20)
                             .interactive(scale: 0.9)
                             .horizontal()
@@ -109,7 +107,6 @@ struct Home: View {
                                 vm.pageVenueChanged(to: idx)
                             }
                             .accessibilityLabel("Sedes disponibles en la ciudad")
-                            .accessibilityValue(vm.position?.name ?? "Sin selección")
                             .accessibilityHint("Desliza para cambiar de estadio y escucha un resumen accesible")
                             .frame(height: 140)
                             
