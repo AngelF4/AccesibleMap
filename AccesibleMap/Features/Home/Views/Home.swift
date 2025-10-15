@@ -11,10 +11,12 @@ import SwiftUIPager
 
 struct Home: View {
     @StateObject private var vm = HomeViewModel()
+    @StateObject private var mapVM = MapaViewModel()
+    @AccessibilityFocusState private var focusHeroCTA: Bool
     
     var body: some View {
         ZStack(alignment: .bottom) {
-            MapHome(vm: vm)
+            MapHome(vm: vm, mapVM: mapVM)
                 .allowsHitTesting(vm.step != .hero)
             
             if !vm.showVenueList || vm.selectedVenue == nil {
@@ -24,15 +26,21 @@ struct Home: View {
                     )
                     .ignoresSafeArea()
                     .allowsHitTesting(false)
+                    .accessibilityHidden(true)
             }
             
             VStack {
-                MovingWaves(period: 6, height: 160)
-                    .ignoresSafeArea(edges: .top)
-                    .scaleEffect(1.1)
-                    .rotationEffect(.degrees(-10))
-                    .offset(y: vm.showVenueList ? -1000 : -140)
-                    .accessibilityHidden(true)
+                MovingWaves(
+                    period: 6,
+                    height: 160,
+                    isAnimating: Binding(get: { !vm.showVenueList },
+                                         set: { vm.showVenueList = !$0 })
+                )
+                .ignoresSafeArea(edges: .top)
+                .scaleEffect(1.1)
+                .rotationEffect(.degrees(-10))
+                .offset(y: vm.showVenueList ? -1000 : -140)
+                .accessibilityHidden(true)
                 Spacer()
             }
             
@@ -73,10 +81,12 @@ struct Home: View {
                                 }
                             } label: {
                                 Text("Ver sedes en \(vm.positionCity?.displayName ?? vm.cities.first?.displayName ?? "ciudad")")
+                                    .foregroundStyle(.text)
                                     .fontWeight(.semibold)
                                     .frame(maxWidth: .infinity, minHeight: 50)
                             }
-                            .buttonStyle(.glass)
+                            .buttonStyle(.glassProminent)
+                            .tint(.back)
                             .padding(.horizontal, 30)
                             .padding(.bottom, 30)
                             .accessibilityHint("Confirma la selección de ciudad para ver los estadios disponibles")
@@ -114,10 +124,12 @@ struct Home: View {
                                 vm.confirmVenueSelection()
                             } label: {
                                 Text("Entrar a ver ese estadio")
+                                    .foregroundStyle(.text)
                                     .fontWeight(.semibold)
                                     .frame(maxWidth: .infinity, minHeight: 50)
                             }
-                            .buttonStyle(.glass)
+                            .buttonStyle(.glassProminent)
+                            .tint(.back)
                             .padding(.horizontal, 30)
                             .padding(.bottom, 30)
                             .accessibilityHint("Abre el mapa detallado de la sede elegida")
@@ -149,6 +161,11 @@ struct Home: View {
                     .tint(.back)
                     .padding(.horizontal, 30)
                     .padding(.bottom, 30)
+                    .accessibilityLabel("Abrir lista de ciudades y estadios")
+                    .accessibilityAddTraits(.isButton)
+                    .accessibilitySortPriority(100)
+                    .accessibilityFocused($focusHeroCTA)
+                    .accessibilityRespondsToUserInteraction(true)
                     .accessibilityHint("Muestra la lista de ciudades y estadios disponibles")
                 }
             }
@@ -156,26 +173,36 @@ struct Home: View {
         }
         .onAppear {
             vm.onAppear()
+            mapVM.apply(vm.exportedState, animated: true, duration: 0.4)
+            if vm.step == .hero {
+                focusHeroCTA = true
+            }
         }
         .onChange(of: vm.showVenueList) {
-            vm.syncCameraForStateChange(animated: true, duration: 0.4)
+            mapVM.apply(vm.exportedState, animated: true, duration: 0.4)
         }
         .onChange(of: vm.position) {
             if vm.step != .venueDetail {
-                vm.syncCameraForStateChange(animated: true, duration: 0.4)
+                mapVM.apply(vm.exportedState, animated: true, duration: 0.4)
             }
         }
         .onChange(of: vm.selectedVenue) {
-            vm.syncCameraForStateChange(animated: true, duration: 0.4)
+            mapVM.apply(vm.exportedState, animated: true, duration: 0.4)
         }
         .onChange(of: vm.selectedCity) {
             if vm.step != .venueDetail {
-                vm.syncCameraForStateChange(animated: true, duration: 0.4)
+                mapVM.apply(vm.exportedState, animated: true, duration: 0.4)
             }
         }
         .onChange(of: vm.positionCity) {
             if vm.step != .venueDetail {
-                vm.syncCameraForStateChange(animated: true, duration: 0.4)
+                mapVM.apply(vm.exportedState, animated: true, duration: 0.4)
+            }
+        }
+        .onChange(of: vm.step) {
+            if vm.step == .hero {
+                // Move VoiceOver focus to the primary CTA when entering hero
+                focusHeroCTA = true
             }
         }
         .toolbar {

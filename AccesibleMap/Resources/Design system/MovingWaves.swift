@@ -9,19 +9,30 @@ import SwiftUI
 
 struct MovingWaves: View {
     /// Seconds it takes for one screen-width to traverse from right to left.
-    var period: TimeInterval = 8
+    var period: TimeInterval
     /// Height of the waves area.
-    var height: CGFloat = 150
+    var height: CGFloat
+    /// Controls whether the waves animate. Pass a binding from the parent view.
+    @Binding var isAnimating: Bool
     
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     
+    init(period: TimeInterval = 8,
+         height: CGFloat = 150,
+         isAnimating: Binding<Bool> = .constant(true)) {
+        self.period = period
+        self.height = height
+        self._isAnimating = isAnimating
+    }
+    
     var body: some View {
-        if reduceMotion {
+        if reduceMotion || !isAnimating {
             Image("wavePath")
                 .resizable()
                 .scaledToFill()
                 .frame(height: height)
                 .frame(maxWidth: .infinity, alignment: .leading)
+                
         } else {
             GeometryReader { proxy in
                 let width = max(proxy.size.width, 1)
@@ -49,6 +60,7 @@ struct MovingWaves: View {
             }
             .frame(height: height)
             .allowsHitTesting(false)
+            .transition(.move(edge: .top))
         }
     }
 }

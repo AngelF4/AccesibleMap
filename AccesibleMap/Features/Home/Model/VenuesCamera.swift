@@ -10,6 +10,7 @@ import MapKit
 
 class VenuesCamera {
     let cameras: [MapCamera] = [
+        // Estadio BBVA
         MapCamera(
             centerCoordinate: .init(
                 latitude: 25.669122,
@@ -29,6 +30,7 @@ class VenuesCamera {
             heading: 15,
             pitch: 64
         ),
+        //Estadio Akron
         MapCamera(
             centerCoordinate: .init(
                 latitude: 20.681728,
@@ -48,15 +50,15 @@ class VenuesCamera {
 //            pitch: 64
 //        ),
         // Estadio Borregos (ITESM)
-        MapCamera(
-            centerCoordinate: .init(
-                latitude: 25.654429468749143,
-                longitude: -100.28558285522575
-            ),
-            distance: 1200,
-            heading: 0,
-            pitch: 64
-        ),
+//        MapCamera(
+//            centerCoordinate: .init(
+//                latitude: 25.654429468749143,
+//                longitude: -100.28558285522575
+//            ),
+//            distance: 1200,
+//            heading: 0,
+//            pitch: 64
+//        ),
         //Estadio Azteca
         MapCamera(
             centerCoordinate: .init(latitude: 19.3029, longitude: -99.1505),

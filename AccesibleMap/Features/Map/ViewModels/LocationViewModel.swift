@@ -22,6 +22,10 @@ class LocationViewModel: ObservableObject {
         bind()
     }
     
+    var hasLocation: Bool {
+        authorizationStatus == .authorizedAlways || authorizationStatus == .authorizedWhenInUse
+    }
+    
     func bind() {
         locationService.$location
             .compactMap { $0 }

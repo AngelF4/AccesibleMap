@@ -16,6 +16,7 @@ enum TriBool: String, CaseIterable, Identifiable {
     var id: String { rawValue }
 }
 
+//MARK: Hola profes del iOS Lab, si están leyendo estó es por qué revisarón el codigo, esta vista se pensaba usar para que el usuario pudiera personalizar la accesibilidad desde la app, sin tener que entrar a configuración del sistema para hacerlo, pero se quedó pendiente para alcanzar a entregar el MVP >:D
 struct A11ySettingsView: View {
     @StateObject private var a11y = AccesibilityService.shared
     
