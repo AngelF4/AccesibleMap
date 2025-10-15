@@ -138,7 +138,7 @@ struct Home: View {
                     }
                 } else {
                     VStack(alignment: .leading, spacing: 0) {
-                        Text("home.hero.title")
+                        Text("STADIUM")
                             .font(.custom("FWC2026-UltraCondensedBold", size: 62, relativeTo: .largeTitle))
                             .blendMode(.overlay)
                     }

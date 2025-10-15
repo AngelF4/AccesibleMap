@@ -34,7 +34,7 @@
 "home.venues.accessibilityHint" = "Desliza para cambiar de estadio y escucha un resumen accesible";
 "home.venueButton.label" = "Entrar a ver ese estadio";
 "home.venueButton.hint" = "Abre el mapa detallado de la sede elegida";
-"home.hero.title" = "ESTADIO";
+"home.hero.title" = "STADIUM";
 "home.hero.cta" = "¿Listo para el partido?";
 "home.hero.accessibilityLabel" = "Abrir lista de ciudades y estadios";
 "home.hero.accessibilityHint" = "Muestra la lista de ciudades y estadios disponibles";
