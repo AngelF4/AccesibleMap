@@ -20,9 +20,9 @@ struct CategoriesFilterSheet: View {
                     .padding(10)
                     .frame(minWidth: 60, minHeight: 60)
                     .background(.accent.gradient, in: .rect(cornerRadius: 12))
-                Text("Categorías")
+                Text("home.filters.title")
                     .font(.title2.bold())
-                Text("Filtra los resultados seleccionando las categorías que quieres mostrar.")
+                Text("home.filters.subtitle")
                     .frame(maxWidth: .infinity)
                     .multilineTextAlignment(.center)
             }
@@ -47,12 +47,12 @@ struct CategoriesFilterSheet: View {
                 }
             } header: {
                 HStack {
-                    Button("Restablecer") {
+                    Button("home.filters.reset") {
                         vm.resetCategories()
                     }
                     .font(.headline)
                     Spacer()
-                    Button("Quitar todo") {
+                    Button("home.filters.removeAll") {
                         if vm.selectedCategories.isEmpty {
                             vm.resetCategories()
                         } else {
@@ -64,7 +64,7 @@ struct CategoriesFilterSheet: View {
                 }
             }
         }
-        .navigationTitle("Filtros")
+        .navigationTitle("home.filters.navigationTitle")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigation) {
@@ -98,7 +98,7 @@ struct SelectionSwitchStyle: ToggleStyle {
                     .contentTransition(.symbolEffect(.replace))
                     .font(.title2)
             }
-            .accessibilityLabel(configuration.isOn ? "Categoría activada" : "Categoría desactivada")
+            .accessibilityLabel(configuration.isOn ? "home.filters.categoryOn".localized : "home.filters.categoryOff".localized)
             .accessibilityAddTraits(.isButton)
         }
     }

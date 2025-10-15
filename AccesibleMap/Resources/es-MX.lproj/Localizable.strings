@@ -1,7 +1,52 @@
-/* 
-  Localizable.strings
-  AccesibleMap
+"poi.medicalKit" = "Primeros auxilios";
+"poi.parking" = "Estacionamiento";
+"poi.stails" = "Escaleras";
+"poi.access" = "Acceso";
+"poi.accessWheelchair" = "Acceso para personas con discapacidad";
+"poi.elevator" = "Elevador";
+"poi.food" = "Restaurantes";
+"poi.enfermy" = "Enfermería";
+"poi.atm" = "Cajero";
+"poi.bathroom" = "Baños";
+"poi.familyBathroom" = "Baño familiar";
+"poi.elevatorWheelchair" = "Elevador para personas con discapacidad";
+"poi.customerService" = "Información";
+"poi.other" = "Otros";
 
-  Created by Angel Hernández Gámez on 06/10/25.
-  
-*/
+"map.poi.title" = "%@, piso %d";
+"map.poi.accessibilityHint" = "Da doble toque para ver más detalles y obtener indicaciones";
+"map.centerButton.label" = "Centrar mapa en la sede";
+"map.centerButton.hint" = "Vuelve a enfocar el estadio seleccionado";
+"map.floorPicker.title" = "Piso";
+"map.floorPicker.accessibilityLabel" = "Seleccionar piso";
+"map.floorPicker.accessibilityValue" = "Piso %d";
+"map.floorPicker.accessibilityHint" = "Cambia el nivel del estadio para ver diferentes servicios";
+"map.sheet.noName" = "Sin nombre";
+"map.sheet.appleIntelligence" = "Pregúntale a Apple Intelligence";
+"map.sheet.directions" = "Cómo llegar";
+
+"home.cities.accessibilityLabel" = "Ciudades sede disponibles";
+"home.cities.accessibilityHint" = "Desliza para cambiar de ciudad o pulsa dos veces para escuchar la descripción";
+"home.cityButton.placeholder" = "tu ciudad";
+"home.cityButton.title" = "Ver sedes en %@";
+"home.cityButton.hint" = "Confirma la selección de ciudad para ver los estadios disponibles";
+"home.venues.accessibilityLabel" = "Sedes disponibles en la ciudad";
+"home.venues.accessibilityHint" = "Desliza para cambiar de estadio y escucha un resumen accesible";
+"home.venueButton.label" = "Entrar a ver ese estadio";
+"home.venueButton.hint" = "Abre el mapa detallado de la sede elegida";
+"home.hero.title" = "ESTADIO";
+"home.hero.cta" = "¿Listo para el partido?";
+"home.hero.accessibilityLabel" = "Abrir lista de ciudades y estadios";
+"home.hero.accessibilityHint" = "Muestra la lista de ciudades y estadios disponibles";
+"home.toolbar.back" = "Regresar";
+"home.toolbar.backHint" = "Regresa al paso anterior del flujo";
+"home.toolbar.resumeLabel" = "Continuar en el %@";
+"home.toolbar.resumeHint" = "Te llevará al último mapa visitado mostrando los puntos de accesos y servicios";
+
+"home.filters.title" = "Categorías";
+"home.filters.subtitle" = "Filtra los resultados seleccionando las categorías que quieres mostrar.";
+"home.filters.reset" = "Restablecer";
+"home.filters.removeAll" = "Quitar todo";
+"home.filters.navigationTitle" = "Filtros";
+"home.filters.categoryOn" = "Categoría activada";
+"home.filters.categoryOff" = "Categoría desactivada";
