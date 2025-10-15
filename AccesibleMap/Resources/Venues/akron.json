@@ -1,0 +1,45 @@
+
+{
+    "name": "Estadio Akron",
+    "city": "gdl",
+    "center": { "latitude": 20.681728, "longitude": -103.462681 },
+    "pathImage": [],
+    "accessibilityDescription": "Estadio Akron",
+    "accessibilityLabel": "Estadio de futbon Akron, casa del equipo Chivas Guadalajara",
+    "pois": [
+        { "center": { "latitude": 20.682867, "longitude": -103.466522 }, "floor": 0, "type": "parking" },
+        
+        { "center": { "latitude": 20.682423, "longitude": -103.463728 }, "floor": 0, "type": "access" },
+        { "center": { "latitude": 20.681384, "longitude": -103.46376 },  "floor": 0, "type": "access" },
+        { "center": { "latitude": 20.680515, "longitude": -103.462899 }, "floor": 0, "type": "access" },
+        { "center": { "latitude": 20.682891, "longitude": -103.462085 }, "floor": 0, "type": "access" },
+        
+        { "center": { "latitude": 20.68153,  "longitude": -103.463483 }, "floor": 0, "type": "customerService" },
+        { "center": { "latitude": 20.6819,   "longitude": -103.463496 }, "floor": 0, "type": "atm" },
+        
+        { "center": { "latitude": 20.681212, "longitude": -103.463392 }, "floor": 0, "type": "bathroom" },
+        { "center": { "latitude": 20.680863, "longitude": -103.463089 }, "floor": 0, "type": "bathroom" },
+        { "center": { "latitude": 20.680797, "longitude": -103.462245 }, "floor": 0, "type": "bathroom" },
+        { "center": { "latitude": 20.681378, "longitude": -103.461675 }, "floor": 0, "type": "familyBathroom" },
+        { "center": { "latitude": 20.681834, "longitude": -103.461703 }, "floor": 0, "type": "bathroom" },
+        { "center": { "latitude": 20.682072, "longitude": -103.461868 }, "floor": 0, "type": "customerService" },
+        { "center": { "latitude": 20.682642, "longitude": -103.462003 }, "floor": 0, "type": "bathroom" },
+        
+        { "center": { "latitude": 20.682529, "longitude": -103.463214 }, "floor": 0, "type": "food" },
+        { "center": { "latitude": 20.682106, "longitude": -103.463425 }, "floor": 0, "type": "food" },
+        { "center": { "latitude": 20.682144, "longitude": -103.463669 }, "floor": 0, "type": "atm" },
+        
+        { "center": { "latitude": 20.682529, "longitude": -103.463214 }, "floor": 1, "type": "food" },
+        { "center": { "latitude": 20.682106, "longitude": -103.463425 }, "floor": 1, "type": "food" },
+        { "center": { "latitude": 20.681212, "longitude": -103.463392 }, "floor": 1, "type": "bathroom" },
+        { "center": { "latitude": 20.680863, "longitude": -103.463089 }, "floor": 1, "type": "bathroom" },
+        { "center": { "latitude": 20.680797, "longitude": -103.462245 }, "floor": 1, "type": "bathroom" },
+        { "center": { "latitude": 20.681378, "longitude": -103.461675 }, "floor": 1, "type": "familyBathroom" },
+        { "center": { "latitude": 20.681834, "longitude": -103.461703 }, "floor": 1, "type": "bathroom" },
+        { "center": { "latitude": 20.682642, "longitude": -103.462003 }, "floor": 1, "type": "bathroom" },
+        { "center": { "latitude": 20.681530, "longitude": -103.463483 }, "floor": 1, "type": "customerService" },
+        { "center": { "latitude": 20.682072, "longitude": -103.461868 }, "floor": 1, "type": "customerService" },
+        { "center": { "latitude": 20.681900, "longitude": -103.463496 }, "floor": 1, "type": "atm" },
+        { "center": { "latitude": 20.682144, "longitude": -103.463669 }, "floor": 1, "type": "atm" }
+    ]
+}

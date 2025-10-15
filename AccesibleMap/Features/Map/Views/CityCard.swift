@@ -17,14 +17,15 @@ struct CityCard: View {
 //                .scaledToFit()
 //                .frame(width: 100, height: 150)
             Text(city.displayName.uppercased())
-                .font(.custom("FWC2026-NormalBlack", size: 23, relativeTo: .title))
+                .font(.custom("FWC2026-NormalBlack", size: 16, relativeTo: .title))
                 .foregroundStyle(city.secondaryColor)
                 .lineLimit(2)
                 .minimumScaleFactor(0.6)
                 .multilineTextAlignment(.center)
         }
         .padding(.horizontal, 16)
-        .frame(width: 300, height: 130)
+        .frame(width: 200)
+        .frame(minHeight: 100)
         .background(city.primaryColor)
         .cornerRadius(30)
     }

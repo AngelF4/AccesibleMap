@@ -11,10 +11,12 @@ import SwiftUIPager
 
 struct Home: View {
     @StateObject private var vm = HomeViewModel()
+    @StateObject private var mapVM = MapaViewModel()
+    @AccessibilityFocusState private var focusHeroCTA: Bool
     
     var body: some View {
         ZStack(alignment: .bottom) {
-            MapHome(vm: vm)
+            MapHome(vm: vm, mapVM: mapVM)
                 .allowsHitTesting(vm.step != .hero)
             
             if !vm.showVenueList || vm.selectedVenue == nil {
@@ -24,15 +26,21 @@ struct Home: View {
                     )
                     .ignoresSafeArea()
                     .allowsHitTesting(false)
+                    .accessibilityHidden(true)
             }
             
             VStack {
-                MovingWaves(period: 6, height: 160)
-                    .ignoresSafeArea(edges: .top)
-                    .scaleEffect(1.1)
-                    .rotationEffect(.degrees(-10))
-                    .offset(y: vm.showVenueList ? -1000 : -140)
-                    .accessibilityHidden(true)
+                MovingWaves(
+                    period: 6,
+                    height: 160,
+                    isAnimating: Binding(get: { !vm.showVenueList },
+                                         set: { vm.showVenueList = !$0 })
+                )
+                .ignoresSafeArea(edges: .top)
+                .scaleEffect(1.1)
+                .rotationEffect(.degrees(-10))
+                .offset(y: vm.showVenueList ? -1000 : -140)
+                .accessibilityHidden(true)
                 Spacer()
             }
             
@@ -46,12 +54,11 @@ struct Home: View {
                                     vm.confirmCitySelection(city)
                                 } label: {
                                     CityCard(city: city)
-                                        .scaleEffect(0.7)
                                         .accessibilityValue(city.displayName)
                                 }
                             }
                             .draggingAnimation(.custom(animation: .spring(duration: 0.1)))
-                            .preferredItemSize(CGSize(width: 300 * 0.7, height: 130))
+                            .preferredItemSize(CGSize(width: 220, height: 100))
                             .itemSpacing(20)
                             .interactive(scale: 0.8)
                             .horizontal()
@@ -62,9 +69,8 @@ struct Home: View {
                             .onPageChanged { idx in
                                 vm.pageCityChanged(to: idx)
                             }
-                            .accessibilityLabel("Ciudades sede disponibles")
-                            
-                            .accessibilityHint("Desliza para cambiar de ciudad o pulsa dos veces para escuchar la descripción")
+                            .accessibilityLabel("home.cities.accessibilityLabel".localized)
+                            .accessibilityHint("home.cities.accessibilityHint".localized)
                             .frame(height: 130)
                             
                             Button {
@@ -74,14 +80,17 @@ struct Home: View {
                                     vm.confirmCitySelection()
                                 }
                             } label: {
-                                Text("Ver sedes en \(vm.positionCity?.displayName ?? vm.cities.first?.displayName ?? "ciudad")")
+                                let cityName = vm.positionCity?.displayName ?? vm.cities.first?.displayName ?? "home.cityButton.placeholder".localized
+                                Text("home.cityButton.title".localizedFormat(cityName))
+                                    .foregroundStyle(.text)
                                     .fontWeight(.semibold)
                                     .frame(maxWidth: .infinity, minHeight: 50)
                             }
-                            .buttonStyle(.glass)
+                            .buttonStyle(.glassProminent)
+                            .tint(.back)
                             .padding(.horizontal, 30)
                             .padding(.bottom, 30)
-                            .accessibilityHint("Confirma la selección de ciudad para ver los estadios disponibles")
+                            .accessibilityHint("home.cityButton.hint".localized)
                         }
                     }
                     // Paso 2: Elegir sede dentro de la ciudad
@@ -93,11 +102,11 @@ struct Home: View {
                                     vm.confirmVenueSelection(item)
                                 } label: {
                                     VenueCard(venue: item)
-                                        .scaleEffect(0.7)
                                 }
+                                .accessibilityValue(item.name)
                             }
                             .draggingAnimation(.custom(animation: .spring(duration: 0.1)))
-                            .preferredItemSize(CGSize(width: 270 * 0.7, height: 120))
+                            .preferredItemSize(CGSize(width: 220, height: 100))
                             .itemSpacing(20)
                             .interactive(scale: 0.9)
                             .horizontal()
@@ -108,27 +117,28 @@ struct Home: View {
                             .onPageChanged { idx in
                                 vm.pageVenueChanged(to: idx)
                             }
-                            .accessibilityLabel("Sedes disponibles en la ciudad")
-                            .accessibilityValue(vm.position?.name ?? "Sin selección")
-                            .accessibilityHint("Desliza para cambiar de estadio y escucha un resumen accesible")
+                            .accessibilityLabel("home.venues.accessibilityLabel".localized)
+                            .accessibilityHint("home.venues.accessibilityHint".localized)
                             .frame(height: 140)
                             
                             Button {
                                 vm.confirmVenueSelection()
                             } label: {
-                                Text("Entrar a ver ese estadio")
+                                Text("home.venueButton.label")
+                                    .foregroundStyle(.text)
                                     .fontWeight(.semibold)
                                     .frame(maxWidth: .infinity, minHeight: 50)
                             }
-                            .buttonStyle(.glass)
+                            .buttonStyle(.glassProminent)
+                            .tint(.back)
                             .padding(.horizontal, 30)
                             .padding(.bottom, 30)
-                            .accessibilityHint("Abre el mapa detallado de la sede elegida")
+                            .accessibilityHint("home.venueButton.hint".localized)
                         }
                     }
                 } else {
                     VStack(alignment: .leading, spacing: 0) {
-                        Text("Stadium".uppercased())
+                        Text("home.hero.title")
                             .font(.custom("FWC2026-UltraCondensedBold", size: 62, relativeTo: .largeTitle))
                             .blendMode(.overlay)
                     }
@@ -143,7 +153,7 @@ struct Home: View {
                             vm.showList()
                         }
                     } label: {
-                        Text("¿Listo para el partido?")
+                        Text("home.hero.cta")
                             .fontWeight(.semibold)
                             .foregroundStyle(.text)
                             .frame(maxWidth: .infinity, minHeight: 50)
@@ -152,33 +162,48 @@ struct Home: View {
                     .tint(.back)
                     .padding(.horizontal, 30)
                     .padding(.bottom, 30)
-                    .accessibilityHint("Muestra la lista de ciudades y estadios disponibles")
+                    .accessibilityLabel("home.hero.accessibilityLabel".localized)
+                    .accessibilityAddTraits(.isButton)
+                    .accessibilitySortPriority(100)
+                    .accessibilityFocused($focusHeroCTA)
+                    .accessibilityRespondsToUserInteraction(true)
+                    .accessibilityHint("home.hero.accessibilityHint".localized)
                 }
             }
             
         }
         .onAppear {
             vm.onAppear()
+            mapVM.apply(vm.exportedState, animated: true, duration: 0.4)
+            if vm.step == .hero {
+                focusHeroCTA = true
+            }
         }
         .onChange(of: vm.showVenueList) {
-            vm.syncCameraForStateChange(animated: true, duration: 0.4)
+            mapVM.apply(vm.exportedState, animated: true, duration: 0.4)
         }
         .onChange(of: vm.position) {
             if vm.step != .venueDetail {
-                vm.syncCameraForStateChange(animated: true, duration: 0.4)
+                mapVM.apply(vm.exportedState, animated: true, duration: 0.4)
             }
         }
         .onChange(of: vm.selectedVenue) {
-            vm.syncCameraForStateChange(animated: true, duration: 0.4)
+            mapVM.apply(vm.exportedState, animated: true, duration: 0.4)
         }
         .onChange(of: vm.selectedCity) {
             if vm.step != .venueDetail {
-                vm.syncCameraForStateChange(animated: true, duration: 0.4)
+                mapVM.apply(vm.exportedState, animated: true, duration: 0.4)
             }
         }
         .onChange(of: vm.positionCity) {
             if vm.step != .venueDetail {
-                vm.syncCameraForStateChange(animated: true, duration: 0.4)
+                mapVM.apply(vm.exportedState, animated: true, duration: 0.4)
+            }
+        }
+        .onChange(of: vm.step) {
+            if vm.step == .hero {
+                // Move VoiceOver focus to the primary CTA when entering hero
+                focusHeroCTA = true
             }
         }
         .toolbar {
@@ -189,9 +214,9 @@ struct Home: View {
                             vm.goBack()
                         }
                     } label: {
-                        Label("Regresar", systemImage: "chevron.left")
+                        Label("home.toolbar.back", systemImage: "chevron.left")
                     }
-                    .accessibilityHint("Regresa al paso anterior del flujo")
+                    .accessibilityHint("home.toolbar.backHint".localized)
                 }
             }
             ToolbarItem {
@@ -213,8 +238,8 @@ struct Home: View {
                             .foregroundStyle(.text)
                             .frame(maxWidth: .infinity, minHeight: 50)
                     }
-                    .accessibilityLabel("Continuar en el \(lastVenue.name)")
-                    .accessibilityHint("Te llevará al ultimo mapa visitado mostrando los puntos de accesos y servicios")
+                    .accessibilityLabel("home.toolbar.resumeLabel".localizedFormat(lastVenue.name))
+                    .accessibilityHint("home.toolbar.resumeHint".localized)
                     .padding(.horizontal, 30)
                     .padding(.bottom, 8)
                 }

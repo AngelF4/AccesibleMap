@@ -20,9 +20,9 @@ struct CategoriesFilterSheet: View {
                     .padding(10)
                     .frame(minWidth: 60, minHeight: 60)
                     .background(.accent.gradient, in: .rect(cornerRadius: 12))
-                Text("Categorías")
+                Text("home.filters.title")
                     .font(.title2.bold())
-                Text("Filtra los resultados con seleccionar las categorias que quieres que se muestren")
+                Text("home.filters.subtitle")
                     .frame(maxWidth: .infinity)
                     .multilineTextAlignment(.center)
             }
@@ -47,24 +47,24 @@ struct CategoriesFilterSheet: View {
                 }
             } header: {
                 HStack {
+                    Button("home.filters.reset") {
+                        vm.resetCategories()
+                    }
+                    .font(.headline)
                     Spacer()
-                    if vm.selectedCategories.isEmpty {
-                        Button("Restablecer") {
+                    Button("home.filters.removeAll") {
+                        if vm.selectedCategories.isEmpty {
                             vm.resetCategories()
-                        }
-                        .font(.headline)
-                        .foregroundStyle(.secondary)
-                    } else {
-                        Button("Quitar todo") {
+                        } else {
                             vm.resetCategories(selectAll: false)
                         }
-                        .font(.headline)
-                        .foregroundStyle(.secondary)
                     }
+                    .font(.headline)
+                    .foregroundStyle(.secondary)
                 }
             }
         }
-        .navigationTitle("Filtros")
+        .navigationTitle("home.filters.navigationTitle")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigation) {
@@ -72,11 +72,6 @@ struct CategoriesFilterSheet: View {
                     dismiss()
                 } label: {
                     Image(systemName: "xmark")
-                }
-            }
-            ToolbarItem(placement: .destructiveAction) {
-                Button("Restablecer") {
-                    vm.resetCategories(selectAll: true)
                 }
             }
         }
@@ -101,11 +96,9 @@ struct SelectionSwitchStyle: ToggleStyle {
             } label: {
                 Image(systemName: configuration.isOn ? "checkmark.square.fill" : "square")
                     .contentTransition(.symbolEffect(.replace))
-                    .font(.title3)
-                    .foregroundStyle(.accent)
+                    .font(.title2)
             }
-            .buttonStyle(.plain)
-            .accessibilityLabel(configuration.isOn ? "Categoría activada" : "Categoría desactivada")
+            .accessibilityLabel(configuration.isOn ? "home.filters.categoryOn".localized : "home.filters.categoryOff".localized)
             .accessibilityAddTraits(.isButton)
         }
     }

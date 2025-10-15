@@ -1,0 +1,42 @@
+
+{
+    "name": "Estadio Azteca",
+    "city": "cdmx",
+    "center": { "latitude": 19.302941, "longitude": -99.150484 },
+    "pathImage": [],
+    "accessibilityDescription": "Estadio Azteca",
+    "accessibilityLabel": "Estadio Azteca, estadio de fútbol mexicano",
+    "pois": [
+        { "center": { "latitude": 19.303391, "longitude": -99.149305 }, "floor": 0, "type": "accessWheelchair" },
+        { "center": { "latitude": 19.302233, "longitude": -99.14941 },  "floor": 0, "type": "accessWheelchair" },
+        { "center": { "latitude": 19.301812, "longitude": -99.151368 }, "floor": 0, "type": "accessWheelchair" },
+        { "center": { "latitude": 19.303959, "longitude": -99.151382 }, "floor": 0, "type": "accessWheelchair" },
+        { "center": { "latitude": 19.304222, "longitude": -99.150748 }, "floor": 0, "type": "accessWheelchair" },
+        
+        { "center": { "latitude": 19.304005, "longitude": -99.150452 }, "floor": 0, "type": "bathroom" },
+        { "center": { "latitude": 19.30393,  "longitude": -99.150122 }, "floor": 0, "type": "bathroom" },
+        { "center": { "latitude": 19.303423, "longitude": -99.149629 }, "floor": 0, "type": "bathroom" },
+        { "center": { "latitude": 19.302482, "longitude": -99.14965 },  "floor": 0, "type": "bathroom" },
+        { "center": { "latitude": 19.302134, "longitude": -99.149786 }, "floor": 0, "type": "bathroom" },
+        { "center": { "latitude": 19.301963, "longitude": -99.150438 }, "floor": 0, "type": "bathroom" },
+        
+        { "center": { "latitude": 19.303166, "longitude": -99.149577 }, "floor": 0, "type": "familyBathroom" },
+        { "center": { "latitude": 19.301996, "longitude": -99.150905 }, "floor": 0, "type": "familyBathroom" },
+        
+        { "center": { "latitude": 19.302741, "longitude": -99.151478 }, "floor": 0, "type": "enfermy" },
+        { "center": { "latitude": 19.3038,   "longitude": -99.149826 }, "floor": 0, "type": "enfermy" },
+        
+        { "center": { "latitude": 19.302906, "longitude": -99.149795 }, "floor": 0, "type": "customerService" },
+        
+        { "center": { "latitude": 19.302649, "longitude": -99.151321 }, "floor": 0, "type": "food" },
+        { "center": { "latitude": 19.303412, "longitude": -99.15122 },  "floor": 0, "type": "food" },
+        
+        { "center": { "latitude": 19.302978, "longitude": -99.151272 }, "floor": 0, "type": "atm" },
+        { "center": { "latitude": 19.302472, "longitude": -99.149843 }, "floor": 0, "type": "atm" },
+        
+        { "center": { "latitude": 19.303682, "longitude": -99.148457 }, "floor": 0, "type": "parking" },
+        { "center": { "latitude": 19.301709, "longitude": -99.152248 }, "floor": 0, "type": "parking" },
+        { "center": { "latitude": 19.303788, "longitude": -99.153448 }, "floor": 0, "type": "parking" },
+        { "center": { "latitude": 19.304591, "longitude": -99.151643 }, "floor": 0, "type": "parking" }
+    ]
+}

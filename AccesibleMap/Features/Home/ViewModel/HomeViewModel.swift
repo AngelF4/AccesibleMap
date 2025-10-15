@@ -13,7 +13,6 @@ import SwiftUIPager
 
 class HomeViewModel: ObservableObject {
     @Published var showVenueList = false
-    @Published var mapPosition: MapCameraPosition = .automatic
     @Published var venues: [Venue] = []
     @Published var position: Venue?
     @Published var selectedVenue: Venue?
@@ -49,15 +48,11 @@ class HomeViewModel: ObservableObject {
         return .venueList
     }
     
-    // Estado de cámara (desde la Vista)
-    @Published var cameraInfo: MapCamera? = nil
-    
-    // Filtros de UI (MVVM)
+    // ---- Filtros (UI)
     @Published var selectedFloor: Int = 0
     private var allCategories: Set<pointOfInterest> { Set(pointOfInterest.allCases) }
     @Published var selectedCategories: Set<pointOfInterest> = Set(pointOfInterest.allCases)
     @Published var showCategoryFilters: Bool = false
-    //    @Published var showOnlyEssentials: Bool = true
     
     // flujo por ciudad
     @Published var selectedCity: City? = nil
@@ -90,14 +85,13 @@ class HomeViewModel: ObservableObject {
     
     // MARK: - Intents (acciones desde la Vista)
     func onAppear() {
-        mapPosition = .camera(cameraToShow)
         positionCity = cities.first
     }
     
     func showList() {
         showVenueList = true
         positionCity = cities.first
-        syncCameraForStateChange(animated: true, duration: 0.4)
+        // La vista sincroniza la cámara con MapaViewModel al detectar este cambio.
     }
     
     func pageCityChanged(to index: Int) {
@@ -110,7 +104,7 @@ class HomeViewModel: ObservableObject {
         positionCity = city
         if let city { alignPagers(for: city) }
         position = venuesInSelectedCity.first
-        syncCameraForStateChange(animated: true, duration: 0.9)
+        // La vista sincroniza la cámara con MapaViewModel.
     }
     
     func confirmCitySelection(_ city: City) {
@@ -118,7 +112,6 @@ class HomeViewModel: ObservableObject {
         positionCity = city
         alignPagers(for: city)
         position = venuesInSelectedCity.first
-        syncCameraForStateChange(animated: true, duration: 0.9)
     }
     
     func pageVenueChanged(to index: Int) {
@@ -128,48 +121,38 @@ class HomeViewModel: ObservableObject {
     func confirmVenueSelection() {
         selectedVenue = position
         if let selectedVenue {
-            // Asegura que la ciudad quede bloqueada a la del venue
             if selectedCity != selectedVenue.city {
                 selectedCity = selectedVenue.city
                 positionCity = selectedVenue.city
-                // Alinea solo el pager de ciudades; NO reinicies el pager de sedes aquí
                 if let cidx = indexForCity(selectedVenue.city) {
                     pageCity = Page.withIndex(cidx)
                 }
             }
-            // Mantén 'position' y alinea el pager de sedes al venue actual
             position = selectedVenue
             alignVenuePager(to: selectedVenue)
             setLastVisitedVenue(selectedVenue)
         }
-        syncCameraForStateChange(animated: true, duration: 0.4)
     }
     
     func confirmVenueSelection(_ venue: Venue) {
-        // Asegura que la ciudad quede bloqueada a la del venue
         if selectedCity != venue.city {
             selectedCity = venue.city
             positionCity = venue.city
-            // Alinea solo el pager de ciudades; NO reinicies el pager de sedes aquí
             if let cidx = indexForCity(venue.city) {
                 pageCity = Page.withIndex(cidx)
             }
         }
-        // Mantén 'position' y alinea el pager de sedes al venue confirmado
         position = venue
         selectedVenue = venue
         alignVenuePager(to: venue)
         setLastVisitedVenue(venue)
-        syncCameraForStateChange(animated: true, duration: 0.4)
     }
     
     func goBack() {
         if selectedVenue != nil {
-            // Salir del detalle: volvemos a la lista de sedes y conservamos la posición del carrusel
             let currentSelected = selectedVenue
             selectedVenue = nil
             
-            // Si no hay una position válida, usa la última visitada (si es de la misma ciudad) o la primera sede
             if position == nil {
                 if let last = lastVisitedVenue, last.city == selectedCity {
                     position = last
@@ -177,10 +160,8 @@ class HomeViewModel: ObservableObject {
                     position = venuesInSelectedCity.first
                 }
             } else if let currentSelected, position?.id != currentSelected.id {
-                // Si hubo un venue seleccionado diferente a la position, alineamos la position al seleccionado
                 position = currentSelected
             }
-            // Asegura que los pagers queden alineados con la ciudad y el venue actual
             if let city = selectedCity, let cidx = indexForCity(city) {
                 pageCity = Page.withIndex(cidx)
             }
@@ -188,17 +169,16 @@ class HomeViewModel: ObservableObject {
                 alignVenuePager(to: pos)
             }
         } else if selectedCity != nil {
-            // Salir de la lista de sedes a la lista de ciudades: limpiar position y resetear pager
             selectedCity = nil
             position = nil
             pageVenue = Page.withIndex(0)
         } else {
-            // Salir del flujo: limpiar todo y regresar al héroe
             showVenueList = false
             selectedCity = nil
+            pageCity.index = 0
+            pageVenue.index = 0
             position = nil
         }
-        syncCameraForStateChange(animated: true, duration: 0.8)
     }
     
     // Ciudades disponibles en base a las sedes cargadas (ordenadas)
@@ -218,52 +198,13 @@ class HomeViewModel: ObservableObject {
         return floors.sorted()
     }
     
-    func filteredPOIs(for venue: Venue) -> [VenuePOI] {
-        let base = venue.pois.filter { $0.floor == selectedFloor }
-        return base.filter { selectedCategories.contains($0.type) }
-    }
-    
-    var cameraDistance: CLLocationDistance {
-        cameraInfo?.distance ?? .greatestFiniteMagnitude
-    }
-    
-    var shouldShowPOIs: Bool {
-        cameraDistance <= 4000
-    }
-    
-    var isFarFromSelectedVenue: Bool {
-        guard let venue = selectedVenue, let cam = cameraInfo else { return false }
-        let v = CLLocation(latitude: venue.center.latitude, longitude: venue.center.longitude)
-        let c = CLLocation(latitude: cam.centerCoordinate.latitude, longitude: cam.centerCoordinate.longitude)
-        let centerDistance = v.distance(from: c)
-        let zoomDistance = cameraInfo?.distance ?? .greatestFiniteMagnitude
-        return centerDistance > 400 || zoomDistance > 5000
-    }
-    
-    // Sincroniza la cámara con el estado actual
-    func syncCameraForStateChange(animated: Bool = true, duration: Double = 0.4) {
-        let camera = cameraToShow
-        if animated {
-            withAnimation(.spring(duration: duration)) {
-                mapPosition = .camera(camera)
-            }
-        } else {
-            mapPosition = .camera(camera)
-        }
-    }
-    
     // MARK: - Datos auxiliares
-    let cameras = VenuesCamera().cameras
     let geo = DIContainer.shared.geo
     private let defaults = UserDefaults.standard
     private let lastVisitedVenueKey = "lastVisitedVenueName"
     
     init() {
-        //#if DEBUG
-        //        self.venues = Venue.mocks
-        //#else
         venues = geo.venues
-        //#endif
         loadLastVisitedVenue()
         onAppear()
     }
@@ -311,66 +252,18 @@ class HomeViewModel: ObservableObject {
         position = venue
         selectedVenue = venue
         setLastVisitedVenue(venue)
-        syncCameraForStateChange(animated: true, duration: 0.4)
     }
     
-    private func getRandomCamera() -> MapCamera {
-        return cameras.randomElement() ?? MapCamera(
-            centerCoordinate: .init(
-                latitude: 25.669122,
-                longitude: -100.244362
-            ),
-            distance: 1200,
-            heading: -30,
-            pitch: 64
+    //Para sincronizar HomeVM con el MapaViewModel
+    var exportedState: HomeSelection {
+        HomeSelection(
+            showVenueList: showVenueList,
+            selectedCity: selectedCity,
+            positionedCity: positionCity,
+            selectedVenue: selectedVenue,
+            positionedVenue: position,
+            venues: venues,
+            cities: cities
         )
-    }
-    
-    var cameraToShow: MapCamera {
-        // 1) Si ya hay sede seleccionada, centra en la sede
-        if let venue = selectedVenue {
-            return MapCamera(
-                centerCoordinate: venue.center,
-                distance: 3000,
-                heading: 0,
-                pitch: 0
-            )
-        }
-        
-        // 2) En flujo de lista, prioriza la selección actual del carrusel
-        if showVenueList {
-            // Si estamos en el paso de sedes y hay una sede "posicionada" en el pager, céntrala
-            if let venue = position {
-                return MapCamera(
-                    centerCoordinate: venue.center,
-                    distance: 9000,
-                    heading: 0,
-                    pitch: 35
-                )
-            }
-            
-            // Si estamos en el paso de ciudades (o aún no hay sede posicionada), céntrate en la ciudad seleccionada/posicionada
-            if let city = selectedCity ?? positionCity ?? cities.first {
-                return MapCamera(
-                    centerCoordinate: city.center,
-                    distance: 500000,
-                    heading: 0,
-                    pitch: 10
-                )
-            }
-            
-            // Fallback dentro del flujo de lista
-            if let venue = venues.first {
-                return MapCamera(
-                    centerCoordinate: venue.center,
-                    distance: 9000,
-                    heading: 0,
-                    pitch: 35
-                )
-            }
-        }
-        
-        // 3) Pantalla inicial (hero)
-        return getRandomCamera()
     }
 }

@@ -56,9 +56,9 @@ enum City: String, CaseIterable, Identifiable {
     /// Para ordenar consistentemente en el pager.
     var sortOrder: Int {
         switch self {
-        case .cdmx: 0
-        case .gdl:  1
-        case .mty:  2
+        case .cdmx: 1
+        case .gdl:  2
+        case .mty:  0
         }
     }
 }

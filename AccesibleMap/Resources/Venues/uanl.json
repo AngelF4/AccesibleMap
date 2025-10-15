@@ -1,0 +1,36 @@
+
+{
+    "name": "Estadio UANL",
+    "city": "mty",
+    "center": { "latitude": 25.722516391227714, "longitude": -100.31198463210087 },
+    "pathImage": [],
+    "accessibilityDescription": "Estadio UANL",
+    "accessibilityLabel": "Estadio de futbol de la Universidad Autónoma de Nuevo León",
+    "pois": [
+        { "center": { "latitude": 25.721437, "longitude": -100.310214 }, "floor": 0, "type": "parking" },
+        { "center": { "latitude": 25.722792, "longitude": -100.309737 }, "floor": 0, "type": "parking" },
+        { "center": { "latitude": 25.72294,  "longitude": -100.314879 }, "floor": 0, "type": "parking" },
+        
+        { "center": { "latitude": 25.722095, "longitude": -100.313536 }, "floor": 0, "type": "accessWheelchair" },
+        { "center": { "latitude": 25.721434, "longitude": -100.311018 }, "floor": 0, "type": "accessWheelchair" },
+        
+        { "center": { "latitude": 25.721751, "longitude": -100.312878 }, "floor": 0, "type": "atm" },
+        { "center": { "latitude": 25.722479, "longitude": -100.31328 },  "floor": 0, "type": "atm" },
+        
+        { "center": { "latitude": 25.722687, "longitude": -100.313271 }, "floor": 0, "type": "access" },
+        { "center": { "latitude": 25.722887, "longitude": -100.313248 }, "floor": 0, "type": "access" },
+        { "center": { "latitude": 25.723245, "longitude": -100.312914 }, "floor": 0, "type": "access" },
+        { "center": { "latitude": 25.723199, "longitude": -100.312976 }, "floor": 0, "type": "access" },
+        { "center": { "latitude": 25.722935, "longitude": -100.310833 }, "floor": 0, "type": "access" },
+        { "center": { "latitude": 25.722119, "longitude": -100.310692 }, "floor": 0, "type": "access" },
+        { "center": { "latitude": 25.721578, "longitude": -100.311273 }, "floor": 0, "type": "access" },
+        { "center": { "latitude": 25.722261, "longitude": -100.313238 }, "floor": 0, "type": "access" },
+        
+        { "center": { "latitude": 25.723633, "longitude": -100.312365 }, "floor": 0, "type": "accessWheelchair" },
+        { "center": { "latitude": 25.723455, "longitude": -100.311185 }, "floor": 0, "type": "accessWheelchair" },
+        { "center": { "latitude": 25.72237,  "longitude": -100.310642 }, "floor": 0, "type": "accessWheelchair" },
+        
+        { "center": { "latitude": 25.7229,   "longitude": -100.313103 }, "floor": 0, "type": "enfermy" },
+        { "center": { "latitude": 25.722621, "longitude": -100.310732 }, "floor": 0, "type": "enfermy" }
+    ]
+}

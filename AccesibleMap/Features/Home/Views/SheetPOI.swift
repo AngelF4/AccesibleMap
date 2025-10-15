@@ -22,7 +22,7 @@ struct SheetPOI: View {
                         .bold()
                         .foregroundStyle(poi.type.color)
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(venue?.name ?? "Sin nombre")
+                        Text(venue?.name ?? "map.sheet.noName".localized)
                             .font(.headline)
                             .foregroundStyle(.secondary)
                         Text(poi.type.displayName)
@@ -48,7 +48,7 @@ struct SheetPOI: View {
                 GroupBox {
                     
                 } label: {
-                    Label("Pregúntale a Apple Intelligence", systemImage: "apple.intelligence")
+                    Label("map.sheet.appleIntelligence".localized, systemImage: "apple.intelligence")
                 }
             }
             .buttonStyle(.plain)
@@ -59,7 +59,7 @@ struct SheetPOI: View {
                 item.name = poi.type.displayName
                 item.openInMaps(launchOptions: [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeWalking])
             } label: {
-                Text("Cómo llegar")
+                Text("map.sheet.directions".localized)
                     .font(.headline)
                     .padding(8)
                     .frame(maxWidth: .infinity)
