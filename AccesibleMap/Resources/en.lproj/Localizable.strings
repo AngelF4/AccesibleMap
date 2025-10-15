@@ -1,7 +1,52 @@
-/* 
-  Localizable.strings
-  AccesibleMap
+"poi.medicalKit" = "First aid kit";
+"poi.parking" = "Parking";
+"poi.stails" = "Stairs";
+"poi.access" = "Entrance";
+"poi.accessWheelchair" = "Accessible entrance";
+"poi.elevator" = "Elevator";
+"poi.food" = "Food";
+"poi.enfermy" = "Infirmary";
+"poi.atm" = "ATM";
+"poi.bathroom" = "Restrooms";
+"poi.familyBathroom" = "Family restroom";
+"poi.elevatorWheelchair" = "Accessible elevator";
+"poi.customerService" = "Information";
+"poi.other" = "Other";
 
-  Created by Angel Hernández Gámez on 06/10/25.
-  
-*/
+"map.poi.title" = "%@, floor %d";
+"map.poi.accessibilityHint" = "Double-tap to view more details and get directions";
+"map.centerButton.label" = "Center map on venue";
+"map.centerButton.hint" = "Re-focus on the selected stadium";
+"map.floorPicker.title" = "Floor";
+"map.floorPicker.accessibilityLabel" = "Select floor";
+"map.floorPicker.accessibilityValue" = "Floor %d";
+"map.floorPicker.accessibilityHint" = "Change the stadium level to view different services";
+"map.sheet.noName" = "No name";
+"map.sheet.appleIntelligence" = "Ask Apple Intelligence";
+"map.sheet.directions" = "Get directions";
+
+"home.cities.accessibilityLabel" = "Available host cities";
+"home.cities.accessibilityHint" = "Swipe to change city or double-tap to hear the description";
+"home.cityButton.placeholder" = "your city";
+"home.cityButton.title" = "See venues in %@";
+"home.cityButton.hint" = "Confirm the city selection to view available stadiums";
+"home.venues.accessibilityLabel" = "Available venues in the city";
+"home.venues.accessibilityHint" = "Swipe to change stadium and hear an accessible summary";
+"home.venueButton.label" = "Enter to view this stadium";
+"home.venueButton.hint" = "Opens the detailed map of the selected venue";
+"home.hero.title" = "STADIUM";
+"home.hero.cta" = "Ready for the match?";
+"home.hero.accessibilityLabel" = "Open list of cities and stadiums";
+"home.hero.accessibilityHint" = "Shows the list of available cities and stadiums";
+"home.toolbar.back" = "Back";
+"home.toolbar.backHint" = "Return to the previous step in the flow";
+"home.toolbar.resumeLabel" = "Continue in %@";
+"home.toolbar.resumeHint" = "Takes you to the last visited map showing accessible points and services";
+
+"home.filters.title" = "Categories";
+"home.filters.subtitle" = "Filter the results by selecting the categories you want to show.";
+"home.filters.reset" = "Reset";
+"home.filters.removeAll" = "Clear all";
+"home.filters.navigationTitle" = "Filters";
+"home.filters.categoryOn" = "Category enabled";
+"home.filters.categoryOff" = "Category disabled";

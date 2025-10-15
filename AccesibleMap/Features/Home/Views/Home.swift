@@ -69,8 +69,8 @@ struct Home: View {
                             .onPageChanged { idx in
                                 vm.pageCityChanged(to: idx)
                             }
-                            .accessibilityLabel("Ciudades sede disponibles")
-                            .accessibilityHint("Desliza para cambiar de ciudad o pulsa dos veces para escuchar la descripción")
+                            .accessibilityLabel("home.cities.accessibilityLabel".localized)
+                            .accessibilityHint("home.cities.accessibilityHint".localized)
                             .frame(height: 130)
                             
                             Button {
@@ -80,7 +80,8 @@ struct Home: View {
                                     vm.confirmCitySelection()
                                 }
                             } label: {
-                                Text("Ver sedes en \(vm.positionCity?.displayName ?? vm.cities.first?.displayName ?? "ciudad")")
+                                let cityName = vm.positionCity?.displayName ?? vm.cities.first?.displayName ?? "home.cityButton.placeholder".localized
+                                Text("home.cityButton.title".localizedFormat(cityName))
                                     .foregroundStyle(.text)
                                     .fontWeight(.semibold)
                                     .frame(maxWidth: .infinity, minHeight: 50)
@@ -89,7 +90,7 @@ struct Home: View {
                             .tint(.back)
                             .padding(.horizontal, 30)
                             .padding(.bottom, 30)
-                            .accessibilityHint("Confirma la selección de ciudad para ver los estadios disponibles")
+                            .accessibilityHint("home.cityButton.hint".localized)
                         }
                     }
                     // Paso 2: Elegir sede dentro de la ciudad
@@ -116,14 +117,14 @@ struct Home: View {
                             .onPageChanged { idx in
                                 vm.pageVenueChanged(to: idx)
                             }
-                            .accessibilityLabel("Sedes disponibles en la ciudad")
-                            .accessibilityHint("Desliza para cambiar de estadio y escucha un resumen accesible")
+                            .accessibilityLabel("home.venues.accessibilityLabel".localized)
+                            .accessibilityHint("home.venues.accessibilityHint".localized)
                             .frame(height: 140)
                             
                             Button {
                                 vm.confirmVenueSelection()
                             } label: {
-                                Text("Entrar a ver ese estadio")
+                                Text("home.venueButton.label")
                                     .foregroundStyle(.text)
                                     .fontWeight(.semibold)
                                     .frame(maxWidth: .infinity, minHeight: 50)
@@ -132,12 +133,12 @@ struct Home: View {
                             .tint(.back)
                             .padding(.horizontal, 30)
                             .padding(.bottom, 30)
-                            .accessibilityHint("Abre el mapa detallado de la sede elegida")
+                            .accessibilityHint("home.venueButton.hint".localized)
                         }
                     }
                 } else {
                     VStack(alignment: .leading, spacing: 0) {
-                        Text("Stadium".uppercased())
+                        Text("home.hero.title")
                             .font(.custom("FWC2026-UltraCondensedBold", size: 62, relativeTo: .largeTitle))
                             .blendMode(.overlay)
                     }
@@ -152,7 +153,7 @@ struct Home: View {
                             vm.showList()
                         }
                     } label: {
-                        Text("¿Listo para el partido?")
+                        Text("home.hero.cta")
                             .fontWeight(.semibold)
                             .foregroundStyle(.text)
                             .frame(maxWidth: .infinity, minHeight: 50)
@@ -161,12 +162,12 @@ struct Home: View {
                     .tint(.back)
                     .padding(.horizontal, 30)
                     .padding(.bottom, 30)
-                    .accessibilityLabel("Abrir lista de ciudades y estadios")
+                    .accessibilityLabel("home.hero.accessibilityLabel".localized)
                     .accessibilityAddTraits(.isButton)
                     .accessibilitySortPriority(100)
                     .accessibilityFocused($focusHeroCTA)
                     .accessibilityRespondsToUserInteraction(true)
-                    .accessibilityHint("Muestra la lista de ciudades y estadios disponibles")
+                    .accessibilityHint("home.hero.accessibilityHint".localized)
                 }
             }
             
@@ -213,9 +214,9 @@ struct Home: View {
                             vm.goBack()
                         }
                     } label: {
-                        Label("Regresar", systemImage: "chevron.left")
+                        Label("home.toolbar.back", systemImage: "chevron.left")
                     }
-                    .accessibilityHint("Regresa al paso anterior del flujo")
+                    .accessibilityHint("home.toolbar.backHint".localized)
                 }
             }
             ToolbarItem {
@@ -237,8 +238,8 @@ struct Home: View {
                             .foregroundStyle(.text)
                             .frame(maxWidth: .infinity, minHeight: 50)
                     }
-                    .accessibilityLabel("Continuar en el \(lastVenue.name)")
-                    .accessibilityHint("Te llevará al ultimo mapa visitado mostrando los puntos de accesos y servicios")
+                    .accessibilityLabel("home.toolbar.resumeLabel".localizedFormat(lastVenue.name))
+                    .accessibilityHint("home.toolbar.resumeHint".localized)
                     .padding(.horizontal, 30)
                     .padding(.bottom, 8)
                 }

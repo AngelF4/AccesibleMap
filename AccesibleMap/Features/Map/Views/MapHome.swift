@@ -39,7 +39,7 @@ struct MapHome: View {
                             ForEach(renderablePOIs) { item in
                                 let poi = item.poi
                                 let level = item.level
-                                let title = poi.type.displayName
+                                let title = "map.poi.title".localizedFormat(poi.type.displayName, poi.floor)
                                 
                                 if selectedPOIId == poi.id {
                                     Marker(title, systemImage: poi.type.icon, coordinate: poi.center)
@@ -54,16 +54,16 @@ struct MapHome: View {
                                             scale: mapVM.scaleForZoom(mapVM.cameraDistance)
                                         )
                                         .accessibilityElement(children: .ignore)
-                                        .accessibilityLabel("\(poi.type.displayName), piso \(poi.floor)")
-                                        .accessibilityHint("Da clic para ver más detalles y ver cómo llegar")
+                                        .accessibilityLabel(title)
+                                        .accessibilityHint("map.poi.accessibilityHint".localized)
                                         .accessibilityAddTraits(.isButton)
                                         .accessibilityRepresentation {
                                             Button {
                                                 selectedPOIId = poi.id
                                             } label: {
-                                                Text("\(poi.type.displayName), piso \(poi.floor)")
+                                                Text(title)
                                             }
-                                            .accessibilityHint("Da clic para ver más detalles y ver cómo llegar")
+                                            .accessibilityHint("map.poi.accessibilityHint".localized)
                                         }
                                     }
                                     .tag(poi.id)
@@ -109,8 +109,8 @@ struct MapHome: View {
                                     .glassEffect(.regular, in: .circle)
                             }
                             .transition(.move(edge: .trailing).combined(with: .opacity))
-                            .accessibilityLabel("Centrar mapa en la sede")
-                            .accessibilityHint("Vuelve a enfocar el estadio seleccionado")
+                            .accessibilityLabel("map.centerButton.label".localized)
+                            .accessibilityHint("map.centerButton.hint".localized)
                         }
                     }
                     .animation(.easeInOut(duration: 0.2), value: mapVM.isFarFromSelectedVenue(for: vm.selectedVenue))
@@ -118,17 +118,17 @@ struct MapHome: View {
                         Spacer()
                         if vm.availableFloors(for: selectedVenue).count > 1 {
                             HStack(spacing: 4) {
-                                Text("Piso")
-                                Picker("Piso", selection: $vm.selectedFloor) {
+                                Text("map.floorPicker.title".localized)
+                                Picker("map.floorPicker.title".localized, selection: $vm.selectedFloor) {
                                     ForEach(vm.availableFloors(for: selectedVenue), id: \.self) { piso in
                                         Text("\(piso)").tag(piso)
                                     }
                                 }
                                 .labelsHidden()
                                 .pickerStyle(.automatic)
-                                .accessibilityLabel("Seleccionar piso")
-                                .accessibilityValue("Piso \(vm.selectedFloor)")
-                                .accessibilityHint("Cambia el nivel del estadio para ver diferentes servicios")
+                                .accessibilityLabel("map.floorPicker.accessibilityLabel".localized)
+                                .accessibilityValue("map.floorPicker.accessibilityValue".localizedFormat(vm.selectedFloor))
+                                .accessibilityHint("map.floorPicker.accessibilityHint".localized)
                             }
                             .padding(8)
                             .glassEffect(.regular)

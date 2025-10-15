@@ -60,36 +60,7 @@ enum pointOfInterest: String, CaseIterable {
     
     //Nombre a mostrar
     var displayName: String {
-        switch self {
-        case .stails:
-            "Escaleras"
-        case .access:
-            "Acceso"
-        case .accessWheelchair:
-            "Acceso para personas con discapacidad"
-        case .elevator:
-            "Elevador"
-        case .food:
-            "Restaurantes"
-        case .enfermy:
-            "Enfermeria"
-        case .atm:
-            "Cajero"
-        case .bathroom:
-            "Baños"
-        case .familyBathroom:
-            "Baño familiar"
-        case .elevatorWheelchair:
-            "Elevador para personas con discapacidad"
-        case .customerService:
-            "Información"
-        case .other:
-            "otros"
-        case .medicalKit:
-            "Primeros aúxilios"
-        case .parking:
-            "Estacionamiento"
-        }
+        NSLocalizedString("poi.\(rawValue)", comment: "Point of interest display name")
     }
     
     //Icono del punto
