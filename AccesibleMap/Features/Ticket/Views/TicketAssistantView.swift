@@ -47,7 +47,7 @@ struct TicketAssistantView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             
             Button {
-//                flipped.toggle()
+                //                                flipped.toggle()
                 showCamera.toggle()
             } label: {
                 Text("ticket.button.photo".localized)

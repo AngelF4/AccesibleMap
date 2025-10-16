@@ -36,7 +36,7 @@ struct TicketView: View {
                 // MARK: - Encabezado
                 HStack {
                     Label(stadium, systemImage: "sportscourt.fill")
-                        .frame(width: 200)
+                        .frame(width: 220)
                         .font(.headline)
                         .bold()
                         .foregroundColor(.primary)
