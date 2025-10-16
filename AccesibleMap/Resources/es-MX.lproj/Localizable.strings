@@ -52,6 +52,14 @@
 "home.filters.categoryOff" = "Categoría desactivada";
 
 "ticket.button.photo" = "Fotografía tu boleto";
+"ticket.button.photo.label" = "Toma una foto del boleto";
+"ticket.button.photo.hint" = "Abre la camara para tomar una foto de tu boleto";
+
+"ticket.placeholder.label" = "Vista previa del boleto";
+"ticket.placeholder.hint" = "Imagen de referencia del boleto antes de tomar la foto";
+
+"ticket.photo.label" = "Boleto capturado";
+"ticket.photo.hint" = "Vista del boleto escaneado desde la cámara";
 
 "ticket.item.label.seat" = "ASIENTO";
 "ticket.item.label.row" = "FILA";
@@ -60,6 +68,26 @@
 "ticket.item.label.time" = "HORA";
 "ticket.item.label.serial" = "FOLIO";
 "ticket.item.label.accessible" = "ACCESIBLE";
+
+"ticket.item.value.accessibleYes" = "Sí";
+"ticket.item.value.accessibleNo" = "No";
+
+"ticket.header.label" = "Estadio Universitario";
+"ticket.header.hint" = "Lugar del evento";
+"ticket.header.date" = "Dic 03";
+"ticket.header.date.accessibility" = "3 de diciembre";
+
+"ticket.match.label" = "Tigres vs Puebla";
+"ticket.match.hint" = "Equipos del partido";
+
+"ticket.details.accessibilityLabel" = "Asiento %@, fila %@, sección %@. Tipo de boleto %@. Hora %@. Número de serie %@.";
+"ticket.details.accessibilityHint" = "Información del boleto capturado";
+
+"ticket.accessibility.label" = "Área accesible: %@";
+"ticket.accessibility.hint" = "Indica si el asiento cuenta con acceso para personas con discapacidad";
+
+"ticket.overall.accessibilityLabel" = "Boleto para el %@ el %@. %@. Asiento %@, fila %@, sección %@. Tipo de boleto %@, hora %@, número de serie %@. Área accesible: %@.";
+"ticket.overall.accessibilityHint" = "Resumen completo del boleto capturado, incluyendo ubicación, hora y accesibilidad";
 
 "router.tab.home" = "Inicio";
 "router.tab.ticket" = "Boleto";

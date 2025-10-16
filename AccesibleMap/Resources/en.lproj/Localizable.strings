@@ -52,6 +52,14 @@
 "home.filters.categoryOff" = "Category disabled";
 
 "ticket.button.photo" = "Take a photo of your ticket";
+"ticket.button.photo.label" = "Take ticket photo";
+"ticket.button.photo.hint" = "Opens the camera to capture your ticket image";
+
+"ticket.placeholder.label" = "Ticket preview";
+"ticket.placeholder.hint" = "Reference image of the ticket before taking the photo";
+
+"ticket.photo.label" = "Captured ticket";
+"ticket.photo.hint" = "View of the ticket scanned from the camera";
 
 "ticket.item.label.seat" = "SEAT";
 "ticket.item.label.row" = "ROW";
@@ -60,6 +68,27 @@
 "ticket.item.label.time" = "TIME";
 "ticket.item.label.serial" = "SERIAL";
 "ticket.item.label.accessible" = "ACCESSIBLE";
+
+"ticket.item.value.accessibleYes" = "Yes";
+"ticket.item.value.accessibleNo" = "No";
+
+"ticket.header.label" = "Universitario Stadium";
+"ticket.header.hint" = "Event location";
+"ticket.header.date" = "Dec 03";
+"ticket.header.date.accessibility" = "December 03";
+
+
+"ticket.match.label" = "Tigres vs Puebla";
+"ticket.match.hint" = "Match teams";
+
+"ticket.details.accessibilityLabel" = "Seat %@, row %@, section %@. Ticket type %@. Time %@. Serial number %@.";
+"ticket.details.accessibilityHint" = "Captured ticket information";
+
+"ticket.accessibility.label" = "Accessible area: %@";
+"ticket.accessibility.hint" = "Indicates whether the seat has accessibility for people with disabilities";
+
+"ticket.overall.accessibilityLabel" = "Ticket for %@ on %@. %@. Seat %@, row %@, section %@. Ticket type %@, time %@, serial number %@. Accessible area: %@.";
+"ticket.overall.accessibilityHint" = "Full summary of the captured ticket including location, time, and accessibility";
 
 "router.tab.home" = "Home";
 "router.tab.ticket" = "Ticket";

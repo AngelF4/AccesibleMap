@@ -14,6 +14,8 @@ struct TicketAssistantView: View {
     @StateObject private var motion = MotionManager()
     @State private var image: UIImage? = nil
     
+    @Environment(\.accessibilityReduceMotion) var reduceMotion
+    
     var body: some View {
         VStack {
             ZStack {
@@ -23,7 +25,12 @@ struct TicketAssistantView: View {
                         .degrees(flipped ? 180 : 0),
                         axis: (x: 0, y: 1, z: 0)
                     )
-                    .modifier(ParallaxEffect(pitch: motion.pitch, roll: motion.roll))
+                    .apply(!reduceMotion) { view in
+                        view.modifier(ParallaxEffect(pitch: motion.pitch, roll: motion.roll))
+                    }
+                    .accessibilityHidden(flipped)
+                    .accessibilityLabel(Text("ticket.placeholder.label".localized))
+                    .accessibilityHint(Text("ticket.placeholder.hint".localized))
                 
                 TicketView()
                     .opacity(flipped ? 1 : 0)
@@ -31,13 +38,17 @@ struct TicketAssistantView: View {
                         .degrees(flipped ? 0 : -180),
                         axis: (x: 0, y: 1, z: 0)
                     )
-                    .modifier(ParallaxEffect(pitch: motion.pitch, roll: motion.roll))
+                    .apply(!reduceMotion) { view in
+                        view.modifier(ParallaxEffect(pitch: motion.pitch, roll: motion.roll))
+                    }
+                    .accessibilityHidden(!flipped)
             }
-            .animation(.spring(response: 0.6, dampingFraction: 0.8), value: flipped)
+            .animation(reduceMotion ? nil : .spring(response: 0.6, dampingFraction: 0.8), value: flipped)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             
             Button {
-                showCamera.toggle()
+                flipped.toggle()
+//                showCamera.toggle()
             } label: {
                 Text("ticket.button.photo".localized)
                     .font(.headline)
@@ -46,6 +57,8 @@ struct TicketAssistantView: View {
                     .frame(minHeight: 50)
             }
             .buttonStyle(.borderedProminent)
+            .accessibilityLabel(Text("ticket.button.photo.label".localized))
+            .accessibilityHint(Text("ticket.button.photo.hint".localized))
             .sheet(isPresented: $showCamera) {
                 CameraViewModel(image: $image, onImageTaken: {
                     ticketCaptured.toggle()
@@ -54,6 +67,20 @@ struct TicketAssistantView: View {
             }
         }
         .padding(15)
+    }
+}
+
+extension View {
+    @ViewBuilder
+    func apply<Content: View>(
+        _ condition: Bool,
+        _ transform: (Self) -> Content
+    ) -> some View {
+        if condition {
+            transform(self)
+        } else {
+            self
+        }
     }
 }
 
