@@ -13,7 +13,7 @@
 "poi.customerService" = "Información";
 "poi.other" = "Otros";
 
-"map.poi.title" = "%@, piso %d";
+"map.poi.title" = "%@";
 "map.poi.accessibilityHint" = "Da doble toque para ver más detalles y obtener indicaciones";
 "map.centerButton.label" = "Centrar mapa en la sede";
 "map.centerButton.hint" = "Vuelve a enfocar el estadio seleccionado";

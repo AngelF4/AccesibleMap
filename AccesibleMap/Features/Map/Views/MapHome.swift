@@ -39,7 +39,7 @@ struct MapHome: View {
                             ForEach(renderablePOIs) { item in
                                 let poi = item.poi
                                 let level = item.level
-                                let title = "map.poi.title".localizedFormat(poi.type.displayName, poi.floor)
+                                let title = "map.poi.title".localizedFormat(poi.type.displayName)
                                 
                                 if selectedPOIId == poi.id {
                                     Marker(title, systemImage: poi.type.icon, coordinate: poi.center)

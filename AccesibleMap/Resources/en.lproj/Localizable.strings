@@ -13,7 +13,7 @@
 "poi.customerService" = "Information";
 "poi.other" = "Other";
 
-"map.poi.title" = "%@, floor %d";
+"map.poi.title" = "%@";
 "map.poi.accessibilityHint" = "Double-tap to view more details and get directions";
 "map.centerButton.label" = "Center map on venue";
 "map.centerButton.hint" = "Re-focus on the selected stadium";

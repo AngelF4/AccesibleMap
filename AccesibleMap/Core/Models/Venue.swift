@@ -77,7 +77,7 @@ enum pointOfInterest: String, CaseIterable {
         case .food:
             "fork.knife"
         case .enfermy:
-            "heart.fill"
+            "cross.fill"
         case .atm:
             "dollarsign"
         case .bathroom:
@@ -91,7 +91,7 @@ enum pointOfInterest: String, CaseIterable {
         case .other:
             "ellipsis"
         case .medicalKit:
-            "plus"
+            "pills.fill"
         case .parking:
             "e.circle"
         }
