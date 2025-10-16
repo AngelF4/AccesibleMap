@@ -22,18 +22,6 @@ struct ContentView: View {
                     TicketAssistantView()
                 }
             }
-            
-//            Tab("Chat", systemImage: "apple.intelligence") {
-//                NavigationStack {
-//                    ContentUnavailableView(
-//                        "Apple Intelligence en proceso",
-//                        systemImage: "apple.intelligence.badge.xmark",
-//                        description:
-//                            Text("Cuando esté listo, aqui podrás ver lo ultimo en IA y preguntarle lo que tu quieras")
-//                    )
-//                    .foregroundStyle(.secondary, .accent)
-//                }
-//            }
         }
     }
 }

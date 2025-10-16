@@ -47,8 +47,8 @@ struct TicketAssistantView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             
             Button {
-                flipped.toggle()
-//                showCamera.toggle()
+//                flipped.toggle()
+                showCamera.toggle()
             } label: {
                 Text("ticket.button.photo".localized)
                     .font(.headline)
@@ -64,6 +64,7 @@ struct TicketAssistantView: View {
                     ticketCaptured.toggle()
                     flipped.toggle()
                 })
+                .ignoresSafeArea()
             }
         }
         .padding(15)

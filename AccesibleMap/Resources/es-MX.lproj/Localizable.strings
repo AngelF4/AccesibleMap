@@ -48,6 +48,8 @@
 "home.filters.reset" = "Restablecer";
 "home.filters.removeAll" = "Quitar todo";
 "home.filters.navigationTitle" = "Filtros";
+"home.filters.toolbar.close" = "Cerrar";
+"home.filters.toolbar.done" = "Listo";
 "home.filters.categoryOn" = "Categoría activada";
 "home.filters.categoryOff" = "Categoría desactivada";
 

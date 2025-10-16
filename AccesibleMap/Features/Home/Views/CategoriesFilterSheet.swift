@@ -71,8 +71,17 @@ struct CategoriesFilterSheet: View {
                 Button {
                     dismiss()
                 } label: {
+                    Label("home.filters.toolbar.close", systemImage: "xmark")
                     Image(systemName: "xmark")
                 }
+            }
+            ToolbarItem(placement: .primaryAction) {
+                Button {
+                    dismiss()
+                } label: {
+                    Label("home.filters.toolbar.done".localized, systemImage: "checkmark")
+                }
+                .buttonStyle(.glassProminent)
             }
         }
     }
@@ -81,6 +90,18 @@ struct CategoriesFilterSheet: View {
 #Preview {
     NavigationStack {
         CategoriesFilterSheet(vm: HomeViewModel())
+    }
+}
+
+#Preview("Sheet") {
+    @Previewable @State var isOn: Bool = true
+    Button("toggle") {
+        isOn.toggle()
+    }
+    .sheet(isPresented: $isOn) {
+        NavigationStack {
+            CategoriesFilterSheet(vm: HomeViewModel())
+        }
     }
 }
 
