@@ -12,9 +12,14 @@ import MapKit
 struct ContentView: View {
     var body: some View {
         TabView {
-            Tab("Inicio", systemImage: "soccerball") {
+            Tab("router.tab.home".localized, systemImage: "soccerball") {
                 NavigationStack {
                     Home()
+                }
+            }
+            Tab("router.tab.ticket".localized, systemImage: "ticket") {
+                NavigationStack {
+                    TicketAssistantView()
                 }
             }
             

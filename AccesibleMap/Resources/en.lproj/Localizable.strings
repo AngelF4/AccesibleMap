@@ -50,3 +50,16 @@
 "home.filters.navigationTitle" = "Filters";
 "home.filters.categoryOn" = "Category enabled";
 "home.filters.categoryOff" = "Category disabled";
+
+"ticket.button.photo" = "Take a photo of your ticket";
+
+"ticket.item.label.seat" = "SEAT";
+"ticket.item.label.row" = "ROW";
+"ticket.item.label.section" = "SECTION";
+"ticket.item.label.ticket_type" = "TICKET TYPE";
+"ticket.item.label.time" = "TIME";
+"ticket.item.label.serial" = "SERIAL";
+"ticket.item.label.accessible" = "ACCESSIBLE";
+
+"router.tab.home" = "Home";
+"router.tab.ticket" = "Ticket";

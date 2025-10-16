@@ -50,3 +50,17 @@
 "home.filters.navigationTitle" = "Filtros";
 "home.filters.categoryOn" = "Categoría activada";
 "home.filters.categoryOff" = "Categoría desactivada";
+
+"ticket.button.photo" = "Fotografía tu boleto";
+
+"ticket.item.label.seat" = "ASIENTO";
+"ticket.item.label.row" = "FILA";
+"ticket.item.label.section" = "SECCIÓN";
+"ticket.item.label.ticket_type" = "TIPO DE BOLETO";
+"ticket.item.label.time" = "HORA";
+"ticket.item.label.serial" = "FOLIO";
+"ticket.item.label.accessible" = "ACCESIBLE";
+
+"router.tab.home" = "Inicio";
+"router.tab.ticket" = "Boleto";
+

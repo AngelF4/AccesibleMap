@@ -17,5 +17,7 @@
 	<array>
 		<string>location</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string></string>
 </dict>
 </plist>
